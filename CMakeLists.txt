@@ -9,17 +9,35 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Bluetooth Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Bluetooth Core Widgets)
+
+file(GLOB helloworld_SRC
+     "connect/*.h"
+     "connect/*.cpp"
+)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        connect/connectwindow.h
-        connect/connectwindow.cpp
+       # connect/connectwindow.h
+       # connect/connectwindow.cpp
         connect/connectwindow.ui
+        connect/connectmanager.cpp
+        connect/connectmanager.h
+      #  connect/chat.ui
+        connect/client.cpp
+        connect/client.h
+        connect/server.cpp
+        connect/server.h
+        connect/connectwindow.cpp
+        connect/connectwindow.h
+        connect/connectwindow.ui
+        connect/remoteselector.cpp
+        connect/remoteselector.h
+        connect/remoteselector.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -45,7 +63,11 @@ else()
     endif()
 endif()
 
-target_link_libraries(Stellar-Surfers PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Stellar-Surfers PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Bluetooth
+)
 
 set_target_properties(Stellar-Surfers PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -54,6 +76,7 @@ set_target_properties(Stellar-Surfers PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
 
 install(TARGETS Stellar-Surfers
     BUNDLE DESTINATION .

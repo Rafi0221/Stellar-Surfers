@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "connect/connectwindow.h"
+#include "connect/connectmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,8 +26,11 @@ void MainWindow::playClicked()
 void MainWindow::connectClicked()
 {
     qDebug() << "connect";
-    ConnectWindow* connectWindow = new ConnectWindow();
-    connectWindow->setAttribute(Qt::WA_DeleteOnClose);
-    connectWindow->show();
+//    ConnectWindow* connectWindow = new ConnectWindow();
+//    connectWindow->setAttribute(Qt::WA_DeleteOnClose);
+//    connectWindow->show();
+    ConnectManager* chat = new ConnectManager();
+    chat->setAttribute(Qt::WA_DeleteOnClose);
+    chat->show();
 }
 
