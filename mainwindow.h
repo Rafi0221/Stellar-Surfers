@@ -16,6 +16,7 @@ public:
     ~MainWindow();
     void playClicked();
     void connectClicked();
+    void testClicked();
 
 private:
     Ui::MainWindow *ui;
