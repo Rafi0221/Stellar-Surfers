@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS OpenGL)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
@@ -20,6 +21,14 @@ set(PROJECT_SOURCES
         connect/connectwindow.h
         connect/connectwindow.cpp
         connect/connectwindow.ui
+        opengl/openglwindow.h
+        opengl/openglwindow.cpp
+        test/trianglewindow.h
+        test/trianglewindow.cpp
+        utils/camera.h
+        utils/camera.cpp
+        utils/shader.h
+        utils/shader.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -46,6 +55,7 @@ else()
 endif()
 
 target_link_libraries(Stellar-Surfers PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Stellar-Surfers PRIVATE Qt6::OpenGL)
 
 set_target_properties(Stellar-Surfers PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -62,3 +72,9 @@ install(TARGETS Stellar-Surfers
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Stellar-Surfers)
 endif()
+
+add_custom_command(
+        TARGET Stellar-Surfers POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_SOURCE_DIR}/shaders/
+                ${CMAKE_BINARY_DIR}/shaders/)
