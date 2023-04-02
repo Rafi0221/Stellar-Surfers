@@ -5,6 +5,7 @@
 #define REMOTESELECTOR_H
 
 #include <QtWidgets/qdialog.h>
+#include "ui_connectwindow.h"
 
 #include <QtBluetooth/qbluetoothaddress.h>
 #include <QtBluetooth/qbluetoothserviceinfo.h>
@@ -15,38 +16,35 @@ QT_FORWARD_DECLARE_CLASS(QListWidgetItem)
 
 QT_USE_NAMESPACE
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-    class RemoteSelector;
-}
-QT_END_NAMESPACE
 
-class RemoteSelector : public QDialog
+class RemoteSelector : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit RemoteSelector(const QBluetoothAddress &localAdapter, QWidget *parent = nullptr);
+    explicit RemoteSelector(const QBluetoothAddress &localAdapter, Ui_ConnectWindow* _ui);
     ~RemoteSelector();
 
     void startDiscovery(const QBluetoothUuid &uuid);
     void stopDiscovery();
-    QBluetoothServiceInfo service() const;
 
 private:
-    Ui::RemoteSelector *ui;
+    Ui_ConnectWindow* ui;
 
     QBluetoothServiceDiscoveryAgent *m_discoveryAgent;
     QBluetoothServiceInfo m_service;
     QMap<QListWidgetItem *, QBluetoothServiceInfo> m_discoveredServices;
 
+signals:
+    void createConnection(QBluetoothServiceInfo service);
+
 private slots:
     void serviceDiscovered(const QBluetoothServiceInfo &serviceInfo);
     void discoveryFinished();
-    void on_remoteDevices_itemActivated(QListWidgetItem *item);
-    void on_remoteDevices_itemClicked(QListWidgetItem *item);
-    void on_cancelButton_clicked();
-    void on_connectButton_clicked();
+    void deviceItemActivated(QListWidgetItem *item);
+    void deviceItemClicked(QListWidgetItem *item);
+    void cancelClicked();
+    void connectClicked();
 };
 
 #endif // REMOTESELECTOR_H

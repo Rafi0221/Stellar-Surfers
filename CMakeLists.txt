@@ -18,22 +18,15 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        #connect/connectwindow.h
-        #connect/connectwindow.cpp
         connect/connectwindow.ui
         connect/connectmanager.cpp
         connect/connectmanager.h
-      #  connect/chat.ui
         connect/client.cpp
         connect/client.h
         connect/server.cpp
         connect/server.h
-        connect/connectwindow.cpp
-        connect/connectwindow.h
-        connect/connectwindow.ui
         connect/remoteselector.cpp
         connect/remoteselector.h
-        connect/remoteselector.ui
         opengl/openglwindow.h
         opengl/openglwindow.cpp
         test/trianglewindow.h

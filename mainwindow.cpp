@@ -12,11 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->playButton, &QPushButton::clicked, this, &MainWindow::playClicked);
     connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::connectClicked);
     connect(ui->testButton, &QPushButton::clicked, this, &MainWindow::testClicked);
+
+    connectManager = new ConnectManager();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete connectManager;
 }
 
 void MainWindow::playClicked()
@@ -27,12 +30,7 @@ void MainWindow::playClicked()
 void MainWindow::connectClicked()
 {
     qDebug() << "connect";
-//    ConnectWindow* connectWindow = new ConnectWindow();
-//    connectWindow->setAttribute(Qt::WA_DeleteOnClose);
-//    connectWindow->show();
-    ConnectManager* chat = new ConnectManager();
-    chat->setAttribute(Qt::WA_DeleteOnClose);
-    chat->show();
+    connectManager->show();
 }
 
 void MainWindow::testClicked()

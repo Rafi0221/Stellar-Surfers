@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "connect/connectmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,5 +21,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    ConnectManager* connectManager;
 };
 #endif // MAINWINDOW_H

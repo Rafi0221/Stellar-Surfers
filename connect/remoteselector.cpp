@@ -2,17 +2,21 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "remoteselector.h"
-#include "ui_remoteselector.h"
+#include "ui_connectwindow.h"
 
 #include <QtBluetooth/qbluetoothlocaldevice.h>
 #include <QtBluetooth/qbluetoothservicediscoveryagent.h>
 
 QT_USE_NAMESPACE
 
-RemoteSelector::RemoteSelector(const QBluetoothAddress &localAdapter, QWidget *parent)
-    :   QDialog(parent), ui(new Ui::RemoteSelector)
+RemoteSelector::RemoteSelector(const QBluetoothAddress &localAdapter, Ui_ConnectWindow* _ui)
+
 {
-    ui->setupUi(this);
+    ui = _ui;
+    connect(ui->connectButton, &QPushButton::clicked, this, &RemoteSelector::connectClicked);
+    connect(ui->remoteDevices, &QListWidget::itemClicked, this, &RemoteSelector::deviceItemClicked);
+    // connect on double click?
+    //connect(ui->remoteDevices, &QListWidget::itemActivated, this, &RemoteSelector::deviceItemActivated);
 
     m_discoveryAgent = new QBluetoothServiceDiscoveryAgent(localAdapter);
 
@@ -24,7 +28,6 @@ RemoteSelector::RemoteSelector(const QBluetoothAddress &localAdapter, QWidget *p
 
 RemoteSelector::~RemoteSelector()
 {
-    delete ui;
     delete m_discoveryAgent;
 }
 
@@ -46,11 +49,7 @@ void RemoteSelector::stopDiscovery()
     if (m_discoveryAgent){
         m_discoveryAgent->stop();
     }
-}
-
-QBluetoothServiceInfo RemoteSelector::service() const
-{
-    return m_service;
+    ui->scanButton->setEnabled(true);
 }
 
 void RemoteSelector::serviceDiscovered(const QBluetoothServiceInfo &serviceInfo)
@@ -91,25 +90,28 @@ void RemoteSelector::serviceDiscovered(const QBluetoothServiceInfo &serviceInfo)
 
 void RemoteSelector::discoveryFinished()
 {
-    ui->status->setText(tr("Select the chat service to connect to."));
+    ui->status->setText(tr("Select the device to connect to."));
+    ui->scanButton->setEnabled(true);
 }
 
-void RemoteSelector::on_remoteDevices_itemActivated(QListWidgetItem *item)
+void RemoteSelector::deviceItemActivated(QListWidgetItem *item)
 {
     m_service = m_discoveredServices.value(item);
     if (m_discoveryAgent->isActive())
         m_discoveryAgent->stop();
 
-    accept();
+    qDebug() << "trying to create connection";
+    emit createConnection(m_service);
 }
 
-void RemoteSelector::on_remoteDevices_itemClicked(QListWidgetItem *)
+void RemoteSelector::deviceItemClicked(QListWidgetItem *)
 {
     ui->connectButton->setEnabled(true);
 }
 
-void RemoteSelector::on_connectButton_clicked()
+void RemoteSelector::connectClicked()
 {
+    qDebug() << "connect clicked";
     auto items = ui->remoteDevices->selectedItems();
     if (items.size()) {
         QListWidgetItem *item = items[0];
@@ -117,11 +119,13 @@ void RemoteSelector::on_connectButton_clicked()
         if (m_discoveryAgent->isActive())
             m_discoveryAgent->stop();
 
-        accept();
+        qDebug() << "trying to create connection2";
+        emit createConnection(m_service);
     }
 }
 
-void RemoteSelector::on_cancelButton_clicked()
+// not used
+void RemoteSelector::cancelClicked()
 {
-    reject();
+    //reject();
 }
