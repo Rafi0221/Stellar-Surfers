@@ -60,9 +60,9 @@ float Camera::GetRoll(){
 
 void Camera::UpdateCameraVectors(){
     QMatrix4x4 rotationMatrix;
-    rotationMatrix.rotate(qDegreesToRadians(Pitch), 1, 0, 0);
-    rotationMatrix.rotate(qDegreesToRadians(Yaw), 0, 1, 0);
-    rotationMatrix.rotate(qDegreesToRadians(Roll), 0, 0, 1);
+    rotationMatrix.rotate(Pitch, 1, 0, 0);
+    rotationMatrix.rotate(Yaw, 0, 1, 0);
+    rotationMatrix.rotate(Roll, 0, 0, 1);
 
     QVector3D front(0,0,1);
     QVector3D up(0,1,0);
