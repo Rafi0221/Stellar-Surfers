@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
         connect/remoteselector.h
         opengl/gl.h
         opengl/gl.cpp
+        opengl/gl.h
+        opengl/gl.cpp
         opengl/openglwindow.h
         opengl/openglwindow.cpp
         terrain/noisedterrain.h
