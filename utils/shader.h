@@ -3,9 +3,10 @@
 
 #include <string>
 
-#include <QOpenGLFunctions>
-
-class Shader
+#include <QVector3D>
+#include <QMatrix4x4>
+#include <QOpenGLFunctions_3_3_Core>
+class Shader : protected QOpenGLFunctions_3_3_Core
 {
 public:
     Shader(const std::string vertexPath, const std::string fragmentPath);

@@ -3,8 +3,11 @@
 
 #include <QOpenGLShaderProgram>
 #include "../opengl/openglwindow.h"
-#include "../utils/camera.h"
-#include "../utils/shader.h"
+
+class Camera;
+class Planet;
+class Shader;
+class TerrainFace;
 
 class TriangleWindow : public OpenGLWindow
 {
@@ -23,5 +26,12 @@ private:
 
     Camera *camera;
     Shader *shader;
+
+    unsigned int VAO, VBO;
+
+//    TerrainFace *face;
+    Planet *planet;
+
+    int counter = 0;
 };
 #endif // TRIANGLEWINDOW_H

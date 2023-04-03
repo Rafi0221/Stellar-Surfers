@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "openglwindow.h"
+#include "gl.h"
 
 #include <QOpenGLContext>
 #include <QOpenGLPaintDevice>
@@ -88,7 +89,7 @@ void OpenGLWindow::renderNow()
 
     m_context->makeCurrent(this);
     if (needsInitialize) {
-        initializeOpenGLFunctions();
+        GL::funcs.initializeOpenGLFunctions();
         initialize();
     }
 
@@ -110,4 +111,3 @@ void OpenGLWindow::setAnimating(bool animating)
         renderLater();
 }
 //! [5]
-
