@@ -27,12 +27,30 @@ set(PROJECT_SOURCES
         connect/server.h
         connect/remoteselector.cpp
         connect/remoteselector.h
+        opengl/gl.h
+        opengl/gl.cpp
         opengl/openglwindow.h
         opengl/openglwindow.cpp
+        terrain/noisedterrain.h
+        terrain/noisedterrain.cpp
+        terrain/planet.h
+        terrain/planet.cpp
+        terrain/sphericalterrain.h
+        terrain/sphericalterrain.cpp
+        terrain/terrainface.h
+        terrain/terrainface.cpp
+        terrain/terrainpatch.h
+        terrain/terrainpatch.cpp
+        terrain/terraintype.h
+        terrain/terraintype.cpp
+        terrain/quadtreenode.h
+        terrain/quadtreenode.cpp
         test/trianglewindow.h
         test/trianglewindow.cpp
         utils/camera.h
         utils/camera.cpp
+        utils/perlinnoise.h
+        utils/perlinnoise.cpp
         utils/shader.h
         utils/shader.cpp
 )
