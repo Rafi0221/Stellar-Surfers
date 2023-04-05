@@ -6,6 +6,7 @@
 
 #include <QtCore/qobject.h>
 
+#include <qbluetoothservicediscoveryagent.h>
 #include <QtBluetooth/qbluetoothserviceinfo.h>
 #include <QtBluetooth/qbluetoothsocket.h>
 
@@ -13,19 +14,19 @@ QT_FORWARD_DECLARE_CLASS(QBluetoothSocket)
 
 QT_USE_NAMESPACE
 
-//! [declaration]
 class Client : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Client(QObject *parent = nullptr);
+    explicit Client(const QString &name, const QBluetoothAddress &address, QObject *parent = nullptr);
     ~Client();
 
     void startClient(const QBluetoothServiceInfo &remoteService);
     void stopClient();
 
 public slots:
+    void serviceDiscovered(const QBluetoothServiceInfo&);
     void sendMessage(const QString &message);
 
 signals:
@@ -40,8 +41,8 @@ private slots:
     void onSocketErrorOccurred(QBluetoothSocket::SocketError);
 
 private:
+    QBluetoothServiceDiscoveryAgent *discoveryAgent;
     QBluetoothSocket *socket = nullptr;
 };
-//! [declaration]
 
 #endif // CLIENT_H

@@ -1,216 +1,116 @@
-// Copyright (C) 2017 The Qt Company Ltd.
+// Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "connectmanager.h"
-#include "remoteselector.h"
-#include "server.h"
+#include "ui_connectwindow.h"
 #include "client.h"
 
-#include <QCoreApplication>
-#include <QtCore/qdebug.h>
+#include <qbluetoothaddress.h>
+#include <qbluetoothdevicediscoveryagent.h>
+#include <qbluetoothlocaldevice.h>
 
-#include <QtBluetooth/qbluetoothdeviceinfo.h>
-#include <QtBluetooth/qbluetoothlocaldevice.h>
-#include <QtBluetooth/qbluetoothuuid.h>
+#include <QMenu>
+#include <QDebug>
 
-static const QLatin1String serviceUuid("e8e10f95-1a70-4b27-9ccf-02010264e9c8");
-
-
-ConnectManager::ConnectManager(QWidget *parent)
-    : QDialog(parent), ui(new Ui_ConnectWindow)
+static QColor colorForPairing(QBluetoothLocalDevice::Pairing pairing)
 {
-    //! [Construct UI]
+    return pairing == QBluetoothLocalDevice::Paired
+           || pairing == QBluetoothLocalDevice::AuthorizedPaired
+           ? QColor(Qt::green) : QColor(Qt::red);
+}
+
+ConnectManager::ConnectManager(QWidget *parent) :
+    QDialog(parent),
+    localDevice(new QBluetoothLocalDevice),
+    ui(new Ui_ConnectWindow)
+{
     ui->setupUi(this);
+    ui->stopScan->setVisible(false);
 
-    connect(ui->quitButton, &QPushButton::clicked, this, &ConnectManager::accept);
-    connect(ui->scanButton, &QPushButton::clicked, this, &ConnectManager::scanClicked);
-    connect(ui->sendButton, &QPushButton::clicked, this, &ConnectManager::sendClicked);
-    //! [Construct UI]
+    discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
 
-    localAdapters = QBluetoothLocalDevice::allDevices();
-    // selection of adapter if more than one available
-    // maybe we don't need this and currently isn't updated in RemoteSelector
-    if (localAdapters.size() < 2) {
-        ui->localAdapterBox->setVisible(false);
-    } else {
-        //we ignore more than two adapters
-        ui->localAdapterBox->setVisible(true);
-        ui->firstAdapter->setText(tr("Default (%1)", "%1 = Bluetooth address").
-                                  arg(localAdapters.at(0).address().toString()));
-        ui->secondAdapter->setText(localAdapters.at(1).address().toString());
-        ui->firstAdapter->setChecked(true);
-        connect(ui->firstAdapter, &QRadioButton::clicked, this, &ConnectManager::newAdapterSelected);
-        connect(ui->secondAdapter, &QRadioButton::clicked, this, &ConnectManager::newAdapterSelected);
-    }
+    connect(ui->scan, &QAbstractButton::clicked, this, &ConnectManager::startScan);
+    connect(ui->stopScan, &QAbstractButton::clicked, this, &ConnectManager::stopScan);
+    connect(ui->power, &QPushButton::clicked, this, &ConnectManager::powerClicked);
 
-    // make discoverable
-    if (!localAdapters.isEmpty()) {
-        QBluetoothLocalDevice adapter(localAdapters.at(0).address());
-        adapter.setHostMode(QBluetoothLocalDevice::HostDiscoverable);
-    } else {
-        qWarning("Local adapter is not found! The application might work incorrectly.");
-#ifdef Q_OS_WIN
-        // WinRT implementation does not support adapter information yet. So it
-        // will always return an empty list.
-        qWarning("If the adapter exists, make sure to pair the devices manually before launching"
-                 " the chat.");
-#endif
-    }
+    connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+            this, &ConnectManager::addDevice);
+    connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
+            this, &ConnectManager::scanFinished);
 
-    // we probably don't need server
-    //! [Create Chat Server]
-    server = new Server(this);
-    connect(server, QOverload<const QString &>::of(&Server::clientConnected),
-            this, &ConnectManager::clientConnected);
-    connect(server, QOverload<const QString &>::of(&Server::clientDisconnected),
-            this,  QOverload<const QString &>::of(&ConnectManager::clientDisconnected));
-    connect(server, &Server::messageReceived,
-            this,  &ConnectManager::showMessage);
-    connect(this, &ConnectManager::sendMessage, server, &Server::sendMessage);
-    server->startServer();
-    //! [Create Chat Server]
+    connect(ui->list, &QListWidget::itemActivated,
+            this, &ConnectManager::itemActivated);
 
-    //! [Get local device name]
-    localName = QBluetoothLocalDevice().name();
-    //! [Get local device name]
+    connect(localDevice, &QBluetoothLocalDevice::hostModeStateChanged,
+            this, &ConnectManager::hostModeStateChanged);
 
-    const QBluetoothAddress adapter = localAdapters.isEmpty() ?
-                                           QBluetoothAddress() :
-                                           localAdapters.at(currentAdapterIndex).address();
-    remoteSelector = new RemoteSelector(adapter, ui);
-    connect(remoteSelector, &RemoteSelector::createConnection, this, &ConnectManager::createClient);
+    hostModeStateChanged(localDevice->hostMode());
 }
 
 ConnectManager::~ConnectManager()
 {
-    qDeleteAll(clients);
-    delete server;
-    delete remoteSelector;
+    delete discoveryAgent;
 }
 
-// used only by server
-//! [clientConnected clientDisconnected]
-void ConnectManager::clientConnected(const QString &name)
+void ConnectManager::addDevice(const QBluetoothDeviceInfo &info)
 {
-    ui->chat->insertPlainText(QString::fromLatin1("%1 has connected.\n").arg(name));
-}
-
-// used only by server
-void ConnectManager::clientDisconnected(const QString &name)
-{
-    ui->chat->insertPlainText(QString::fromLatin1("%1 has disconected.\n").arg(name));
-}
-//! [clientConnected clientDisconnected]
-
-//! [connected]
-void ConnectManager::connected(const QString &name)
-{
-    ui->chat->insertPlainText(QString::fromLatin1("Joined chat with %1.\n").arg(name));
-}
-//! [connected]
-
-// currently unused (for multiple adapters)
-void ConnectManager::newAdapterSelected()
-{
-    const int newAdapterIndex = adapterFromUserSelection();
-    if (currentAdapterIndex != newAdapterIndex) {
-        server->stopServer();
-        currentAdapterIndex = newAdapterIndex;
-        const QBluetoothHostInfo info = localAdapters.at(currentAdapterIndex);
-        QBluetoothLocalDevice adapter(info.address());
-        adapter.setHostMode(QBluetoothLocalDevice::HostDiscoverable);
-        server->startServer(info.address());
-        localName = info.name();
+    const QString label = info.address().toString() + u' ' + info.name();
+    const auto items = ui->list->findItems(label, Qt::MatchExactly);
+    if (items.isEmpty()) {
+        QListWidgetItem *item = new QListWidgetItem(label);
+        QBluetoothLocalDevice::Pairing pairingStatus = localDevice->pairingStatus(info.address());
+        item->setForeground(colorForPairing(pairingStatus));
+        ui->list->addItem(item);
     }
 }
 
-// currently unused (for multiple adapters)
-int ConnectManager::adapterFromUserSelection() const
+void ConnectManager::startScan()
 {
-    int result = 0;
-    QBluetoothAddress newAdapter = localAdapters.at(0).address();
-
-    if (ui->secondAdapter->isChecked()) {
-        newAdapter = localAdapters.at(1).address();
-        result = 1;
-    }
-    return result;
+    discoveryAgent->start();
+    ui->scan->setVisible(false);
+    ui->stopScan->setVisible(true);
 }
 
-void ConnectManager::reactOnSocketError(const QString &error)
+void ConnectManager::stopScan()
 {
-    ui->chat->insertPlainText(QString::fromLatin1("%1\n").arg(error));
+    discoveryAgent->stop();
+    scanFinished();
 }
 
-//! [clientDisconnected]
-void ConnectManager::clientDisconnected()
+void ConnectManager::scanFinished()
 {
-    Client *client = qobject_cast<Client *>(sender());
-    if (client) {
-        clients.removeOne(client);
-        client->deleteLater();
-    }
-}
-//! [clientDisconnected]
-
-//! [Connect to remote service]
-void ConnectManager::scanClicked()
-{
-    ui->scanButton->setEnabled(false);
-
-    remoteSelector->startDiscovery(QBluetoothUuid(serviceUuid));
-}
-//! [Connect to remote service]
-
-void ConnectManager::createClient(QBluetoothServiceInfo service)
-{
-    qDebug() << "Connecting to service 2" << service.serviceName()
-             << "on" << service.device().name();
-
-    // Create client
-    qDebug() << "Going to create client";
-    Client *client = new Client(this);
-qDebug() << "Connecting...";
-
-    connect(client, &Client::messageReceived,
-            this, &ConnectManager::showMessage);
-    connect(client, &Client::disconnected,
-            this, QOverload<>::of(&ConnectManager::clientDisconnected));
-    connect(client, QOverload<const QString &>::of(&Client::connected),
-            this, &ConnectManager::connected);
-    connect(client, &Client::socketErrorOccurred,
-            this, &ConnectManager::reactOnSocketError);
-    connect(this, &ConnectManager::sendMessage, client, &Client::sendMessage);
-qDebug() << "Start client";
-    client->startClient(service);
-
-    clients.append(client);
-
-    ui->scanButton->setEnabled(true);
+    ui->scan->setVisible(true);
+    ui->stopScan->setVisible(false);
 }
 
-//! [sendClicked]
-void ConnectManager::sendClicked()
+void ConnectManager::itemActivated(QListWidgetItem *item)
 {
-    ui->sendButton->setEnabled(false);
-    ui->sendText->setEnabled(false);
+    const QString text = item->text();
+    const auto index = text.indexOf(' ');
+    if (index == -1)
+        return;
 
-    showMessage(localName, ui->sendText->text());
-    emit sendMessage(ui->sendText->text());
+    QBluetoothAddress address(text.left(index));
+    QString name(text.mid(index + 1));
 
-    ui->sendText->clear();
-
-    ui->sendText->setEnabled(true);
-    ui->sendButton->setEnabled(true);
-    ui->sendText->setFocus();
+    if (client != nullptr)
+        delete client;
+    client = new Client(name, address);
 }
-//! [sendClicked]
 
-//! [showMessage]
-void ConnectManager::showMessage(const QString &sender, const QString &message)
+void ConnectManager::powerClicked(bool clicked)
 {
-    qDebug() << QString::fromLatin1("message %1: %2\n").arg(sender, message);
-    ui->chat->insertPlainText(QString::fromLatin1("%1: %2\n").arg(sender, message));
-    ui->chat->ensureCursorVisible();
+    if (clicked)
+        localDevice->powerOn();
+    else
+        localDevice->setHostMode(QBluetoothLocalDevice::HostPoweredOff);
 }
-//! [showMessage]
+
+void ConnectManager::hostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
+{
+    ui->power->setChecked(mode != QBluetoothLocalDevice::HostPoweredOff);;
+
+    const bool on = mode != QBluetoothLocalDevice::HostPoweredOff;
+    ui->scan->setEnabled(on);
+}
+

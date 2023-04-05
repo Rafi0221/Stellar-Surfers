@@ -23,10 +23,6 @@ set(PROJECT_SOURCES
         connect/connectmanager.h
         connect/client.cpp
         connect/client.h
-        connect/server.cpp
-        connect/server.h
-        connect/remoteselector.cpp
-        connect/remoteselector.h
         opengl/gl.h
         opengl/gl.cpp
         opengl/gl.h

@@ -1,60 +1,45 @@
-// Copyright (C) 2017 The Qt Company Ltd.
+// Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-#ifndef CONNECTMANAGER_H
-#define CONNECTMANAGER_H
 
-#include "ui_connectwindow.h"
-#include "remoteselector.h"
+#ifndef DEVICE_H
+#define DEVICE_H
 
-#include <QtWidgets/qdialog.h>
+#include <qbluetoothlocaldevice.h>
+#include "client.h"
 
-#include <QtBluetooth/qbluetoothhostinfo.h>
-#include <QBluetoothServiceInfo>
+#include <QDialog>
+
+QT_FORWARD_DECLARE_CLASS(QBluetoothDeviceDiscoveryAgent)
+QT_FORWARD_DECLARE_CLASS(QBluetoothDeviceInfo)
+QT_FORWARD_DECLARE_CLASS(QListWidgetItem)
+
+QT_FORWARD_DECLARE_CLASS(Ui_ConnectWindow)
 
 QT_USE_NAMESPACE
-
-class Server;
-class Client;
-
-class ConnectManager : public QDialog
+    
+    class ConnectManager : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ConnectManager(QWidget *parent = nullptr);
+    ConnectManager(QWidget *parent = nullptr);
     ~ConnectManager();
 
-signals:
-    void sendMessage(const QString &message);
-
 public slots:
-    void createClient(QBluetoothServiceInfo service);
-
+    void addDevice(const QBluetoothDeviceInfo&);
+    void powerClicked(bool clicked);
 private slots:
-    void scanClicked();
-    void sendClicked();
-
-    void showMessage(const QString &sender, const QString &message);
-
-    void clientConnected(const QString &name);
-    void clientDisconnected(const QString &name);
-    void clientDisconnected();
-    void connected(const QString &name);
-    void reactOnSocketError(const QString &error);
-
-    void newAdapterSelected();
+    void startScan();
+    void stopScan();
+    void scanFinished();
+    void itemActivated(QListWidgetItem *item);
+    void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
 
 private:
-    int adapterFromUserSelection() const;
-    int currentAdapterIndex = 0;
+    QBluetoothDeviceDiscoveryAgent *discoveryAgent;
+    QBluetoothLocalDevice *localDevice;
     Ui_ConnectWindow *ui;
-
-    RemoteSelector *remoteSelector;
-    Server *server;
-    QList<Client *> clients;
-    QList<QBluetoothHostInfo> localAdapters;
-
-    QString localName;
+    Client *client = nullptr;
 };
 
-#endif // CONNECTMANAGER_H
+#endif
