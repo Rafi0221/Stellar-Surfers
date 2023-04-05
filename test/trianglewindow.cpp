@@ -2,6 +2,7 @@
 
 #include <QScreen>
 #include "../opengl/gl.h"
+#include "../skybox/skybox.h"
 #include "../terrain/noisedterrain.h"
 #include "../terrain/planet.h"
 #include "../terrain/terrainface.h"
@@ -16,10 +17,12 @@ void TriangleWindow::initialize()
 
     shader = new Shader("shaders/testShader.vs", "shaders/testShader.fs");
     GL::terrainShader = new Shader("shaders/terrainShader.vs", "shaders/terrainShader.fs");
-
+    GL::skyboxShader = new Shader("shaders/skyboxShader.vs", "shaders/skyboxShader.fs");
 //    face = new TerrainFace(new SphericalTerrain());
     planet = new Planet(new NoisedTerrain());
     planet->SetPosition(QVector3D(0,0,1.5));
+
+    skybox = new SkyBox();
 
     GLfloat vertices[] = {
         -0.5f, -0.5f, -0.5f,
@@ -161,44 +164,51 @@ void TriangleWindow::render()
 //    camera->SetYaw(camera->GetYaw() + 20);
 //    camera->SetRoll(camera->GetRoll() + 20);
 
-    camera->SetPitch(45);
+//    camera->SetPitch(camera->GetPitch() + 2);
+    camera->SetYaw(camera->GetYaw() + 0.6);
     camera->SetPosition(QVector3D(0, 1.5, 0));
 
     counter++;
+    QMatrix4x4 projection;
+    projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+    QMatrix4x4 view = camera->GetViewMatrix();
+    QMatrix3x3 view_ = view.normalMatrix();
+//    view_.normalMatrix();
+    QMatrix4x4 tmp(view_);
+    GL::skyboxShader->use();
+
+    GL::skyboxShader->setMat4("projection", projection);
+    GL::skyboxShader->setMat4("view", tmp);
+
+    // skybox->Render();
+
+    GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
     shader->use();
-    QMatrix4x4 projection_;
-    projection_.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-    shader->setMat4("projection", projection_);
+
+    shader->setMat4("projection", projection);
+    shader->setMat4("view", view);
 
     QMatrix4x4 model_;
     model_.translate(0, 0, (float)counter/400);
     model_.scale(0.05);
     shader->setMat4("model", model_);
 
-    QMatrix4x4 view_ = camera->GetViewMatrix();
-    shader->setMat4("view", view_);
-
-
     GL::funcs.glBindVertexArray(VAO);
     GL::funcs.glDrawArrays(GL_TRIANGLES, 0, 36);
 
     GL::terrainShader->use();
-    QMatrix4x4 projection;
-    projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
     GL::terrainShader->setMat4("projection", projection);
 
     QMatrix4x4 model;
 
     model.translate(0,0,1.5);
-
     GL::terrainShader->setMat4("model", model);
 
-    QMatrix4x4 view = camera->GetViewMatrix();
     GL::terrainShader->setMat4("view", view);
 
     planet->Update(QVector3D(0,0,(float)counter/400));
     planet->Render();
-//    face->Update(camera->GetPosition() + QVector3D(0,0,(float)counter/200),model);
-//    face->Render();
 }

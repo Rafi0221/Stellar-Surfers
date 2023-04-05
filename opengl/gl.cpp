@@ -6,3 +6,4 @@
 
 QOpenGLFunctions_3_3_Core GL::funcs;
 Shader *GL::terrainShader;
+Shader *GL::skyboxShader;

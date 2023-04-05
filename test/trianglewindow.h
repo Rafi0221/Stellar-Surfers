@@ -8,6 +8,7 @@ class Camera;
 class Planet;
 class Shader;
 class TerrainFace;
+class SkyBox;
 
 class TriangleWindow : public OpenGLWindow
 {
@@ -31,7 +32,7 @@ private:
 
 //    TerrainFace *face;
     Planet *planet;
-
+    SkyBox *skybox;
     int counter = 0;
 };
 #endif // TRIANGLEWINDOW_H

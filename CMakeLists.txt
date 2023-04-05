@@ -33,6 +33,8 @@ set(PROJECT_SOURCES
         opengl/gl.cpp
         opengl/openglwindow.h
         opengl/openglwindow.cpp
+        skybox/skybox.h
+        skybox/skybox.cpp
         terrain/noisedterrain.h
         terrain/noisedterrain.cpp
         terrain/planet.h
