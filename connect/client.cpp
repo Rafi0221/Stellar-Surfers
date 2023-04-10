@@ -13,6 +13,7 @@
 #include <QtBluetooth/qbluetoothsocket.h>
 
 static const QString serviceName("Broadcast Service");
+static const QLatin1String serviceUuid("e8e10f95-1a70-4b27-9ccf-02010264e9c8");
 
 Client::Client(const QString &name, const QBluetoothAddress &address, QObject *parent)
     :   QObject(parent)
@@ -20,14 +21,16 @@ Client::Client(const QString &name, const QBluetoothAddress &address, QObject *p
     QBluetoothLocalDevice localDevice;
     QBluetoothAddress adapterAddress = localDevice.address();
 
-    discoveryAgent = new QBluetoothServiceDiscoveryAgent(adapterAddress);
+    startClient(address);
 
-    discoveryAgent->setRemoteAddress(address);
+//    discoveryAgent = new QBluetoothServiceDiscoveryAgent(adapterAddress);
 
-    connect(discoveryAgent, &QBluetoothServiceDiscoveryAgent::serviceDiscovered,
-            this, &Client::serviceDiscovered);
+//    discoveryAgent->setRemoteAddress(address);
 
-    discoveryAgent->start();
+//    connect(discoveryAgent, &QBluetoothServiceDiscoveryAgent::serviceDiscovered,
+//            this, &Client::serviceDiscovered);
+
+//    discoveryAgent->start();
 }
 
 Client::~Client()
@@ -39,7 +42,7 @@ Client::~Client()
 
 void Client::serviceDiscovered(const QBluetoothServiceInfo &info)
 {
-#if 0
+#if 1
     qDebug() << "Discovered service on"
              << info.device().name() << info.device().address().toString();
     qDebug() << "\tService name:" << info.serviceName();
@@ -57,6 +60,23 @@ void Client::serviceDiscovered(const QBluetoothServiceInfo &info)
     if(info.serviceName() == serviceName){
         startClient(info);
     }
+}
+
+void Client::startClient(const QBluetoothAddress &address)
+{
+    if (socket)
+        return;
+
+    QBluetoothUuid uuid = QBluetoothUuid(serviceUuid);
+    socket = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
+    qDebug() << "Create socket";
+    socket->connectToService(address, uuid);
+    qDebug() << "ConnectToService done";
+
+    connect(socket, &QBluetoothSocket::readyRead, this, &Client::readSocket);
+    connect(socket, &QBluetoothSocket::connected, this, QOverload<>::of(&Client::connected));
+    connect(socket, &QBluetoothSocket::disconnected, this, &Client::disconnected);
+    connect(socket, &QBluetoothSocket::errorOccurred, this, &Client::onSocketErrorOccurred);
 }
 
 void Client::startClient(const QBluetoothServiceInfo &remoteService)

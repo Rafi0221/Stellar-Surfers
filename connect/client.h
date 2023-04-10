@@ -23,6 +23,7 @@ public:
     ~Client();
 
     void startClient(const QBluetoothServiceInfo &remoteService);
+    void startClient(const QBluetoothAddress &address);
     void stopClient();
 
 public slots:
