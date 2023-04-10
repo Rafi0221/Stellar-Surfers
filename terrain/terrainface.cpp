@@ -14,10 +14,10 @@ TerrainFace::~TerrainFace(){
     delete root;
 }
 
-void TerrainFace::Update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
-    root->Update(cameraPosition, modelMatrix);
+void TerrainFace::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
+    root->update(cameraPosition, modelMatrix);
 }
 
-void TerrainFace::Render(){
-    root->Render();
+void TerrainFace::render(){
+    root->render();
 }

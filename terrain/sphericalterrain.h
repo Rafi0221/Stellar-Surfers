@@ -7,10 +7,12 @@ class QVector3D;
 
 class SphericalTerrain : public TerrainType
 {
+private:
+    float radius;
 public:
-    SphericalTerrain();
+    SphericalTerrain(float radius = 1.0f);
 
-    virtual float TerrainHeight(QVector3D position) override;
+    virtual float terrainHeight(QVector3D position) override;
 };
 
 #endif // SPHERICALTERRAIN_H

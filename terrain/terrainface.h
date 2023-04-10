@@ -18,8 +18,8 @@ public:
     TerrainFace(TerrainType *type, QMatrix4x4 relativeRotation);
     ~TerrainFace();
 
-    void Update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
-    void Render();
+    void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
+    void render();
 };
 
 #endif // TERRAINFACE_H

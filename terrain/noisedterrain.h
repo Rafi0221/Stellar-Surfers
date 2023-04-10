@@ -5,15 +5,16 @@
 #include "terraintype.h"
 
 class QVector3D;
-class PerlinNoise;
+class Noise;
 
 class NoisedTerrain : public TerrainType
 {
 private:
-    PerlinNoise *noiseFn;
+    Noise *noise;
+    float radius;
 public:
-    NoisedTerrain();
-    virtual float TerrainHeight(QVector3D position) override;
+    NoisedTerrain(float radius = 1.0f);
+    virtual float terrainHeight(QVector3D position) override;
 };
 
 #endif // NOISEDTERRAIN_H

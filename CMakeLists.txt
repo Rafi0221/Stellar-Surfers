@@ -49,10 +49,15 @@ set(PROJECT_SOURCES
         test/trianglewindow.cpp
         utils/camera.h
         utils/camera.cpp
+        utils/layeredperlinnoise.h
+        utils/layeredperlinnoise.cpp
+        utils/noise.h
         utils/perlinnoise.h
         utils/perlinnoise.cpp
         utils/shader.h
         utils/shader.cpp
+        utils/shadermanager.h
+        utils/shadermanager.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

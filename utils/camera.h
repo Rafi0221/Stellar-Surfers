@@ -9,33 +9,32 @@ class Camera
 public:
     Camera();
 
-    QMatrix4x4 GetViewMatrix();
+    QMatrix4x4 getViewMatrix();
 
-    void SetPosition(QVector3D position);
-    QVector3D GetPosition();
+    void setPosition(QVector3D position);
+    QVector3D getPosition();
 
-    QVector3D GetFront();
+    QVector3D getFront();
 
-    void SetYaw(float yaw);
-    float GetYaw();
+    void setYaw(float yaw);
+    float getYaw();
 
-    void SetPitch(float pitch);
-    float GetPitch();
+    void setPitch(float pitch);
+    float getPitch();
 
-    void SetRoll(float roll);
-    float GetRoll();
+    void setRoll(float roll);
+    float getRoll();
 private:
-    QVector3D Position;
-    QVector3D Front;
-    QVector3D Up;
-    QVector3D Right;
-    QVector3D WorldUp;
+    QVector3D position;
+    QVector3D front;
+    QVector3D up;
+    QVector3D right;
 
-    float Yaw;
-    float Pitch;
-    float Roll;
+    float yaw;
+    float pitch;
+    float roll;
 
-    void UpdateCameraVectors();
+    void updateCameraVectors();
 };
 
 #endif // CAMERA_H

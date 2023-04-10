@@ -66,7 +66,7 @@ SkyBox::SkyBox()
     GL::funcs.glBindVertexArray(0);
 }
 
-void SkyBox::Render(){
+void SkyBox::render(){
     GL::funcs.glBindVertexArray(VAO);
     GL::funcs.glDrawArrays(GL_TRIANGLES, 0, 36);
 }

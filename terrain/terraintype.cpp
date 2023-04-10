@@ -7,7 +7,7 @@ TerrainType::TerrainType()
 
 }
 
-QVector3D TerrainType::CubeToSphere(QVector3D position){
+QVector3D TerrainType::cubeToSphere(QVector3D position){
     float x2 = position.x() * position.x();
     float y2 = position.y() * position.y();
     float z2 = position.z() * position.z();

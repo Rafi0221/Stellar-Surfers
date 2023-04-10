@@ -35,17 +35,17 @@ private:
 
     QMatrix4x4 relativeRotation;
 
-    bool IsLeaf();
-    void Merge();
-    void Split();
+    bool isLeaf();
+    void merge();
+    void split();
 
     int counter = 0;
 public:
     QuadTreeNode(TerrainFace *face, TerrainType *type, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
     ~QuadTreeNode();
 
-    void Update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
-    void Render();
+    void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
+    void render();
 
 };
 
