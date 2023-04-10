@@ -20,11 +20,13 @@ private:
     TerrainFace *faces[6];
 
     QVector3D position;
+    QVector3D rotation;
 public:
-    Planet(TerrainType *type);
-    void Update(QVector3D cameraPosition);
-    void Render();
-    void SetPosition(QVector3D position);
+    Planet(float radius = 1.0f);
+    void update(QVector3D cameraPosition);
+    void render();
+    void setPosition(QVector3D position);
+    void setRotation(QVector3D rotation);
 };
 
 #endif // PLANET_H

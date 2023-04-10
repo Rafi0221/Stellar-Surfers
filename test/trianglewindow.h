@@ -26,11 +26,9 @@ private:
     int m_frame = 0;
 
     Camera *camera;
-    Shader *shader;
 
     unsigned int VAO, VBO;
 
-//    TerrainFace *face;
     Planet *planet;
     SkyBox *skybox;
     int counter = 0;

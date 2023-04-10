@@ -27,15 +27,15 @@ private:
     float vertices[PATCH_SIZE * PATCH_SIZE * 6];
     unsigned int indices[(PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6];
 
-    void CalculateBoundingSphere();
+    void calculateBoundingSphere();
 public:
     TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float scale = 2.0, QVector2D relativePosition = QVector2D(-1,-1));
     ~TerrainPatch();
 
-    QVector3D GetCenter();
+    QVector3D getCenter();
     float getRadius();
 
-    void Render();
+    void render();
 };
 
 #endif // TERRAINPATCH_H

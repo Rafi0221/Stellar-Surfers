@@ -9,18 +9,20 @@
 #include "../terrain/sphericalterrain.h"
 #include "../utils/camera.h"
 #include "../utils/shader.h"
-
+#include "../utils/shadermanager.h"
 
 void TriangleWindow::initialize()
 {
     camera = new Camera();
 
-    shader = new Shader("shaders/testShader.vs", "shaders/testShader.fs");
-    GL::terrainShader = new Shader("shaders/terrainShader.vs", "shaders/terrainShader.fs");
-    GL::skyboxShader = new Shader("shaders/skyboxShader.vs", "shaders/skyboxShader.fs");
+//    shader = new Shader("shaders/testShader.vs", "shaders/testShader.fs");
+//    GL::terrainShader = new Shader("shaders/terrainShader.vs", "shaders/terrainShader.fs");
+//    GL::skyboxShader = new Shader("shaders/skyboxShader.vs", "shaders/skyboxShader.fs");
 //    face = new TerrainFace(new SphericalTerrain());
-    planet = new Planet(new NoisedTerrain());
-    planet->SetPosition(QVector3D(0,0,1.5));
+    ShaderManager::initialize();
+
+    planet = new Planet(5.0f);
+    planet->setPosition(QVector3D(0,0,15));
 
     skybox = new SkyBox();
 
@@ -113,6 +115,7 @@ void TriangleWindow::initialize()
     };
 
     GLfloat data[36*6];
+
     for(int i = 0; i < 36; i++){
         data[i*6] = vertices[i*3];
         data[i*6+1] = vertices[i*3+1];
@@ -164,51 +167,51 @@ void TriangleWindow::render()
 //    camera->SetYaw(camera->GetYaw() + 20);
 //    camera->SetRoll(camera->GetRoll() + 20);
 
-//    camera->SetPitch(camera->GetPitch() + 2);
-    camera->SetYaw(camera->GetYaw() + 0.6);
-    camera->SetPosition(QVector3D(0, 1.5, 0));
+//    camera->setPitch(45);
+//    camera->SetYaw(camera->GetYaw() + 0.6);
+//    camera->setPosition(QVector3D(0.0, 15, 0));
 
     counter++;
     QMatrix4x4 projection;
     projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
-    QMatrix4x4 view = camera->GetViewMatrix();
+    QMatrix4x4 view = camera->getViewMatrix();
     QMatrix3x3 view_ = view.normalMatrix();
 //    view_.normalMatrix();
     QMatrix4x4 tmp(view_);
-    GL::skyboxShader->use();
+    Shader *skyboxShader = ShaderManager::getShader("skyboxShader");
+    skyboxShader->use();
 
-    GL::skyboxShader->setMat4("projection", projection);
-    GL::skyboxShader->setMat4("view", tmp);
+    skyboxShader->setMat4("projection", projection);
+    skyboxShader->setMat4("view", tmp);
 
-    // skybox->Render();
+//    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
-    shader->use();
+//    Shader *testShader = ShaderManager::getShader("testShader");
+//    testShader->use();
 
-    shader->setMat4("projection", projection);
-    shader->setMat4("view", view);
+//    testShader->setMat4("projection", projection);
+//    testShader->setMat4("view", view);
 
-    QMatrix4x4 model_;
-    model_.translate(0, 0, (float)counter/400);
-    model_.scale(0.05);
-    shader->setMat4("model", model_);
+//    QMatrix4x4 model_;
+//    model_.translate(0, 0, (float)counter/400);
+//    model_.scale(0.05);
+//    testShader->setMat4("model", model_);
 
-    GL::funcs.glBindVertexArray(VAO);
-    GL::funcs.glDrawArrays(GL_TRIANGLES, 0, 36);
+//    GL::funcs.glBindVertexArray(VAO);
+//    GL::funcs.glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    GL::terrainShader->use();
-
-    GL::terrainShader->setMat4("projection", projection);
+    Shader *terrainShader = ShaderManager::getShader("terrainShader");
+    terrainShader->use();
+    terrainShader->setMat4("projection", projection);
 
     QMatrix4x4 model;
+    terrainShader->setMat4("view", view);
 
-    model.translate(0,0,1.5);
-    GL::terrainShader->setMat4("model", model);
-
-    GL::terrainShader->setMat4("view", view);
-
-    planet->Update(QVector3D(0,0,(float)counter/400));
-    planet->Render();
+    planet->setRotation(QVector3D(0,(float)counter/20,0));
+//    planet->update(QVector3D(0,0,(float)counter/400));
+    planet->update(QVector3D(0,0,8));
+    planet->render();
 }

@@ -35,12 +35,12 @@ QuadTreeNode::~QuadTreeNode(){
 //    delete patch;
 }
 
-bool QuadTreeNode::IsLeaf(){
+bool QuadTreeNode::isLeaf(){
     return (children[0] == nullptr);
 }
 
-void QuadTreeNode::Merge(){
-    if(IsLeaf())
+void QuadTreeNode::merge(){
+    if(isLeaf())
         return;
     for(int i = 0; i < 4; i++){
         delete children[i];
@@ -48,8 +48,8 @@ void QuadTreeNode::Merge(){
     }
 }
 
-void QuadTreeNode::Split(){
-    if(!IsLeaf())
+void QuadTreeNode::split(){
+    if(!isLeaf())
         return;
     children[NORTH_EAST] = new QuadTreeNode(face, this->type, this->relativeRotation, this, relativePosition);
     children[NORTH_WEST] = new QuadTreeNode(face, this->type, this->relativeRotation, this, relativePosition + QVector2D(scale / 2.0 ,0));
@@ -57,28 +57,34 @@ void QuadTreeNode::Split(){
     children[SOUTH_EAST] = new QuadTreeNode(face, this->type, this->relativeRotation, this, relativePosition + QVector2D(0, scale / 2.0));
 }
 
-void QuadTreeNode::Update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
-    QVector3D center = patch->GetCenter();
+void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
+    QVector3D center = patch->getCenter();
     float distance = modelMatrix.map(center).distanceToPoint(cameraPosition);
-
-    if(distance <= (patch->getRadius() * 1.5) && depth <= 5)
-        Split();
+//    qDebug() << center;
+//    qDebug() << center << " " << modelMatrix.map(center) << " " << distance << " " << patch->getRadius();
+//    if(isLeaf() && depth <= 2 && distance <= (patch->getRadius() * 1.5)){
+//        qDebug() << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
+//    }else if(isLeaf() && depth <= 2){
+//        qDebug() << ":(((    " << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
+//    }
+    if(distance <= (patch->getRadius() * 2) && depth <= 4)
+        split();
     else
-        Merge();
+        merge();
 
-    if(!IsLeaf()){
+    if(!isLeaf()){
         for(int i = 0; i < 4; i++){
-            children[i]->Update(cameraPosition, modelMatrix);
+            children[i]->update(cameraPosition, modelMatrix);
         }
     }
 }
 
-void QuadTreeNode::Render(){
-    if(IsLeaf()){
-        patch->Render();
+void QuadTreeNode::render(){
+    if(isLeaf()){
+        patch->render();
     }else{
         for(int i = 0; i < 4; i++){
-            children[i]->Render();
+            children[i]->render();
         }
     }
 }

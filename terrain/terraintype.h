@@ -8,8 +8,8 @@ class TerrainType
 public:
     TerrainType();
 
-    QVector3D CubeToSphere(QVector3D position);
-    virtual float TerrainHeight(QVector3D position) = 0;
+    QVector3D cubeToSphere(QVector3D position);
+    virtual float terrainHeight(QVector3D position) = 0;
 };
 
 #endif // TERRAINTYPE_H

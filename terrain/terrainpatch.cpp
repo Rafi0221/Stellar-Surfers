@@ -6,7 +6,7 @@
 
 #include <QOpenGLFunctions_3_3_Core>
 
-unsigned int ToID(int x, int y){
+unsigned int toID(int x, int y){
     return x * PATCH_SIZE + y;
 }
 
@@ -24,15 +24,15 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
 
             QVector3D pos(xPos, yPos, zPos);
             pos = this->relativeRotation.map(pos);
-            pos = type->CubeToSphere(pos) * type->TerrainHeight(pos);
+            pos = type->cubeToSphere(pos) * type->terrainHeight(pos);
 
-            this->vertices[ToID(x,y) * 6] = pos.x();
-            this->vertices[ToID(x,y) * 6 + 1] = pos.y();
-            this->vertices[ToID(x,y) * 6 + 2] = pos.z();
+            this->vertices[toID(x,y) * 6] = pos.x();
+            this->vertices[toID(x,y) * 6 + 1] = pos.y();
+            this->vertices[toID(x,y) * 6 + 2] = pos.z();
 
-            this->vertices[ToID(x,y) * 6 + 3] = 0.1 + 2 * (type->TerrainHeight(pos) - 0.8);
-            this->vertices[ToID(x,y) * 6 + 4] = 0.2;
-            this->vertices[ToID(x,y) * 6 + 5] = 0.9 - 2 * (type->TerrainHeight(pos) - 0.8);
+            this->vertices[toID(x,y) * 6 + 3] = 0.1 + 2 * (type->terrainHeight(pos) - 0.8);
+            this->vertices[toID(x,y) * 6 + 4] = 0.2;
+            this->vertices[toID(x,y) * 6 + 5] = 0.9 - 2 * (type->terrainHeight(pos) - 0.8);
 //            qDebug() << this->vertices[ToID(x,y) * 6 + 5];
         }
     }
@@ -40,13 +40,13 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
     int tmp = 0;
     for(int x = 0; x < PATCH_SIZE - 1; x++){
         for(int y = 0; y < PATCH_SIZE - 1; y++){
-            this->indices[tmp++] = ToID(x,y);
-            this->indices[tmp++] = ToID(x,y+1);
-            this->indices[tmp++] = ToID(x+1,y+1);
+            this->indices[tmp++] = toID(x,y);
+            this->indices[tmp++] = toID(x,y+1);
+            this->indices[tmp++] = toID(x+1,y+1);
 
-            this->indices[tmp++] = ToID(x,y);
-            this->indices[tmp++] = ToID(x+1,y+1);
-            this->indices[tmp++] = ToID(x+1,y);
+            this->indices[tmp++] = toID(x,y);
+            this->indices[tmp++] = toID(x+1,y+1);
+            this->indices[tmp++] = toID(x+1,y);
         }
     }
 
@@ -71,12 +71,11 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
 
     GL::funcs.glBindVertexArray(0);
 
-    CalculateBoundingSphere();
+    calculateBoundingSphere();
 }
 
 
-void TerrainPatch::Render(){
-    GL::terrainShader->use();
+void TerrainPatch::render(){
     GL::funcs.glBindVertexArray(VAO);
 //    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //    GL::funcs.glDrawElements(GL_TRIANGLES, (PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6, GL_UNSIGNED_INT, 0);
@@ -85,7 +84,7 @@ void TerrainPatch::Render(){
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-QVector3D TerrainPatch::GetCenter(){
+QVector3D TerrainPatch::getCenter(){
     return center;
 }
 
@@ -93,15 +92,15 @@ float TerrainPatch::getRadius(){
     return radius;
 }
 
-void TerrainPatch::CalculateBoundingSphere(){
+void TerrainPatch::calculateBoundingSphere(){
     center = QVector3D(0,0,0);
     for(int i = 0; i < PATCH_SIZE * PATCH_SIZE; i++){
-        center += QVector3D(vertices[i*3], vertices[i*3+1], vertices[i*3+2]);
+        center += QVector3D(vertices[i*6], vertices[i*6+1], vertices[i*6+2]);
     }
     center /= (float)(PATCH_SIZE * PATCH_SIZE);
 
     radius = 0;
     for(int i = 0; i < PATCH_SIZE * PATCH_SIZE; i++){
-        radius = std::max(radius, center.distanceToPoint(QVector3D(vertices[i*3], vertices[i*3+1], vertices[i*3+2])));
+        radius = std::max(radius, center.distanceToPoint(QVector3D(vertices[i*6], vertices[i*6+1], vertices[i*6+2])));
     }
 }

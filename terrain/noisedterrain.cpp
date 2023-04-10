@@ -2,16 +2,17 @@
 
 #include <QVector3D>
 
-#include "../utils/perlinnoise.h"
+#include "../utils/layeredperlinnoise.h"
 
-NoisedTerrain::NoisedTerrain()
+NoisedTerrain::NoisedTerrain(float radius)
 {
-    this->noiseFn = new PerlinNoise(2137);
+    this->radius = radius;
+    this->noise = new LayeredPerlinNoise();
 }
 
 
-float NoisedTerrain::TerrainHeight(QVector3D position){
-    float tmp = noiseFn->noise(position.x(), position.y(), position.z());
+float NoisedTerrain::terrainHeight(QVector3D position){
+    float tmp = noise->getValue(position.x(), position.y(), position.z());
     tmp = (tmp * 2.0) - 1.0;
-    return (1 + tmp * 0.2);
+    return (1 + tmp * 0.2) * radius;
 }

@@ -9,7 +9,7 @@ private:
 public:
     SkyBox();
 
-    void Render();
+    void render();
 };
 
 #endif // SKYBOX_H
