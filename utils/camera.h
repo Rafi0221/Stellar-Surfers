@@ -16,6 +16,8 @@ public:
 
     QVector3D getFront();
 
+    void move(float distance);
+
     void setYaw(float yaw);
     float getYaw();
 

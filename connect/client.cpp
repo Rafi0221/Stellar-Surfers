@@ -3,6 +3,8 @@
 
 #include "client.h"
 
+#include "../opengl/gl.h"
+
 #include <QtCore/qmetaobject.h>
 #include <qbluetoothaddress.h>
 #include <qbluetoothservicediscoveryagent.h>
@@ -107,8 +109,28 @@ void Client::readSocket()
         return;
 
     while (socket->canReadLine()) {
-        QByteArray line = socket->readLine().trimmed();
-        qDebug() << "received " << QString::fromUtf8(line.constData(), line.length());
+        QByteArray line = socket->readLine();
+        if(line.size() >= 13){
+            line = line.last(13);
+
+            const float* ptrFloat = reinterpret_cast<const float*>(line.constData());
+
+            GL::gyro.setX(*ptrFloat);
+            GL::gyro.setY(-(*(ptrFloat+1)));
+            GL::gyro.setZ(*(ptrFloat+2));
+            if(abs(GL::gyro.x()) > 1.0f){
+                GL::gyro.setX(0.0f);
+            }
+            if(abs(GL::gyro.y()) > 1.0f){
+                GL::gyro.setY(0.0f);
+            }
+            if(abs(GL::gyro.z()) > 1.0f){
+                GL::gyro.setZ(0.0f);
+            }
+//            qDebug() << *ptrFloat << " " << *(ptrFloat+1) << " " << *(ptrFloat+2);
+        }
+
+//        qDebug() << "received " << QString::fromUtf8(line.constData(), line.length());
         emit messageReceived(socket->peerName(),
                              QString::fromUtf8(line.constData(), line.length()));
     }

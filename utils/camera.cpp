@@ -30,6 +30,10 @@ QVector3D Camera::getFront(){
     return front;
 }
 
+void Camera::move(float distance){
+    position += front * distance;
+}
+
 void Camera::setYaw(float yaw){
     this->yaw = yaw;
     updateCameraVectors();
