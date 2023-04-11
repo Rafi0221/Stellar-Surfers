@@ -13,7 +13,7 @@
 #include <QtBluetooth/qbluetoothsocket.h>
 
 static const QString serviceName("Broadcast Service");
-static const QLatin1String serviceUuid("e8e10f95-1a70-4b27-9ccf-02010264e9c8");
+static const QLatin1String serviceUuid("f296bf37-5412-460d-954d-2fcc31b072c0");
 
 Client::Client(const QString &name, const QBluetoothAddress &address, QObject *parent)
     :   QObject(parent)
