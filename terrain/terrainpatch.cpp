@@ -24,16 +24,26 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
 
             QVector3D pos(xPos, yPos, zPos);
             pos = this->relativeRotation.map(pos);
-            pos = type->cubeToSphere(pos) * type->terrainHeight(pos);
 
-            this->vertices[toID(x,y) * 6] = pos.x();
-            this->vertices[toID(x,y) * 6 + 1] = pos.y();
-            this->vertices[toID(x,y) * 6 + 2] = pos.z();
+            QVector3D cubePos = type->cubeToSphere(pos);
+            pos = cubePos * type->terrainHeight(pos);
 
-            this->vertices[toID(x,y) * 6 + 3] = 0.1 + 2 * (type->terrainHeight(pos) - 0.8);
-            this->vertices[toID(x,y) * 6 + 4] = 0.2;
-            this->vertices[toID(x,y) * 6 + 5] = 0.9 - 2 * (type->terrainHeight(pos) - 0.8);
+            this->vertices[toID(x,y) * DATA_SIZE] = pos.x();
+            this->vertices[toID(x,y) * DATA_SIZE + 1] = pos.y();
+            this->vertices[toID(x,y) * DATA_SIZE + 2] = pos.z();
+
+            this->vertices[toID(x,y) * DATA_SIZE + 3] = cubePos.x();
+            this->vertices[toID(x,y) * DATA_SIZE + 4] = cubePos.y();
+            this->vertices[toID(x,y) * DATA_SIZE + 5] = cubePos.z();
+
+//            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.1 + 2 * (type->terrainHeight(pos) - 0.8);
+//            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.2;
+//            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.9 - 2 * (type->terrainHeight(pos) - 0.8);
 //            qDebug() << this->vertices[ToID(x,y) * 6 + 5];
+
+            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.8;
+            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.8;
+            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.8;
         }
     }
 
@@ -62,10 +72,12 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
     GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     GL::funcs.glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(this->indices), this->indices, GL_STATIC_DRAW);
 
-    GL::funcs.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    GL::funcs.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)0);
     GL::funcs.glEnableVertexAttribArray(0);
-    GL::funcs.glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    GL::funcs.glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)(3* sizeof(float)));
     GL::funcs.glEnableVertexAttribArray(1);
+    GL::funcs.glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)(6* sizeof(float)));
+    GL::funcs.glEnableVertexAttribArray(2);
 
     GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -77,8 +89,6 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
 
 void TerrainPatch::render(){
     GL::funcs.glBindVertexArray(VAO);
-//    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    GL::funcs.glDrawElements(GL_TRIANGLES, (PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6, GL_UNSIGNED_INT, 0);
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     GL::funcs.glDrawElements(GL_TRIANGLES, (PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6, GL_UNSIGNED_INT, 0);
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -95,12 +105,12 @@ float TerrainPatch::getRadius(){
 void TerrainPatch::calculateBoundingSphere(){
     center = QVector3D(0,0,0);
     for(int i = 0; i < PATCH_SIZE * PATCH_SIZE; i++){
-        center += QVector3D(vertices[i*6], vertices[i*6+1], vertices[i*6+2]);
+        center += QVector3D(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2]);
     }
     center /= (float)(PATCH_SIZE * PATCH_SIZE);
 
     radius = 0;
     for(int i = 0; i < PATCH_SIZE * PATCH_SIZE; i++){
-        radius = std::max(radius, center.distanceToPoint(QVector3D(vertices[i*6], vertices[i*6+1], vertices[i*6+2])));
+        radius = std::max(radius, center.distanceToPoint(QVector3D(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2])));
     }
 }

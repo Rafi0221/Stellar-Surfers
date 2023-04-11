@@ -167,9 +167,9 @@ void TriangleWindow::render()
 //    camera->SetYaw(camera->GetYaw() + 20);
 //    camera->SetRoll(camera->GetRoll() + 20);
 
-//    camera->setPitch(45);
+//    camera->setPitch(-45);
 //    camera->SetYaw(camera->GetYaw() + 0.6);
-//    camera->setPosition(QVector3D(0.0, 15, 0));
+//    camera->setPosition(QVector3D(0.0, -15, 0));
 
     counter++;
     QMatrix4x4 projection;
@@ -205,9 +205,17 @@ void TriangleWindow::render()
 
     Shader *terrainShader = ShaderManager::getShader("terrainShader");
     terrainShader->use();
-    terrainShader->setMat4("projection", projection);
 
-    QMatrix4x4 model;
+    terrainShader->setVec3("dirLight.direction", QVector3D(-0.2f, -1.0f, -0.3f));
+    terrainShader->setVec3("dirLight.ambient", QVector3D(0.25f, 0.25f, 0.25f));
+    terrainShader->setVec3("dirLight.diffuse", QVector3D(0.3f, 0.3f, 0.3f));
+    terrainShader->setVec3("dirLight.specular", QVector3D(0.4f, 0.4f, 0.4f));
+
+    terrainShader->setFloat("shininess", 2.0f);
+
+    terrainShader->setVec3("viewPos", camera->getPosition());
+
+    terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
 
     planet->setRotation(QVector3D(0,(float)counter/20,0));

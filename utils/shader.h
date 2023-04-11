@@ -14,8 +14,8 @@ public:
 
     void setInt(const std::string name, int value);
     void setFloat(const std::string name, float value);
-    void setVec3(const std::string name, QVector3D &value);
-    void setMat4(const std::string name, QMatrix4x4 &value);
+    void setVec3(const std::string name, QVector3D value);
+    void setMat4(const std::string name, QMatrix4x4 value);
 private:
     unsigned int ID;
 };

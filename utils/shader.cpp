@@ -57,9 +57,9 @@ void Shader::setInt(const std::string name, int value){
 void Shader::setFloat(const std::string name, float value){
     GL::funcs.glUniform1f(GL::funcs.glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shader::setVec3(const std::string name, QVector3D &value){
+void Shader::setVec3(const std::string name, QVector3D value){
     GL::funcs.glUniform3fv(GL::funcs.glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
-void Shader::setMat4(const std::string name, QMatrix4x4 &value){
+void Shader::setMat4(const std::string name, QMatrix4x4 value){
     GL::funcs.glUniformMatrix4fv(GL::funcs.glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, value.data());
 }

@@ -9,6 +9,8 @@
 
 #define PATCH_SIZE ((1 << 4) + 1)
 
+#define DATA_SIZE (9)
+
 class TerrainType;
 
 class TerrainPatch
@@ -24,7 +26,7 @@ private:
     float radius;
 
     unsigned int VAO, VBO, EBO;
-    float vertices[PATCH_SIZE * PATCH_SIZE * 6];
+    float vertices[PATCH_SIZE * PATCH_SIZE * DATA_SIZE];
     unsigned int indices[(PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6];
 
     void calculateBoundingSphere();
