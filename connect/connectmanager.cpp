@@ -44,12 +44,24 @@ ConnectManager::ConnectManager(QWidget *parent) :
     connect(localDevice, &QBluetoothLocalDevice::hostModeStateChanged,
             this, &ConnectManager::hostModeStateChanged);
 
+    client = new Client();
+
+    glupdater = new GLUpdater();
+    connect(client, &Client::connectionLost, glupdater, &GLUpdater::setToDefault);
+
+    parser = new Parser(glupdater);
+    connect(client, &Client::messageReceived, parser, &Parser::parse);
+
     hostModeStateChanged(localDevice->hostMode());
+    startScan();
 }
 
 ConnectManager::~ConnectManager()
 {
     delete discoveryAgent;
+    delete client;
+    delete parser;
+    delete glupdater;
 }
 
 void ConnectManager::addDevice(const QBluetoothDeviceInfo &info)
@@ -91,11 +103,8 @@ void ConnectManager::itemActivated(QListWidgetItem *item)
         return;
 
     QBluetoothAddress address(text.left(index));
-    QString name(text.mid(index + 1));
 
-    if (client != nullptr)
-        delete client;
-    client = new Client(name, address);
+    client->startClient(address);
 }
 
 void ConnectManager::powerClicked(bool clicked)

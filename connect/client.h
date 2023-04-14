@@ -19,27 +19,26 @@ class Client : public QObject
     Q_OBJECT
 
 public:
-    explicit Client(const QString &name, const QBluetoothAddress &address, QObject *parent = nullptr);
+    explicit Client(QObject *parent = nullptr);
     ~Client();
 
-    void startClient(const QBluetoothServiceInfo &remoteService);
     void startClient(const QBluetoothAddress &address);
     void stopClient();
 
 public slots:
-    void serviceDiscovered(const QBluetoothServiceInfo&);
     void sendMessage(const QString &message);
 
 signals:
-    void messageReceived(const QString &sender, const QString &message);
+    void messageReceived(const QByteArray &line);
     void connected(const QString &name);
-    void disconnected();
+    void connectionLost();
     void socketErrorOccurred(const QString &errorString);
 
 private slots:
     void readSocket();
     void connected();
     void onSocketErrorOccurred(QBluetoothSocket::SocketError);
+    void disconnected();
 
 private:
     QBluetoothServiceDiscoveryAgent *discoveryAgent;

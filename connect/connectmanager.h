@@ -6,6 +6,8 @@
 
 #include <qbluetoothlocaldevice.h>
 #include "client.h"
+#include "parser.h"
+#include "glupdater.h"
 
 #include <QDialog>
 
@@ -40,6 +42,8 @@ private:
     QBluetoothLocalDevice *localDevice;
     Ui_ConnectWindow *ui;
     Client *client = nullptr;
+    Parser *parser;
+    GLUpdater *glupdater;
 };
 
 #endif

@@ -173,15 +173,10 @@ void TriangleWindow::render()
 
 //    camera->setRoll(camera->getRoll() + 0.6);
 //    camera->move(0.03);
-    if(abs(GL::gyro.z()) > 0.1f){
-        camera->setPitch(camera->getPitch() + GL::gyro.z() / 3.0);
-    }
-    if(abs(GL::gyro.x()) > 0.1f){
-        camera->setRoll(camera->getRoll() + GL::gyro.x() / 3.0);
-    }
-    if(abs(GL::gyro.y()) > 0.1f){
-        camera->setYaw(camera->getYaw() + GL::gyro.y() / 3.0);
-    }
+
+    camera->setPitch(camera->getPitch() + GL::rotation.z() / 3.0);
+    camera->setRoll(camera->getRoll() + GL::rotation.x() / 3.0);
+    camera->setYaw(camera->getYaw() + GL::rotation.y() / 3.0);
 
     counter++;
     QMatrix4x4 projection;
@@ -230,7 +225,7 @@ void TriangleWindow::render()
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
 
-    planet->setRotation(QVector3D(0,(float)counter/20,0));
+ //   planet->setRotation(QVector3D(0,(float)counter/20,0));
 //    planet->update(QVector3D(0,0,(float)counter/400));
     planet->update(camera->getPosition());
     planet->render();

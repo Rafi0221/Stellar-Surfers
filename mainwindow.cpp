@@ -31,7 +31,6 @@ void MainWindow::playClicked()
 
 void MainWindow::connectClicked()
 {
-    qDebug() << "connect";
     connectManager->show();
 }
 

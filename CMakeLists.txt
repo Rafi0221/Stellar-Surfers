@@ -15,14 +15,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Bluetooth Core Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
+        mainwindow.cpp mainwindow.h
         mainwindow.ui
         connect/connectwindow.ui
-        connect/connectmanager.cpp
-        connect/connectmanager.h
-        connect/client.cpp
-        connect/client.h
+        connect/connectmanager.cpp connect/connectmanager.h
+        connect/client.cpp connect/client.h
+        connect/parser.h connect/parser.cpp
+        connect/glupdater.h connect/glupdater.cpp
         opengl/gl.h
         opengl/gl.cpp
         opengl/gl.h

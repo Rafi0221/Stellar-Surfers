@@ -8,7 +8,7 @@ class QOpenGLFunctions_3_3_Core;
 class GL{
 public:
     static QOpenGLFunctions_3_3_Core funcs;
-    static QVector3D gyro;
+    static QVector3D rotation;
 };
 
 #endif // GL_H

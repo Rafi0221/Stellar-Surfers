@@ -4,4 +4,6 @@
 #include <QVector3D>
 
 QOpenGLFunctions_3_3_Core GL::funcs;
-QVector3D GL::gyro;
+
+// values in [0,1]
+QVector3D GL::rotation;
