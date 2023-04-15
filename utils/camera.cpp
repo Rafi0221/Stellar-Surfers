@@ -36,7 +36,7 @@ void Camera::move(float distance){
 
 void Camera::setYaw(float yaw){
     this->yaw = yaw;
-    updateCameraVectors();
+//    updateCameraVectors();
 }
 
 float Camera::getYaw(){
@@ -45,7 +45,7 @@ float Camera::getYaw(){
 
 void Camera::setPitch(float pitch){
     this->pitch = pitch;
-    updateCameraVectors();
+//    updateCameraVectors();
 }
 
 float Camera::getPitch(){
@@ -54,7 +54,7 @@ float Camera::getPitch(){
 
 void Camera::setRoll(float roll){
     this->roll = roll;
-    updateCameraVectors();
+//    updateCameraVectors();
 }
 
 float Camera::getRoll(){
@@ -63,9 +63,8 @@ float Camera::getRoll(){
 
 void Camera::updateCameraVectors(){
     QMatrix4x4 rotationMatrix;
-    rotationMatrix.rotate(pitch, 1, 0, 0);
-    rotationMatrix.rotate(yaw, 0, 1, 0);
-    rotationMatrix.rotate(roll, 0, 0, 1);
+    QQuaternion q = QQuaternion::fromEulerAngles(pitch, yaw, roll);
+    rotationMatrix.rotate(q);
 
     QVector3D front(0,0,1);
     QVector3D up(0,1,0);
@@ -75,3 +74,4 @@ void Camera::updateCameraVectors(){
     this->up = rotationMatrix.map(up).normalized();
     this->right = rotationMatrix.map(right).normalized();
 }
+

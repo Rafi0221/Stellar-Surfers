@@ -13,13 +13,16 @@ class GLUpdater : public QObject
 public:
     GLUpdater();
 
-    void setCameraXYZ(const float &x, const float &y, const float &z);
+    void setCameraXYZ(float x, float y, float z);
 
 public slots:
     void setToDefault();
 
 private:
-    float scaleAngle(const float &a);
+    float scaleAngle(float a);
+    void smoothenAngles(float &x, float &y, float &z);
+
+    float avX = 0.0f, avY = 0.0f, avZ = 0.0f;
 };
 
 #endif // GLUPDATER_H

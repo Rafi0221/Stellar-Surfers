@@ -14,7 +14,7 @@ void Parser::parse(QByteArray line){
 
         const float* ptrFloat = reinterpret_cast<const float*>(line.constData());
 
-        glupdater->setCameraXYZ(*ptrFloat, *(ptrFloat+1), *(ptrFloat+2));
+        glupdater->setCameraXYZ(*(ptrFloat+2), *ptrFloat, *(ptrFloat+1));
 
 //        qDebug() << *ptrFloat << " " << *(ptrFloat+1) << " " << *(ptrFloat+2);
     }

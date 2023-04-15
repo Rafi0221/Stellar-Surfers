@@ -12,7 +12,7 @@ void GLUpdater::setToDefault() {
     setCameraXYZ(0.0f, 0.0f, 0.0f);
 }
 
-float GLUpdater::scaleAngle(const float &a) {
+float GLUpdater::scaleAngle(const float a) {
     static const float Deadzone = 0.05f;
     static const float MaxAngle = 0.4f;
 
@@ -29,8 +29,20 @@ float GLUpdater::scaleAngle(const float &a) {
         return (a + Deadzone)/(MaxAngle - Deadzone);
 }
 
-void GLUpdater::setCameraXYZ(const float &x, const float &y, const float &z) {
-    GL::rotation.setX(scaleAngle(x));
-    GL::rotation.setY(scaleAngle(y));
-    GL::rotation.setZ(scaleAngle(z));
+void GLUpdater::smoothenAngles(float &x, float &y, float &z) {
+    static const float C = 0.1f;
+    avX = C * x + (1.0f-C) * avX;
+    avY = C * y + (1.0f-C) * avY;
+    avZ = C * z + (1.0f-C) * avZ;
+    x = avX, y = avY, z = avZ;
+}
+
+void GLUpdater::setCameraXYZ(float x, float y, float z) {
+    x = scaleAngle(x);
+    y = scaleAngle(y);
+    z = scaleAngle(z);
+    smoothenAngles(x, y, z);
+    GL::rotation.setX(x);
+    GL::rotation.setY(y);
+    GL::rotation.setZ(z);
 }
