@@ -21,9 +21,12 @@ void TriangleWindow::initialize()
 //    face = new TerrainFace(new SphericalTerrain());
     ShaderManager::initialize();
 
-    planet = new Planet(5.0f);
-    planet->setPosition(QVector3D(0,0,15));
-
+//    planet = new Planet(5.0f);
+//    planet->setPosition(QVector3D(0,0,15));
+    for(int i = 0; i < 100; i++){
+        planets[i] = new Planet(3.0f);
+        planets[i]->setPosition(QVector3D(rand() % 150 - 75, rand()  % 150 - 75, rand() % 150 - 75));
+    }
     skybox = new SkyBox();
 
     GLfloat vertices[] = {
@@ -174,15 +177,15 @@ void TriangleWindow::render()
 //    camera->setRoll(camera->getRoll() + 0.6);
 //    camera->move(0.03);
 
-    camera->updateXYZ(GL::rotation.x() / 3.0, GL::rotation.y() / 3.0, GL::rotation.z() / 3.0);
-    camera->updateCameraVectors();
-
+//    camera->updateXYZ(GL::rotation.x() / 3.0, GL::rotation.y() / 3.0, GL::rotation.z() / 3.0);
+//    camera->updateCameraVectors();
+    camera->addAngles(GL::rotation.x() / 10.0, GL::rotation.z() / 10.0, GL::rotation.y() / 10.0);
     camera->updateSpeed(GL::acceleration);
     camera->move(camera->getSpeed());
 
     counter++;
     QMatrix4x4 projection;
-    projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
 
     QMatrix4x4 view = camera->getViewMatrix();
     QMatrix3x3 view_ = view.normalMatrix();
@@ -229,6 +232,10 @@ void TriangleWindow::render()
 
  //   planet->setRotation(QVector3D(0,(float)counter/20,0));
 //    planet->update(QVector3D(0,0,(float)counter/400));
-    planet->update(camera->getPosition());
-    planet->render();
+    for(int i = 0; i < 100; i++){
+        planets[i]->update(camera->getPosition());
+        planets[i]->render();
+    }
+//    planet->update(camera->getPosition());
+//    planet->render();
 }

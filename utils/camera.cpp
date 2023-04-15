@@ -79,6 +79,19 @@ void Camera::updateCameraVectors(){
     this->right = rotationMatrix.map(right).normalized();
 }
 
+void Camera::addAngles(float pitch, float yaw, float roll){
+    for(int i = 0; i < 20; i++){
+        QMatrix4x4 rotationMatrix;
+        rotationMatrix.rotate(pitch/20.0, right);
+        rotationMatrix.rotate(yaw/20.0, up);
+        rotationMatrix.rotate(roll/20.0, front);
+
+        right = rotationMatrix.map(right);
+        up = rotationMatrix.map(up);
+        front = rotationMatrix.map(front);
+    }
+}
+
 void Camera::updateSpeed(float a) {
     const float slowdown = 0.000005f;
     a = a * 0.00002f;

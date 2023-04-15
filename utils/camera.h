@@ -28,6 +28,7 @@ public:
     float getRoll();
 
     void updateXYZ(float pitch, float yaw, float roll);
+    void addAngles(float pitch, float yaw, float roll);
     void updateCameraVectors();
 
     void updateSpeed(float acceleration);

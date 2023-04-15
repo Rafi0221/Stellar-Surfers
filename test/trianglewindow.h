@@ -29,7 +29,7 @@ private:
 
     unsigned int VAO, VBO;
 
-    Planet *planet;
+    Planet *planets[100];
     SkyBox *skybox;
     int counter = 0;
 };
