@@ -14,6 +14,7 @@ public:
     GLUpdater();
 
     void setCameraXYZ(float x, float y, float z);
+    void setAcceleration(float accel);
 
 public slots:
     void setToDefault();

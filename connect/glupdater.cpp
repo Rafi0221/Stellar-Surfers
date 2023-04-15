@@ -10,6 +10,7 @@ GLUpdater::GLUpdater()
 
 void GLUpdater::setToDefault() {
     setCameraXYZ(0.0f, 0.0f, 0.0f);
+    setAcceleration(0.0f);
 }
 
 float GLUpdater::scaleAngle(const float a) {
@@ -45,4 +46,8 @@ void GLUpdater::setCameraXYZ(float x, float y, float z) {
     GL::rotation.setX(x);
     GL::rotation.setY(y);
     GL::rotation.setZ(z);
+}
+
+void GLUpdater::setAcceleration(float acceleration) {
+    GL::acceleration = acceleration;
 }

@@ -10,6 +10,7 @@ Camera::Camera()
     pitch = 0;
     roll = 0;
     updateCameraVectors();
+    speed = 0.004f;
 }
 
 QMatrix4x4 Camera::getViewMatrix(){
@@ -36,7 +37,6 @@ void Camera::move(float distance){
 
 void Camera::setYaw(float yaw){
     this->yaw = yaw;
-//    updateCameraVectors();
 }
 
 float Camera::getYaw(){
@@ -45,7 +45,6 @@ float Camera::getYaw(){
 
 void Camera::setPitch(float pitch){
     this->pitch = pitch;
-//    updateCameraVectors();
 }
 
 float Camera::getPitch(){
@@ -54,11 +53,16 @@ float Camera::getPitch(){
 
 void Camera::setRoll(float roll){
     this->roll = roll;
-//    updateCameraVectors();
 }
 
 float Camera::getRoll(){
     return roll;
+}
+
+void Camera::updateXYZ(float x, float y, float z){
+    setPitch(getPitch() + x);
+    setRoll(getRoll() + y);
+    setYaw(getYaw() + z);
 }
 
 void Camera::updateCameraVectors(){
@@ -73,5 +77,17 @@ void Camera::updateCameraVectors(){
     this->front = rotationMatrix.map(front).normalized();
     this->up = rotationMatrix.map(up).normalized();
     this->right = rotationMatrix.map(right).normalized();
+}
+
+void Camera::updateSpeed(float a) {
+    const float slowdown = 0.000005f;
+    a = a * 0.00002f;
+    speed = speed - slowdown + a;
+    if(speed < 0)
+        speed = 0.0f;
+}
+
+float Camera::getSpeed() {
+    return speed;
 }
 

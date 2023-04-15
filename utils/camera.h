@@ -27,7 +27,11 @@ public:
     void setRoll(float roll);
     float getRoll();
 
+    void updateXYZ(float pitch, float yaw, float roll);
     void updateCameraVectors();
+
+    void updateSpeed(float acceleration);
+    float getSpeed();
 private:
     QVector3D position;
     QVector3D front;
@@ -37,6 +41,8 @@ private:
     float yaw;
     float pitch;
     float roll;
+
+    float speed;
 };
 
 #endif // CAMERA_H

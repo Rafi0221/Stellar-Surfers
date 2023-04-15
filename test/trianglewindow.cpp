@@ -174,12 +174,11 @@ void TriangleWindow::render()
 //    camera->setRoll(camera->getRoll() + 0.6);
 //    camera->move(0.03);
 
-    camera->setPitch(camera->getPitch() + GL::rotation.x() / 3.0);
-    camera->setRoll(camera->getRoll() + GL::rotation.y() / 3.0);
-    camera->setYaw(camera->getYaw() + GL::rotation.z() / 3.0);
+    camera->updateXYZ(GL::rotation.x() / 3.0, GL::rotation.y() / 3.0, GL::rotation.z() / 3.0);
     camera->updateCameraVectors();
 
-    camera->move(0.004);
+    camera->updateSpeed(GL::acceleration);
+    camera->move(camera->getSpeed());
 
     counter++;
     QMatrix4x4 projection;

@@ -9,6 +9,7 @@ class GL{
 public:
     static QOpenGLFunctions_3_3_Core funcs;
     static QVector3D rotation;
+    static float acceleration;
 };
 
 #endif // GL_H

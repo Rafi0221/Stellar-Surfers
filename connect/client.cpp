@@ -3,8 +3,6 @@
 
 #include "client.h"
 
-#include "../opengl/gl.h"
-
 #include <QtCore/qmetaobject.h>
 #include <qbluetoothaddress.h>
 #include <qbluetoothservicediscoveryagent.h>
@@ -14,7 +12,6 @@
 #include <QtBluetooth/qbluetoothserviceinfo.h>
 #include <QtBluetooth/qbluetoothsocket.h>
 
-static const QLatin1String serviceUuid("f296bf37-5412-460d-954d-2fcc31b072c0");
 
 Client::Client(QObject *parent)
     :   QObject(parent)
@@ -57,9 +54,8 @@ void Client::readSocket()
     if (!socket)
         return;
 
-    while (socket->canReadLine()) {
-        QByteArray line = socket->readLine();
-//        qDebug() << "received " << QString::fromUtf8(line.constData(), line.length());
+    while (socket->bytesAvailable() >= messageSize) {
+        QByteArray line = socket->read(messageSize);
 
         emit messageReceived(line);
     }

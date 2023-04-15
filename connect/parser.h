@@ -11,7 +11,7 @@ class Parser : public QObject
     Q_OBJECT
 
 public:
-    Parser(GLUpdater *_glupdater);
+    Parser(GLUpdater *glupdater);
 
 public slots:
     void parse(QByteArray line);
