@@ -6,6 +6,7 @@
 #include "noisedterrain.h"
 #include "terraintype.h"
 #include "terrainface.h"
+#include "../utils/consts.h""
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 

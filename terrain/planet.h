@@ -3,13 +3,6 @@
 
 #include <QVector3D>
 
-#define NEAR 0
-#define LEFT 1
-#define FAR 2
-#define RIGHT 3
-#define UP 4
-#define DOWN 5
-
 class TerrainFace;
 class TerrainType;
 

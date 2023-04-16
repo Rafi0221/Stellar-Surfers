@@ -7,11 +7,12 @@
 
 #include <QOpenGLFunctions>
 
-#define PATCH_SIZE ((1 << 4) + 1)
+#include "../utils/consts.h"
 
 #define DATA_SIZE (9)
 
 class TerrainType;
+class PatchIndices;
 
 class TerrainPatch
 {
@@ -22,12 +23,13 @@ private:
 
     TerrainType *type;
 
+    PatchIndices *indices;
+
     QVector3D center;
     float radius;
 
     unsigned int VAO, VBO, EBO;
-    float vertices[PATCH_SIZE * PATCH_SIZE * DATA_SIZE];
-    unsigned int indices[(PATCH_SIZE - 1) * (PATCH_SIZE - 1) * 6];
+    float vertices[PATCH_VERTS * PATCH_VERTS * DATA_SIZE];
 
     void calculateBoundingSphere();
 public:

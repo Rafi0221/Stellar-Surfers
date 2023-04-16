@@ -4,16 +4,6 @@
 #include <QVector2D>
 #include <QMatrix4x4>
 
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
-
-#define NORTH_WEST 0
-#define NORTH_EAST 1
-#define SOUTH_EAST 2
-#define SOUTH_WEST 3
-
 class TerrainFace;
 class TerrainPatch;
 class TerrainType;

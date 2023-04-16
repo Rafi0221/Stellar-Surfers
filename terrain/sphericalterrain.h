@@ -7,8 +7,6 @@ class QVector3D;
 
 class SphericalTerrain : public TerrainType
 {
-private:
-    float radius;
 public:
     SphericalTerrain(float radius = 1.0f);
 

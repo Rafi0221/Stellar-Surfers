@@ -32,6 +32,8 @@ set(PROJECT_SOURCES
         skybox/skybox.cpp
         terrain/noisedterrain.h
         terrain/noisedterrain.cpp
+        terrain/patchindices.h
+        terrain/patchindices.cpp
         terrain/planet.h
         terrain/planet.cpp
         terrain/sphericalterrain.h
@@ -48,6 +50,7 @@ set(PROJECT_SOURCES
         test/trianglewindow.cpp
         utils/camera.h
         utils/camera.cpp
+        utils/consts.h
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/noise.h

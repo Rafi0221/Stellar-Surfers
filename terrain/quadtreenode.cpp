@@ -1,9 +1,10 @@
 #include "quadtreenode.h"
 
-#include "terrainpatch.h"
-
 #include <QVector3D>
 #include <QMatrix4x4>
+
+#include "../utils/consts.h"
+#include "terrainpatch.h"
 
 QuadTreeNode::QuadTreeNode(TerrainFace *face, TerrainType *type, QMatrix4x4 relativeRotation, QuadTreeNode *parent, QVector2D relativePosition)
 {
