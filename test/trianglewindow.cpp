@@ -4,6 +4,7 @@
 #include "../opengl/gl.h"
 #include "../skybox/skybox.h"
 #include "../terrain/noisedterrain.h"
+#include "../terrain/patchindices.h"
 #include "../terrain/planet.h"
 #include "../terrain/terrainface.h"
 #include "../terrain/sphericalterrain.h"
@@ -20,7 +21,7 @@ void TriangleWindow::initialize()
 //    GL::skyboxShader = new Shader("shaders/skyboxShader.vs", "shaders/skyboxShader.fs");
 //    face = new TerrainFace(new SphericalTerrain());
     ShaderManager::initialize();
-
+    PatchIndices::initialize();
 //    planet = new Planet(5.0f);
 //    planet->setPosition(QVector3D(0,0,15));
     for(int i = 0; i < 100; i++){
@@ -179,7 +180,7 @@ void TriangleWindow::render()
 
 //    camera->updateXYZ(GL::rotation.x() / 3.0, GL::rotation.y() / 3.0, GL::rotation.z() / 3.0);
 //    camera->updateCameraVectors();
-    camera->addAngles(GL::rotation.x() / 10.0, GL::rotation.z() / 10.0, GL::rotation.y() / 10.0);
+    camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
     camera->move(camera->getSpeed());
 
