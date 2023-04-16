@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "connect/connectmanager.h"
+#include "play/setupgame.h"
 #include "test/trianglewindow.h"
 
 #include <QSurfaceFormat>
@@ -26,7 +27,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::playClicked()
 {
-    qDebug() << "xdd";
+    SetupGame *s = new SetupGame();
+    connect(s, &SetupGame::closed, this, &MainWindow::show);
+    this->hide();
+    s->show();
+
 }
 
 void MainWindow::connectClicked()

@@ -28,6 +28,10 @@ set(PROJECT_SOURCES
         opengl/gl.cpp
         opengl/openglwindow.h
         opengl/openglwindow.cpp
+        play/setupgame.h play/setupgame.cpp
+        play/setupwindow.ui
+        play/saves/gamesave.h play/saves/gamesave.cpp
+        play/saves/datasaver.h play/saves/datasaver.cpp
         skybox/skybox.h
         skybox/skybox.cpp
         terrain/noisedterrain.h
