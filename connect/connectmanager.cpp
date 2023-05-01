@@ -4,6 +4,7 @@
 #include "connectmanager.h"
 #include "ui_connectwindow.h"
 #include "client.h"
+#include "../play/setupgame.h"
 
 #include <qbluetoothaddress.h>
 #include <qbluetoothdevicediscoveryagent.h>
@@ -32,6 +33,7 @@ ConnectManager::ConnectManager(QWidget *parent) :
     connect(ui->scan, &QAbstractButton::clicked, this, &ConnectManager::startScan);
     connect(ui->stopScan, &QAbstractButton::clicked, this, &ConnectManager::stopScan);
     connect(ui->power, &QPushButton::clicked, this, &ConnectManager::powerClicked);
+    connect(ui->play, &QPushButton::clicked, this, &ConnectManager::play);
 
     connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &ConnectManager::addDevice);
@@ -123,3 +125,12 @@ void ConnectManager::hostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
     ui->scan->setEnabled(on);
 }
 
+void ConnectManager::play()
+{
+    if (client != nullptr) {
+        SetupGame *s = new SetupGame();
+        connect(s, &SetupGame::startGame, client, [=]() { client->sendMessage("Start!"); } );
+        this->hide();
+        s->show();
+    }
+}

@@ -11,7 +11,7 @@ class Shader;
 class TerrainFace;
 class SkyBox;
 
-class TriangleWindow : public OpenGLWindow
+class GameWindow : public OpenGLWindow
 {
 public:
     using OpenGLWindow::OpenGLWindow;

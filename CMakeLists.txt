@@ -50,8 +50,8 @@ set(PROJECT_SOURCES
         terrain/terraintype.cpp
         terrain/quadtreenode.h
         terrain/quadtreenode.cpp
-        test/trianglewindow.h
-        test/trianglewindow.cpp
+        game/gamewindow.h
+        game/gamewindow.cpp
         utils/camera.h
         utils/camera.cpp
         utils/consts.h

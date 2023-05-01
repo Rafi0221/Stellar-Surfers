@@ -36,6 +36,7 @@ private slots:
     void scanFinished();
     void itemActivated(QListWidgetItem *item);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
+    void play();
 
 private:
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;

@@ -29,6 +29,7 @@ public:
 
 signals:
     void closed();
+    void startGame();
 
 private:
     void updateSaveListWidget();

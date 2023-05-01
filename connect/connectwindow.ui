@@ -55,9 +55,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="quit">
+      <widget class="QPushButton" name="play">
        <property name="text">
-        <string>Quit</string>
+        <string>Play!</string>
        </property>
       </widget>
      </item>
@@ -68,7 +68,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>quit</sender>
+   <sender>play</sender>
    <signal>clicked()</signal>
    <receiver>ConnectWindow</receiver>
    <slot>accept()</slot>

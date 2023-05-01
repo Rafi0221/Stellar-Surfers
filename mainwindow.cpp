@@ -2,7 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "connect/connectmanager.h"
 #include "play/setupgame.h"
-#include "test/trianglewindow.h"
+#include "game/gamewindow.h"
 
 #include <QSurfaceFormat>
 
@@ -48,9 +48,9 @@ void MainWindow::testClicked()
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
 
-    TriangleWindow *triangleWindow = new TriangleWindow();
-    triangleWindow->resize(640, 480);
-    triangleWindow->showMaximized();
+    GameWindow *gameWindow = new GameWindow();
+    gameWindow->resize(640, 480);
+    gameWindow->showMaximized();
 
-    triangleWindow->setAnimating(true);
+    gameWindow->setAnimating(true);
 }

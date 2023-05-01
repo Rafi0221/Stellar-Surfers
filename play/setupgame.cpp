@@ -1,7 +1,7 @@
 #include "setupgame.h"
 #include "ui_setupwindow.h"
 #include "saves/datasaver.h"
-#include "../test/trianglewindow.h"
+#include "../game/gamewindow.h"
 
 #include <QDebug>
 #include <random>
@@ -57,12 +57,14 @@ void SetupGame::startClicked() {
     DataSaver::write(saveList);
 
     qDebug() << "starting a new game with seed (" << gs.f1 << ", " << gs.f2 << ", " << gs.f3 << ")";
-    TriangleWindow *triangleWindow = new TriangleWindow();
-    triangleWindow->setSeed(gs);
-    triangleWindow->resize(640, 480);
-    triangleWindow->showMaximized();
+    GameWindow *gameWindow = new GameWindow();
+    gameWindow->setSeed(gs);
+    gameWindow->resize(640, 480);
+    emit startGame();
+    gameWindow->showMaximized();
 
-    triangleWindow->setAnimating(true);
+    gameWindow->setAnimating(true);
+    this->close();
 }
 
 void SetupGame::updateSaveListWidget() {
@@ -73,7 +75,6 @@ void SetupGame::updateSaveListWidget() {
         ui->saveListWidget->addItem(item);
     }
 }
-
 
 void SetupGame::closeEvent(QCloseEvent* event) {
     emit closed();

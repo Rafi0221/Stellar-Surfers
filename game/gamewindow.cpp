@@ -1,4 +1,4 @@
-#include "trianglewindow.h"
+#include "gamewindow.h"
 
 #include <QScreen>
 #include "../opengl/gl.h"
@@ -12,7 +12,7 @@
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
-void TriangleWindow::initialize()
+void GameWindow::initialize()
 {
     camera = new Camera();
 
@@ -146,11 +146,11 @@ void TriangleWindow::initialize()
     GL::funcs.glEnableVertexAttribArray(1);
 }
 
-void TriangleWindow::setSeed(SetupGame::GameSeed value) {
+void GameWindow::setSeed(SetupGame::GameSeed value) {
     seed = value;
 }
 
-void TriangleWindow::render()
+void GameWindow::render()
 {
     GL::funcs.glEnable(GL_DEPTH_TEST);
     GL::funcs.glDepthMask(GL_TRUE);
@@ -219,7 +219,7 @@ void TriangleWindow::render()
 //    testShader->setMat4("model", model_);
 
 //    GL::funcs.glBindVertexArray(VAO);
-//    GL::funcs.glDrawArrays(GL_TRIANGLES, 0, 36);
+//    GL::funcs.glDrawArrays(GL_GameS, 0, 36);
 
     Shader *terrainShader = ShaderManager::getShader("terrainShader");
     terrainShader->use();
