@@ -3,6 +3,7 @@
 
 #include <QOpenGLShaderProgram>
 #include "../opengl/openglwindow.h"
+#include "../play/setupgame.h"
 
 class Camera;
 class Planet;
@@ -17,6 +18,7 @@ public:
 
     void initialize() override;
     void render() override;
+    void setSeed(SetupGame::GameSeed);
 
 private:
     GLint m_posAttr = 0;
@@ -32,5 +34,6 @@ private:
     Planet *planets[100];
     SkyBox *skybox;
     int counter = 0;
+    SetupGame::GameSeed seed;
 };
 #endif // TRIANGLEWINDOW_H

@@ -146,6 +146,10 @@ void TriangleWindow::initialize()
     GL::funcs.glEnableVertexAttribArray(1);
 }
 
+void TriangleWindow::setSeed(SetupGame::GameSeed value) {
+    seed = value;
+}
+
 void TriangleWindow::render()
 {
     GL::funcs.glEnable(GL_DEPTH_TEST);
@@ -197,8 +201,9 @@ void TriangleWindow::render()
 
     skyboxShader->setMat4("projection", projection);
     skyboxShader->setMat4("view", tmp);
+    skyboxShader->setVec3("seed", QVector3D(seed.f1, seed.f2, seed.f3));
 
-//    skybox->render();
+    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -231,7 +236,7 @@ void TriangleWindow::render()
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
 
- //   planet->setRotation(QVector3D(0,(float)counter/20,0));
+//    planet->setRotation(QVector3D(0,(float)counter/20,0));
 //    planet->update(QVector3D(0,0,(float)counter/400));
     for(int i = 0; i < 100; i++){
         planets[i]->update(camera->getPosition());

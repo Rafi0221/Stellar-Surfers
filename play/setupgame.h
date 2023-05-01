@@ -21,6 +21,12 @@ public:
     void startClicked();
     void closeEvent(QCloseEvent* event);
 
+    struct GameSeed {
+        float f1;
+        float f2;
+        float f3;
+    };
+
 signals:
     void closed();
 

@@ -1,7 +1,7 @@
-
 #include "setupgame.h"
 #include "ui_setupwindow.h"
 #include "saves/datasaver.h"
+#include "../test/trianglewindow.h"
 
 #include <QDebug>
 #include <random>
@@ -44,15 +44,25 @@ void SetupGame::startClicked() {
 
     std::seed_seq seedSeq(seedString.begin(), seedString.end());
     std::mt19937 gen(seedSeq);
+    std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    unsigned int gameSeed = gen();
+    GameSeed gs;
+    gs.f1 = dis(gen);
+    gs.f2 = dis(gen);
+    gs.f3 = dis(gen);
     QDateTime date = QDateTime::currentDateTime();
 
     saveList.push_front(GameSave(QString::fromStdString(seedString), date));
     updateSaveListWidget();
     DataSaver::write(saveList);
 
-    qDebug() << "starting a new game with seed " << gameSeed;
+    qDebug() << "starting a new game with seed (" << gs.f1 << ", " << gs.f2 << ", " << gs.f3 << ")";
+    TriangleWindow *triangleWindow = new TriangleWindow();
+    triangleWindow->setSeed(gs);
+    triangleWindow->resize(640, 480);
+    triangleWindow->showMaximized();
+
+    triangleWindow->setAnimating(true);
 }
 
 void SetupGame::updateSaveListWidget() {
