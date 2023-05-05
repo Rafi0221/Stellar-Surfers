@@ -11,6 +11,7 @@
 #include "../utils/camera.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
+#include "../utils/perlinnoise.h"
 
 void GameWindow::initialize()
 {
@@ -171,9 +172,10 @@ void GameWindow::render()
     };
 
     srand(time(NULL));
-//    camera->SetPitch(camera->GetPitch() + 20);
-//    camera->SetYaw(camera->GetYaw() + 20);
-//    camera->SetRoll(camera->GetRoll() + 20);
+//    camera->setPitch(0.5);
+//    camera->setRoll(0.5);
+//    camera->setYaw(0.5);
+//    camera->move(0.1);
 
 //    camera->setPitch(-45);
 //    camera->SetYaw(camera->GetYaw() + 0.6);
@@ -201,8 +203,11 @@ void GameWindow::render()
 
     skyboxShader->setMat4("projection", projection);
     skyboxShader->setMat4("view", tmp);
-    skyboxShader->setVec3("seed", QVector3D(seed.f1, seed.f2, seed.f3));
-
+    PerlinNoise noise(round(seed.f1 * 1000000.0));
+    unsigned int textureID = noise.getPermutationTexture();
+    skyboxShader->setInt("permutation", 0);
+    GL::funcs.glActiveTexture(GL_TEXTURE0);
+    GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
     skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
