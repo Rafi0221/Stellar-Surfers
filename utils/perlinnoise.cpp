@@ -4,6 +4,10 @@
 #include <algorithm>
 #include <numeric>
 
+#include <QOpenGLFunctions_3_3_Core>
+
+#include "../opengl/gl.h"
+
 // THIS IS A DIRECT TRANSLATION TO C++11 FROM THE REFERENCE
 // JAVA IMPLEMENTATION OF THE IMPROVED PERLIN FUNCTION (see http://mrl.nyu.edu/~perlin/noise/)
 // THE ORIGINAL JAVA IMPLEMENTATION IS COPYRIGHT 2002 KEN PERLIN
@@ -29,6 +33,8 @@ PerlinNoise::PerlinNoise() {
         138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 };
     // Duplicate the permutation vector
     p.insert(p.end(), p.begin(), p.end());
+
+    createPermutationTexture();
 }
 
 // Generate a new permutation vector based on the value of seed
@@ -46,6 +52,34 @@ PerlinNoise::PerlinNoise(unsigned int seed) {
 
     // Duplicate the permutation vector
     p.insert(p.end(), p.begin(), p.end());
+
+    createPermutationTexture();
+}
+
+void PerlinNoise::createPermutationTexture(){
+    GL::funcs.glGenTextures(1, &textureID);
+    GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
+
+    GL::funcs.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    GL::funcs.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    GL::funcs.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+    GL::funcs.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    GL::funcs.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    std::vector<float> p2;
+    for(int i = 0; i < p.size(); i++){
+        p2.push_back((float)p[i]);
+        p2.push_back((float)p[i]);
+        p2.push_back((float)p[i]);
+        p2.push_back((float)p[i]);
+    }
+
+    GL::funcs.glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA32F, 512, 0, GL_RGBA, GL_FLOAT, p2.data());
+}
+
+unsigned int PerlinNoise::getPermutationTexture(){
+    return textureID;
 }
 
 double PerlinNoise::getValue(double x, double y, double z) {

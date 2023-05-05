@@ -23,12 +23,14 @@ void main()
     vec3 normal = normalize(Normal);
 
     vec3 lightDir = normalize(-dirLight.direction);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
 
     float diff = max(dot(normal, lightDir), 0.0);
 
-    vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+//    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
     vec3 ambient = dirLight.ambient * Color;
     vec3 diffuse = dirLight.diffuse * diff * Color;

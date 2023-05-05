@@ -20,10 +20,21 @@ std::string getShaderCode(const std::string path){
     return buffer.str();
 }
 
-Shader::Shader(const std::string vertexPath, const std::string fragmentPath)
+Shader::Shader(const std::string vertexPath, const std::string fragmentPath,
+               const std::vector<std::string> vertexIncludes, const std::vector<std::string> fragmentIncludes)
 {
-    std::string vertexCodeString = getShaderCode(vertexPath);
-    std::string fragmentCodeString = getShaderCode(fragmentPath);
+    std::string vertexCodeString;
+    for(int i = 0; i < vertexIncludes.size(); i++){
+        vertexCodeString.append(getShaderCode(vertexIncludes[i]));
+    }
+
+    std::string fragmentCodeString;
+    for(int i = 0; i < fragmentIncludes.size(); i++){
+        fragmentCodeString.append(getShaderCode(fragmentIncludes[i]));
+    }
+
+    vertexCodeString.append(getShaderCode(vertexPath));
+    fragmentCodeString.append(getShaderCode(fragmentPath));
 
     const char *vertexCode = vertexCodeString.c_str();
     const char *fragmentCode = fragmentCodeString.c_str();
@@ -37,6 +48,20 @@ Shader::Shader(const std::string vertexPath, const std::string fragmentPath)
     fragmentProgram = GL::funcs.glCreateShader(GL_FRAGMENT_SHADER);
     GL::funcs.glShaderSource(fragmentProgram, 1, &fragmentCode, NULL);
     GL::funcs.glCompileShader(fragmentProgram);
+
+    int success;
+    char infoLog[1024];
+    GL::funcs.glGetShaderiv(vertexProgram, GL_COMPILE_STATUS, &success);
+    if(!success){
+        GL::funcs.glGetShaderInfoLog(vertexProgram , 1024, NULL, infoLog);
+        qDebug() << infoLog;
+    }
+
+    GL::funcs.glGetShaderiv(fragmentProgram, GL_COMPILE_STATUS, &success);
+    if(!success){
+        GL::funcs.glGetShaderInfoLog(fragmentProgram , 1024, NULL, infoLog);
+        qDebug() << infoLog;
+    }
 
     ID = GL::funcs.glCreateProgram();
     GL::funcs.glAttachShader(ID, vertexProgram);

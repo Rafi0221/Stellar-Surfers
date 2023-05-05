@@ -9,7 +9,8 @@
 class Shader : protected QOpenGLFunctions_3_3_Core
 {
 public:
-    Shader(const std::string vertexPath, const std::string fragmentPath);
+    Shader(const std::string vertexPath, const std::string fragmentPath,
+           const std::vector<std::string> vertexIncludes = {}, const std::vector<std::string> fragmentIncludes = {});
     void use();
 
     void setInt(const std::string name, int value);

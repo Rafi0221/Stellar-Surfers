@@ -22,10 +22,15 @@ public:
     PerlinNoise(unsigned int seed = rand());
     // Get a noise value, for 2D images z can have any value
     virtual double getValue(double x, double y, double z);
+
+    unsigned int getPermutationTexture();
 private:
+    unsigned int textureID;
+
     double fade(double t);
     double lerp(double t, double a, double b);
     double grad(int hash, double x, double y, double z);
+    void createPermutationTexture();
 };
 
 #endif
