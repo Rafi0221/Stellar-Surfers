@@ -4,6 +4,7 @@
 #include <QOpenGLShaderProgram>
 #include "../opengl/openglwindow.h"
 #include "../play/setupgame.h"
+#include "space.h"
 
 class Camera;
 class Planet;
@@ -28,6 +29,7 @@ private:
     int m_frame = 0;
 
     Camera *camera;
+    Space *space;
 
     unsigned int VAO, VBO;
 

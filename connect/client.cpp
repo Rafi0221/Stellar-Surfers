@@ -83,7 +83,7 @@ void Client::onSocketErrorOccurred(QBluetoothSocket::SocketError error)
 void Client::connected()
 {
     qDebug() << socket->peerName() << " connected";
-    emit connected(socket->peerName());
+    emit deviceConnected(socket->peerName());
 }
 
 void Client::disconnected()

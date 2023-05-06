@@ -10,7 +10,7 @@
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
-Planet::Planet(float radius)
+Planet::Planet(float radius, int seed)
 {
     this->type = new NoisedTerrain(radius);
     this->faces[2] = new TerrainFace(type, QMatrix4x4());
@@ -54,6 +54,10 @@ void Planet::render(){
 
 void Planet::setPosition(QVector3D position){
     this->position = position;
+}
+
+QVector3D Planet::getPosition() {
+    return position;
 }
 
 void Planet::setRotation(QVector3D rotation){

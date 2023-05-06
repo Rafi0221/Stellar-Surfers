@@ -28,8 +28,8 @@ MainWindow::~MainWindow()
 void MainWindow::playClicked()
 {
     SetupGame *s = new SetupGame();
-    connect(s, &SetupGame::closed, this, &MainWindow::show);
-    this->hide();
+    //connect(s, &SetupGame::closed, this, &MainWindow::show);
+    //this->hide();
     s->show();
 
 }

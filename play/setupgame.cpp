@@ -16,6 +16,7 @@ SetupGame::SetupGame(QWidget *parent)
     this->setWindowTitle("Stellar Surfers");
 
     connect(ui->startButton, &QPushButton::clicked, this, &SetupGame::startClicked);
+    connect(ui->saveListWidget, &QListWidget::itemActivated, this, &SetupGame::itemActivated);
 
     saveList = DataSaver::read();
     updateSaveListWidget();
@@ -47,6 +48,7 @@ void SetupGame::startClicked() {
     std::uniform_real_distribution<> dis(0.0, 1.0);
 
     GameSeed gs;
+    gs.seed = gen();
     gs.f1 = dis(gen);
     gs.f2 = dis(gen);
     gs.f3 = dis(gen);
@@ -56,11 +58,12 @@ void SetupGame::startClicked() {
     updateSaveListWidget();
     DataSaver::write(saveList);
 
-    qDebug() << "starting a new game with seed (" << gs.f1 << ", " << gs.f2 << ", " << gs.f3 << ")";
+    qDebug() << "starting a new game with seed (" << gs.seed << "," << gs.f1 << "," << gs.f2 << "," << gs.f3 << ")";
     GameWindow *gameWindow = new GameWindow();
     gameWindow->setSeed(gs);
     gameWindow->resize(640, 480);
     emit startGame();
+
     gameWindow->showMaximized();
 
     gameWindow->setAnimating(true);
@@ -74,6 +77,16 @@ void SetupGame::updateSaveListWidget() {
         QListWidgetItem *item = new QListWidgetItem(label);
         ui->saveListWidget->addItem(item);
     }
+}
+
+void SetupGame::itemActivated(QListWidgetItem *item)
+{
+    const QString text = item->text();
+    const auto index = text.indexOf(' ');
+    if (index == -1)
+        return;
+    QString seed(text.left(index));
+    ui->seedField->setText(seed);
 }
 
 void SetupGame::closeEvent(QCloseEvent* event) {

@@ -12,6 +12,8 @@
 
 #include <QMenu>
 #include <QDebug>
+#include <QMessageBox>
+#include <QTimer>
 
 static QColor colorForPairing(QBluetoothLocalDevice::Pairing pairing)
 {
@@ -50,6 +52,7 @@ ConnectManager::ConnectManager(QWidget *parent) :
 
     glupdater = new GLUpdater();
     connect(client, &Client::connectionLost, glupdater, &GLUpdater::setToDefault);
+    connect(client, &Client::deviceConnected, this, &ConnectManager::connected);
 
     parser = new Parser(glupdater);
     connect(client, &Client::messageReceived, parser, &Parser::parse);
@@ -133,4 +136,21 @@ void ConnectManager::play()
         this->hide();
         s->show();
     }
+}
+
+void ConnectManager::connected(const QString &name) {
+    QMessageBox msg;
+    msg.setText("Connected");
+
+    int cnt = 2;
+
+    QTimer cntDown;
+    QObject::connect(&cntDown, &QTimer::timeout, [&msg,&cnt, &cntDown]()->void{
+        if(--cnt < 0){
+            cntDown.stop();
+            msg.close();
+        }
+    });
+    cntDown.start(1000);
+    msg.exec();
 }

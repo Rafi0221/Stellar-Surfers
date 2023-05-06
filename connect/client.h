@@ -33,7 +33,7 @@ public slots:
 
 signals:
     void messageReceived(const QByteArray &line);
-    void connected(const QString &name);
+    void deviceConnected(const QString &name);
     void connectionLost();
     void socketErrorOccurred(const QString &errorString);
 
