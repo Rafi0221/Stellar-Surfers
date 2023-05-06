@@ -28,7 +28,7 @@ float turbulence(vec3 pos) {
 void main()
 {
 //    vec3 nPos = normalize(cPos);
-//    vec3 teal = vec3(0.015, 0.01, 0.1);
+    vec3 teal = vec3(0.015, 0.01, 0.1);
 //    // vec3 turb = vec3(turbulence(nPos * 5.0));
 //    // inline for better performance?
 //    float turbulence_factor =

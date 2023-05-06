@@ -19,6 +19,18 @@ inline uint qHash(const QVector3D &v, uint seed)
     return qHash(v.x()) ^ ROTL10(qHash(v.y())) ^ ROTL20(qHash(v.z()));
 }
 
+unsigned long long hashLL(long long u) {
+    unsigned long long v = u * 3935559000370003845 + 2691343689449507681;
+    v ^= v >> 21;
+    v ^= v << 37;
+    v ^= v >>  4;
+    v *= 4768777513237032717;
+    v ^= v << 20;
+    v ^= v >> 41;
+    v ^= v <<  5;
+    return v;
+}
+
 
 Space::Space(int seed)
 {
@@ -28,9 +40,9 @@ Space::Space(int seed)
 int Space::hashCoordinates(const QVector3D & coordinates) {
     static int hashBase = 1e8+7;
     long long hash = seed;
-    int hashX = std::hash<int>{}(coordinates.x())^seed;
-    int hashY = std::hash<int>{}(coordinates.y())^seed;
-    int hashZ = std::hash<int>{}(coordinates.z())^seed;
+    int hashX = hashLL(coordinates.x())^seed;
+    int hashY = hashLL(coordinates.y())^seed;
+    int hashZ = hashLL(coordinates.z())^seed;
     //qDebug() << hashX << hashY << hashZ;
     hash = (hash * hashBase + hashX) % hashRange;
     hash = (hash * hashBase + hashY) % hashRange;
