@@ -4,18 +4,18 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
+class PatchFactory;
 class QuadTreeNode;
-class TerrainType;
 
 class TerrainFace
 {
 private:
     QuadTreeNode *root;
-    TerrainType *type;
+    PatchFactory *factory;
 
     QMatrix4x4 relativeRotation;
 public:
-    TerrainFace(TerrainType *type, QMatrix4x4 relativeRotation);
+    TerrainFace(PatchFactory *factory, QMatrix4x4 relativeRotation);
     ~TerrainFace();
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);

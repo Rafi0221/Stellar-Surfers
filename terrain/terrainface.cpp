@@ -1,13 +1,13 @@
 #include "terrainface.h"
 
+#include "patchfactory.h"
 #include "quadtreenode.h"
-#include "terraintype.h"
 
-TerrainFace::TerrainFace(TerrainType *type, QMatrix4x4 relativeRotation)
+TerrainFace::TerrainFace(PatchFactory *factory, QMatrix4x4 relativeRotation)
 {
-    this->type = type;
+    this->factory = factory;
     this->relativeRotation = relativeRotation;
-    this->root = new QuadTreeNode(this, type, relativeRotation);
+    this->root = new QuadTreeNode(this, factory, relativeRotation);
 }
 
 TerrainFace::~TerrainFace(){

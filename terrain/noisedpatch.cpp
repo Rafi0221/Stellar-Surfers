@@ -1,9 +1,11 @@
-#include "terrainpatch.h"
+#include "noisedpatch.h"
+
+#include "../opengl/gl.h"
+#include "../utils/layeredperlinnoise.h"
+#include "../utils/shader.h"
+#include "../utils/shadermanager.h"
 
 #include "patchindices.h"
-#include "terraintype.h"
-#include "../opengl/gl.h"
-#include "../utils/shader.h"
 
 #include <QOpenGLFunctions_3_3_Core>
 
@@ -13,12 +15,12 @@ namespace {
     }
 }
 
-TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition)
+NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, LayeredPerlinNoise *noise)
 {
-    this->type = type;
     this->relativeRotation = relativeRotation;
     this->scale = scale;
     this->relativePosition = relativePosition;
+    this->noise = noise;
     for(int x = 0; x < PATCH_VERTS; x++){
         for(int y = 0; y < PATCH_VERTS; y++){
             float xPos = relativePosition.x() + scale / PATCH_QUADS * x;
@@ -28,25 +30,27 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
             QVector3D pos(xPos, yPos, zPos);
             pos = this->relativeRotation.map(pos);
 
-            QVector3D cubePos = type->cubeToSphere(pos);
-            pos = cubePos * type->terrainHeight(pos);
+            QVector3D cubePos = cubeToSphere(pos, 3);
+            QVector3D newPos = cubePos * terrainHeight(cubePos);
 
-            this->vertices[toID(x,y) * DATA_SIZE] = pos.x();
-            this->vertices[toID(x,y) * DATA_SIZE + 1] = pos.y();
-            this->vertices[toID(x,y) * DATA_SIZE + 2] = pos.z();
+            this->vertices[toID(x,y) * DATA_SIZE] = newPos.x();
+            this->vertices[toID(x,y) * DATA_SIZE + 1] = newPos.y();
+            this->vertices[toID(x,y) * DATA_SIZE + 2] = newPos.z();
 
+//            this->vertices[(toID(x,y) * DATA_SIZE + 3)] = (float)x/(PATCH_QUADS);
+//            this->vertices[(toID(x,y) * DATA_SIZE + 4)] = (float)y/(PATCH_QUADS);
             this->vertices[toID(x,y) * DATA_SIZE + 3] = cubePos.x();
             this->vertices[toID(x,y) * DATA_SIZE + 4] = cubePos.y();
             this->vertices[toID(x,y) * DATA_SIZE + 5] = cubePos.z();
 
-            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.1 + 2 * (type->terrainHeight(pos) - 0.8);
-            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.2;
-            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.9 - 2 * (type->terrainHeight(pos) - 0.8);
+//            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.1 + 2 * (terrainHeight(pos) - 0.8);
+//            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.2;
+//            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.9 - 2 * (terrainHeight(pos) - 0.8);
 //            qDebug() << this->vertices[ToID(x,y) * 6 + 5];
 
-//            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.8;
-//            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.8;
-//            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.8;
+            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
+            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
+            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
         }
     }
 
@@ -79,23 +83,13 @@ TerrainPatch::TerrainPatch(TerrainType *type, QMatrix4x4 relativeRotation, float
     calculateBoundingSphere();
 }
 
-
-void TerrainPatch::render(){
-    GL::funcs.glBindVertexArray(VAO);
-//    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    GL::funcs.glDrawElements(GL_TRIANGLES, indices->getSize(), GL_UNSIGNED_INT, 0);
-    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+float NoisedPatch::terrainHeight(QVector3D position){
+    float tmp = noise->getValue(position.x(), position.y(), position.z());
+    tmp = (tmp * 2.0) - 1.0;
+    return (1 + tmp * 0.2);
 }
 
-QVector3D TerrainPatch::getCenter(){
-    return center;
-}
-
-float TerrainPatch::getRadius(){
-    return radius;
-}
-
-void TerrainPatch::calculateBoundingSphere(){
+void NoisedPatch::calculateBoundingSphere(){
     center = QVector3D(0,0,0);
     for(int i = 0; i < PATCH_VERTS * PATCH_VERTS; i++){
         center += QVector3D(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2]);
@@ -106,4 +100,11 @@ void TerrainPatch::calculateBoundingSphere(){
     for(int i = 0; i < PATCH_VERTS * PATCH_VERTS; i++){
         radius = std::max(radius, center.distanceToPoint(QVector3D(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2])));
     }
+}
+
+void NoisedPatch::render(){
+    GL::funcs.glBindVertexArray(VAO);
+//    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    GL::funcs.glDrawElements(GL_TRIANGLES, indices->getSize(), GL_UNSIGNED_INT, 0);
+    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
