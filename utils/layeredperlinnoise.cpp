@@ -20,6 +20,7 @@ LayeredPerlinNoise::LayeredPerlinNoise(unsigned int seed, int octaves, double ma
     }
     this->multiplier = maxValue/realMaxValue;
 }
+
 double LayeredPerlinNoise::getValue(double x, double y, double z){
     double value = 0.0f;
     double amplitude = 1.0f;
@@ -30,4 +31,8 @@ double LayeredPerlinNoise::getValue(double x, double y, double z){
         amplitude *= persistance;
     }
     return value * multiplier;
+}
+
+double LayeredPerlinNoise::getMultiplier(){
+    return multiplier;
 }

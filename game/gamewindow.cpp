@@ -3,15 +3,14 @@
 #include <QScreen>
 #include "../opengl/gl.h"
 #include "../skybox/skybox.h"
-#include "../terrain/noisedterrain.h"
+#include "../terrain/noisedpatchfactory.h"
 #include "../terrain/patchindices.h"
 #include "../terrain/planet.h"
-#include "../terrain/terrainface.h"
-#include "../terrain/sphericalterrain.h"
 #include "../utils/camera.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 #include "../utils/perlinnoise.h"
+
 
 void GameWindow::initialize()
 {
@@ -24,14 +23,14 @@ void GameWindow::initialize()
     ShaderManager::initialize();
     PatchIndices::initialize();
 
-    planet = new Planet(5.0f);
+    planet = new Planet(new NoisedPatchFactory(0), 5.0f);
     planet->setPosition(QVector3D(0,0,15));
 
 //    space = new Space(seed.seed);
 //    space->initialize();
 
 //    for(int i = 0; i < 100; i++){
-//        planets[i] = new Planet(3.0f);
+//        planets[i] = new Planet(new NoisedPatchFactory(i), 3.0f);
 //        planets[i]->setPosition(QVector3D(rand() % 150 - 75, rand()  % 150 - 75, rand() % 150 - 75));
 //    }
 
@@ -214,7 +213,7 @@ void GameWindow::render()
     skyboxShader->setInt("permutation", 0);
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
-    skybox->render();
+//    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 

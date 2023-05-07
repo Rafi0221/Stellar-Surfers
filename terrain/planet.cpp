@@ -3,32 +3,30 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
-#include "noisedterrain.h"
-#include "terraintype.h"
+#include "patchfactory.h"
 #include "terrainface.h"
 #include "../utils/consts.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
-Planet::Planet(float radius, int seed)
+Planet::Planet(PatchFactory *factory, float radius)
 {
+    this->factory = factory;
     this->radius = radius;
-    this->seed = seed;
+    this->faces[2] = new TerrainFace(this->factory, QMatrix4x4());
 
-    this->type = new NoisedTerrain(radius);
-    this->faces[2] = new TerrainFace(type, QMatrix4x4());
     QMatrix4x4 tmp;
     tmp.rotate(90, 0, 1, 0);
-    this->faces[LEFT] = new TerrainFace(type, tmp);
+    this->faces[LEFT] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[0] = new TerrainFace(type, tmp);
+    this->faces[0] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[RIGHT] = new TerrainFace(type, tmp);
+    this->faces[RIGHT] = new TerrainFace(this->factory, tmp);
     tmp = QMatrix4x4();
     tmp.rotate(90, 1, 0, 0);
-    this->faces[DOWN] = new TerrainFace(type, tmp);
+    this->faces[DOWN] = new TerrainFace(this->factory, tmp);
     tmp.rotate(180, 1, 0, 0);
-    this->faces[UP] = new TerrainFace(type, tmp);
+    this->faces[UP] = new TerrainFace(this->factory, tmp);
 }
 
 void Planet::update(QVector3D cameraPosition){

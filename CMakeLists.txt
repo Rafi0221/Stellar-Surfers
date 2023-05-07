@@ -34,24 +34,26 @@ set(PROJECT_SOURCES
         play/saves/datasaver.h play/saves/datasaver.cpp
         skybox/skybox.h
         skybox/skybox.cpp
-        terrain/noisedterrain.h
-        terrain/noisedterrain.cpp
+        terrain/noisedpatch.h
+        terrain/noisedpatch.cpp
+        terrain/noisedpatchfactory.h
+        terrain/noisedpatchfactory.cpp
+        terrain/patch.h
+        terrain/patch.cpp
         terrain/patchindices.h
         terrain/patchindices.cpp
+        terrain/patchfactory.h
+        terrain/patchfactory.cpp
         terrain/planet.h
         terrain/planet.cpp
-        terrain/sphericalterrain.h
-        terrain/sphericalterrain.cpp
         terrain/terrainface.h
         terrain/terrainface.cpp
-        terrain/terrainpatch.h
-        terrain/terrainpatch.cpp
-        terrain/terraintype.h
-        terrain/terraintype.cpp
         terrain/quadtreenode.h
         terrain/quadtreenode.cpp
-        game/gamewindow.h game/gamewindow.cpp
-        game/space.h game/space.cpp
+        game/gamewindow.h
+        game/gamewindow.cpp
+        game/space.h
+        game/space.cpp
         utils/camera.h
         utils/camera.cpp
         utils/consts.h

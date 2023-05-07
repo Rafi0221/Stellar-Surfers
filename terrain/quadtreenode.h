@@ -4,16 +4,17 @@
 #include <QVector2D>
 #include <QMatrix4x4>
 
+class Patch;
+class PatchFactory;
 class TerrainFace;
-class TerrainPatch;
-class TerrainType;
 
 class QuadTreeNode
 {
 private:
     TerrainFace *face;
-    TerrainPatch *patch;
-    TerrainType *type;
+    Patch *patch;
+
+    PatchFactory *factory;
 
     QuadTreeNode *parent;
     QuadTreeNode *children[4];
@@ -31,7 +32,7 @@ private:
 
     int counter = 0;
 public:
-    QuadTreeNode(TerrainFace *face, TerrainType *type, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
+    QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
     ~QuadTreeNode();
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);

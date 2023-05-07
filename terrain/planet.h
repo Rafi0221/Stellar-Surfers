@@ -3,22 +3,23 @@
 
 #include <QVector3D>
 
+class PatchFactory;
 class TerrainFace;
-class TerrainType;
 
 class Planet
 {
 private:
-    TerrainType *type;
     TerrainFace *faces[6];
 
     QVector3D position;
     QVector3D rotation;
 
-    int seed;
     float radius;
+
+    PatchFactory *factory;
+
 public:
-    Planet(float radius = 1.0f, int seed = 0);
+    Planet(PatchFactory *factory, float radius = 1.0f);
     void update(QVector3D cameraPosition);
     void render();
     bool checkCollision(QVector3D cameraPosition);

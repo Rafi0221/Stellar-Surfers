@@ -1,6 +1,8 @@
 
 #include "space.h"
 
+#include "../terrain/noisedpatchfactory.h"
+
 #include <QVector3D>
 #include <cmath>
 #include <random>
@@ -59,7 +61,8 @@ void Space::checkAddPlanet(const QVector3D & coordinates) {
     const int hashCutoff = 4000000;
     if(hashCoordinates(coordinates) < hashCutoff && !takenCoords[coordinates]) {
         qDebug() << hashCoordinates(coordinates) << coordinates;
-        Planet* planet = new Planet(3.0f, hashCoordinates(coordinates));
+        //we might need a new hash for planet seed
+        Planet* planet = new Planet(new NoisedPatchFactory(hashCoordinates(coordinates)), 3.0f);
         planet->setPosition(coordinates);
         planets.push_back(planet);
         takenCoords[coordinates] = true;
