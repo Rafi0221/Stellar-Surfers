@@ -20,6 +20,7 @@ public:
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
+    bool chechCollision(const QVector3D & relativePosition);
 };
 
 #endif // TERRAINFACE_H

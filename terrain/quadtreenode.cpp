@@ -89,3 +89,24 @@ void QuadTreeNode::render(){
         }
     }
 }
+
+bool QuadTreeNode::chechCollision(const QVector3D & relativePosition) {
+    if(isLeaf()) {
+        QVector3D planetCenter = QVector3D(0,0,0);
+        float distPosCenter = planetCenter.distanceToPoint(relativePosition);
+        float distPosPatch = relativePosition.distanceToPoint(patch->getCenter());
+        float distPatchCenter = planetCenter.distanceToPoint(patch->getCenter());
+        return distPosPatch < distPatchCenter && distPosCenter < distPatchCenter;
+    }
+
+    int closestChildIndex = -1;
+    float smallestDist = std::numeric_limits<float>::max();
+    for(int i = 0; i < 4; i++){
+        float distance = relativePosition.distanceToPoint(children[i]->patch->getCenter());
+        if(distance < smallestDist) {
+            smallestDist = distance;
+            closestChildIndex = i;
+        }
+    }
+    return children[closestChildIndex]->chechCollision(relativePosition);
+}

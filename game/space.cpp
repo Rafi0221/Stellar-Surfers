@@ -152,3 +152,13 @@ void Space::render() {
     }
 }
 
+bool Space::checkCollision(QVector3D cameraPosition) {
+    for(Planet* planet: planets) {
+        if(cameraPosition.distanceToPoint(planet->getPosition()) <= 2*planet->getRadius()) {
+            if(planet->checkCollision(cameraPosition))
+                return true;
+        }
+    }
+    return false;
+}
+

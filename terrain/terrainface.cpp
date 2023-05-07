@@ -21,3 +21,7 @@ void TerrainFace::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 void TerrainFace::render(){
     root->render();
 }
+
+bool TerrainFace::chechCollision(const QVector3D & relativePosition) {
+    return root->chechCollision(relativePosition);
+}

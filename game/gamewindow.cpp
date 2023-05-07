@@ -23,11 +23,13 @@ void GameWindow::initialize()
 //    face = new TerrainFace(new SphericalTerrain());
     ShaderManager::initialize();
     PatchIndices::initialize();
-//    planet = new Planet(5.0f);
-//    planet->setPosition(QVector3D(0,0,15));
 
-    space = new Space(seed.seed);
-    space->initialize();
+    planet = new Planet(5.0f);
+    planet->setPosition(QVector3D(0,0,15));
+
+//    space = new Space(seed.seed);
+//    space->initialize();
+
 //    for(int i = 0; i < 100; i++){
 //        planets[i] = new Planet(3.0f);
 //        planets[i]->setPosition(QVector3D(rand() % 150 - 75, rand()  % 150 - 75, rand() % 150 - 75));
@@ -248,12 +250,22 @@ void GameWindow::render()
 //    planet->setRotation(QVector3D(0,(float)counter/20,0));
 //    planet->update(QVector3D(0,0,(float)counter/400));
 
-    space->update(camera->getPosition());
-    space->render();
+//    space->update(camera->getPosition());
+//    space->render();
+
 //    for(int i = 0; i < 100; i++){
 //        planets[i]->update(camera->getPosition());
 //        planets[i]->render();
 //    }
-//    planet->update(camera->getPosition());
-//    planet->render();
+    planet->update(camera->getPosition());
+    planet->render();
+
+//    if(space->checkCollision(camera->getPosition())) {
+//        qDebug() << "ALARAM!!!";
+//    }
+
+    if(planet->checkCollision(camera->getPosition())) {
+        qDebug() << "ALARAM!!!";
+    }
+    else qDebug() << "no collision";
 }

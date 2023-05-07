@@ -6,12 +6,15 @@
 #include "noisedterrain.h"
 #include "terraintype.h"
 #include "terrainface.h"
-#include "../utils/consts.h""
+#include "../utils/consts.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
 Planet::Planet(float radius, int seed)
 {
+    this->radius = radius;
+    this->seed = seed;
+
     this->type = new NoisedTerrain(radius);
     this->faces[2] = new TerrainFace(type, QMatrix4x4());
     QMatrix4x4 tmp;
@@ -52,6 +55,15 @@ void Planet::render(){
     }
 }
 
+bool Planet::checkCollision(QVector3D cameraPosition) {
+    QVector3D relativePosition  = cameraPosition - position;
+    for(int i = 0; i < 6; i++){
+        if(faces[i]->chechCollision(relativePosition))
+            return true;
+    }
+    return false;
+}
+
 void Planet::setPosition(QVector3D position){
     this->position = position;
 }
@@ -62,4 +74,8 @@ QVector3D Planet::getPosition() {
 
 void Planet::setRotation(QVector3D rotation){
     this->rotation = rotation;
+}
+
+float Planet::getRadius() {
+    return radius;
 }

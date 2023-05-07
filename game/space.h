@@ -15,6 +15,7 @@ public:
     void update(QVector3D cameraPosition);
     void initialize();
     void render();
+    bool checkCollision(QVector3D cameraPosition);
 
 private:
     int seed;

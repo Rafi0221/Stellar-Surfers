@@ -37,5 +37,8 @@ private:
     SkyBox *skybox;
     int counter = 0;
     SetupGame::GameSeed seed;
+
+    //for testing
+    Planet *planet;
 };
 #endif // TRIANGLEWINDOW_H
