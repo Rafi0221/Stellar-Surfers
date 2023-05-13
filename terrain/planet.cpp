@@ -5,7 +5,7 @@
 
 #include "patchfactory.h"
 #include "terrainface.h"
-#include "../utils/consts.h""
+#include "../utils/consts.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
@@ -13,12 +13,12 @@ Planet::Planet(PatchFactory *factory, float radius)
 {
     this->factory = factory;
     this->radius = radius;
-    this->faces[2] = new TerrainFace(this->factory, QMatrix4x4());
+    this->faces[FAR_] = new TerrainFace(this->factory, QMatrix4x4());
     QMatrix4x4 tmp;
     tmp.rotate(90, 0, 1, 0);
     this->faces[LEFT] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[0] = new TerrainFace(this->factory, tmp);
+    this->faces[NEAR_] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
     this->faces[RIGHT] = new TerrainFace(this->factory, tmp);
     tmp = QMatrix4x4();
@@ -26,6 +26,18 @@ Planet::Planet(PatchFactory *factory, float radius)
     this->faces[DOWN] = new TerrainFace(this->factory, tmp);
     tmp.rotate(180, 1, 0, 0);
     this->faces[UP] = new TerrainFace(this->factory, tmp);
+    int neighbors[6][4] = {
+        {UP, LEFT, DOWN, RIGHT},  // NEAR_
+        {UP, FAR_, DOWN, NEAR_},  // LEFT
+        {UP, RIGHT, DOWN, LEFT},  // FAR_
+        {UP, NEAR_, DOWN, FAR_},  // RIGHT
+        {NEAR_, RIGHT, FAR_, LEFT},  // UP
+        {FAR_, RIGHT, NEAR_, LEFT},  // DOWN
+    };
+    for (int dir = 0; dir < 4; dir++) {
+        for (int i = 0; i < 6; i++)
+            this->faces[i]->addNeighbor(this->faces[neighbors[i][dir]], dir);
+    }
 }
 
 void Planet::update(QVector3D cameraPosition){

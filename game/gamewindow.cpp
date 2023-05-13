@@ -209,7 +209,7 @@ void GameWindow::render()
     skyboxShader->setInt("permutation", 0);
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
-//    skybox->render();
+    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -231,7 +231,7 @@ void GameWindow::render()
     terrainShader->use();
 
     terrainShader->setVec3("dirLight.direction", QVector3D(-0.2f, -1.0f, -0.3f));
-    terrainShader->setVec3("dirLight.ambient", QVector3D(0.25f, 0.25f, 0.25f));
+    terrainShader->setVec3("dirLight.ambient", QVector3D(0.5f, 0.5f, 0.5f));
     terrainShader->setVec3("dirLight.diffuse", QVector3D(0.3f, 0.3f, 0.3f));
     terrainShader->setVec3("dirLight.specular", QVector3D(0.4f, 0.4f, 0.4f));
 

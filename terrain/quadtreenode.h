@@ -18,6 +18,7 @@ private:
 
     QuadTreeNode *parent;
     QuadTreeNode *children[4];
+    QuadTreeNode *neighbors[4];
 
     int depth;
     float scale;
@@ -38,6 +39,7 @@ public:
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
 
+    friend class TerrainFace;
 };
 
 #endif // QUADTREENODE_H

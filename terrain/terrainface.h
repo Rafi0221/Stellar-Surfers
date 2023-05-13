@@ -16,10 +16,12 @@ private:
     QMatrix4x4 relativeRotation;
 public:
     TerrainFace(PatchFactory *factory, QMatrix4x4 relativeRotation);
+
     ~TerrainFace();
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
+    void addNeighbor(TerrainFace* neighbor, int dir);
 };
 
 #endif // TERRAINFACE_H

@@ -21,3 +21,8 @@ void TerrainFace::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 void TerrainFace::render(){
     root->render();
 }
+
+/* called only upon construction */
+void TerrainFace::addNeighbor(TerrainFace* neighborFace, int dir) {
+    this->root->neighbors[dir] = neighborFace->root;
+}
