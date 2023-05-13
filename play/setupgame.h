@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 
+#include "../connect/connectmanager.h"
 #include "saves/gamesave.h"
 
 QT_BEGIN_NAMESPACE
@@ -19,7 +20,7 @@ class SetupGame : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit SetupGame(QWidget *parent = nullptr);
+    explicit SetupGame(ConnectManager* connectManager, QWidget *parent = nullptr);
     void startClicked();
     void closeEvent(QCloseEvent* event);
 
@@ -42,6 +43,7 @@ private:
 
     QList<GameSave> saveList;
 
+    ConnectManager* connectManager;
     Ui::SetupWindow *ui;
 };
 

@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         connect/connectwindow.ui
         connect/connectmanager.cpp connect/connectmanager.h
+        connect/controllerupdater.h connect/controllerupdater.cpp
         connect/client.cpp connect/client.h
         connect/parser.h connect/parser.cpp
         connect/glupdater.h connect/glupdater.cpp

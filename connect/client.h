@@ -29,7 +29,7 @@ public:
     static const int messageSize = 16;
 
 public slots:
-    void sendMessage(const QString &message);
+    void sendMessage(const QByteArray &message);
 
 signals:
     void messageReceived(const QByteArray &line);

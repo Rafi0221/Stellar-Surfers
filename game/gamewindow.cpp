@@ -23,11 +23,11 @@ void GameWindow::initialize()
     ShaderManager::initialize();
     PatchIndices::initialize();
 
-    planet = new Planet(new NoisedPatchFactory(0), 5.0f);
-    planet->setPosition(QVector3D(0,0,15));
+//    planet = new Planet(new NoisedPatchFactory(0), 5.0f);
+//    planet->setPosition(QVector3D(0,0,15));
 
-//    space = new Space(seed.seed);
-//    space->initialize();
+    space = new Space(seed.seed);
+    space->initialize();
 
 //    for(int i = 0; i < 100; i++){
 //        planets[i] = new Planet(new NoisedPatchFactory(i), 3.0f);
@@ -156,6 +156,10 @@ void GameWindow::setSeed(SetupGame::GameSeed value) {
     seed = value;
 }
 
+void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
+    this->controllerUpdater = controllerUpdater;
+}
+
 void GameWindow::render()
 {
     GL::funcs.glEnable(GL_DEPTH_TEST);
@@ -249,22 +253,24 @@ void GameWindow::render()
 //    planet->setRotation(QVector3D(0,(float)counter/20,0));
 //    planet->update(QVector3D(0,0,(float)counter/400));
 
-//    space->update(camera->getPosition());
-//    space->render();
+    space->update(camera->getPosition());
+    space->render();
 
 //    for(int i = 0; i < 100; i++){
 //        planets[i]->update(camera->getPosition());
 //        planets[i]->render();
 //    }
-    planet->update(camera->getPosition());
-    planet->render();
+//    planet->update(camera->getPosition());
+//    planet->render();
 
 //    if(space->checkCollision(camera->getPosition())) {
 //        qDebug() << "ALARAM!!!";
 //    }
 
-    if(planet->checkCollision(camera->getPosition())) {
-        qDebug() << "ALARAM!!!";
-    }
-    else qDebug() << "no collision";
+//    if(planet->checkCollision(camera->getPosition())) {
+//        qDebug() << "ALARAM!!!";
+//    }
+//    else qDebug() << "no collision";
+
+    controllerUpdater->update(camera->getPosition(), camera->getSpeed());
 }
