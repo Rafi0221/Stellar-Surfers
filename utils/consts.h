@@ -5,6 +5,8 @@
 #define PATCH_QUADS ((1 << 4))
 #define PATCH_VERTS (PATCH_QUADS + 1)
 
+#define NORMAL_MAP_SIZE 160
+
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2

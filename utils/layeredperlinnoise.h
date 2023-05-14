@@ -23,6 +23,7 @@ public:
                        double baseFrequency = 0.6f, double persistance = 0.5f, double lacunarity = 2.0f);
     virtual double getValue(double x, double y, double z);
     double getMultiplier();
+    PerlinNoise *getPerlinNoise();
 };
 
 #endif // LAYEREDPERLINNOISE_H

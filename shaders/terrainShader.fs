@@ -10,17 +10,28 @@ struct DirLight {
 };
 
 in vec3 FragPos;
-in vec3 Normal;
-in vec3 Color;
+in vec2 TexCoord;
+//in vec3 Normal;
+//in vec3 Color;
 
 uniform float shininess;
 
 uniform vec3 viewPos;
 uniform DirLight dirLight;
 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform sampler2D normalMapTexture;
+
 void main()
 {
-    vec3 normal = normalize(Normal);
+    vec3 normal = texture(normalMapTexture, TexCoord).rgb;
+    normal = mat3(transpose(inverse(model))) * normal;
+    normal = normalize(normal);
+
+    vec3 color = vec3(1.0 - (texture(normalMapTexture, TexCoord).a - 0.8) * 2.5);
 
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, normal);
@@ -32,9 +43,9 @@ void main()
     float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
 //    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
-    vec3 ambient = dirLight.ambient * Color;
-    vec3 diffuse = dirLight.diffuse * diff * Color;
-    vec3 specular = dirLight.specular * spec * Color;
+    vec3 ambient = dirLight.ambient * color;
+    vec3 diffuse = dirLight.diffuse * diff * color;
+    vec3 specular = dirLight.specular * spec * color;
     if(diff <= 0.0)
         specular *= diff;
 

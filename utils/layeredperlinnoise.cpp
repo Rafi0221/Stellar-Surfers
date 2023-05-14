@@ -36,3 +36,7 @@ double LayeredPerlinNoise::getValue(double x, double y, double z){
 double LayeredPerlinNoise::getMultiplier(){
     return multiplier;
 }
+
+PerlinNoise* LayeredPerlinNoise::getPerlinNoise(){
+    return perlin;
+}
