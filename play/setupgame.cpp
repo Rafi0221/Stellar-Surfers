@@ -62,6 +62,11 @@ void SetupGame::startClicked() {
     DataSaver::write(saveList);
 
     qDebug() << "starting a new game with seed (" << gs.seed << "," << gs.f1 << "," << gs.f2 << "," << gs.f3 << ")";
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setVersion(3, 3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
     GameWindow *gameWindow = new GameWindow();
     gameWindow->setControllerUpdater(new ControllerUpdater(connectManager));
     gameWindow->setSeed(gs);
