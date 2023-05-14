@@ -32,6 +32,10 @@ void GameWindow::setSeed(SetupGame::GameSeed value) {
     seed = value;
 }
 
+void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
+    this->controllerUpdater = controllerUpdater;
+}
+
 void GameWindow::render()
 {
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
@@ -103,4 +107,6 @@ void GameWindow::render()
 //        qDebug() << "ALARAM!!!";
 //    }
 //    else qDebug() << "no collision";
+
+    controllerUpdater->update(camera->getPosition(), camera->getSpeed());
 }

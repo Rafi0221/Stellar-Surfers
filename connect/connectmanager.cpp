@@ -130,19 +130,17 @@ void ConnectManager::hostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
 
 void ConnectManager::play()
 {
-    if (client != nullptr) {
-        SetupGame *s = new SetupGame();
-        connect(s, &SetupGame::startGame, client, [=]() { client->sendMessage("Start!"); } );
-        this->hide();
-        s->show();
-    }
+    SetupGame *s = new SetupGame(this);
+    connect(s, &SetupGame::startGame, client, [=]() { client->sendMessage("Start!"); } );
+    this->hide();
+    s->show();
 }
 
 void ConnectManager::connected(const QString &name) {
     QMessageBox msg;
     msg.setText("Connected");
 
-    int cnt = 2;
+    int cnt = 1;
 
     QTimer cntDown;
     QObject::connect(&cntDown, &QTimer::timeout, [&msg,&cnt, &cntDown]()->void{
@@ -153,4 +151,8 @@ void ConnectManager::connected(const QString &name) {
     });
     cntDown.start(1000);
     msg.exec();
+}
+
+void ConnectManager::send(const QByteArray &message) {
+    client->sendMessage(message);
 }

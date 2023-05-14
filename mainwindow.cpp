@@ -27,7 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::playClicked()
 {
-    SetupGame *s = new SetupGame();
+    SetupGame *s = new SetupGame(connectManager);
     //connect(s, &SetupGame::closed, this, &MainWindow::show);
     //this->hide();
     s->show();

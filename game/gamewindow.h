@@ -4,6 +4,7 @@
 #include <QOpenGLShaderProgram>
 #include "../opengl/openglwindow.h"
 #include "../play/setupgame.h"
+#include "../connect/controllerupdater.h"
 #include "space.h"
 
 class Camera;
@@ -20,6 +21,7 @@ public:
     void initialize() override;
     void render() override;
     void setSeed(SetupGame::GameSeed);
+    void setControllerUpdater(ControllerUpdater* controllerUpdater);
 
 private:
     GLint m_posAttr = 0;
@@ -28,6 +30,7 @@ private:
 
     int m_frame = 0;
 
+    ControllerUpdater* controllerUpdater;
     Camera *camera;
     Space *space;
 

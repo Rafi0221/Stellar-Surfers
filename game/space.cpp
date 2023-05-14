@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <functional>
 
-const int DIST = 80;
+const int DIST = 50;
 const int DISTincrement = 5;
 static int hashRange = 1e9;
 

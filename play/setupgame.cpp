@@ -2,16 +2,19 @@
 #include "ui_setupwindow.h"
 #include "saves/datasaver.h"
 #include "../game/gamewindow.h"
+#include "../connect/connectmanager.h"
 
 #include <QDebug>
 #include <random>
 
 static const int defaultSeedLength = 10;
 
-SetupGame::SetupGame(QWidget *parent)
+SetupGame::SetupGame(ConnectManager* connectManager, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SetupWindow)
 {
+    this->connectManager = connectManager;
+
     ui->setupUi(this);
     this->setWindowTitle("Stellar Surfers");
 
@@ -60,6 +63,7 @@ void SetupGame::startClicked() {
 
     qDebug() << "starting a new game with seed (" << gs.seed << "," << gs.f1 << "," << gs.f2 << "," << gs.f3 << ")";
     GameWindow *gameWindow = new GameWindow();
+    gameWindow->setControllerUpdater(new ControllerUpdater(connectManager));
     gameWindow->setSeed(gs);
     gameWindow->resize(640, 480);
     emit startGame();

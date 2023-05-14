@@ -31,6 +31,7 @@ public slots:
     void addDevice(const QBluetoothDeviceInfo&);
     void powerClicked(bool clicked);
     void connected(const QString &name);
+    void send(const QByteArray &message);
 private slots:
     void startScan();
     void stopScan();
