@@ -18,6 +18,7 @@ private:
 
     QuadTreeNode *parent;
     QuadTreeNode *children[4];
+    QuadTreeNode *neighbors[4];
 
     int depth;
     float scale;
@@ -34,11 +35,14 @@ private:
 public:
     QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
     ~QuadTreeNode();
+    void announceNewNeighbor(QuadTreeNode* added, int dir);
+    void announceDeletedNeighbor(QuadTreeNode* toDelete, int dir);
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
     bool chechCollision(const QVector3D & relativePosition);
 
+    friend class TerrainFace;
 };
 
 #endif // QUADTREENODE_H

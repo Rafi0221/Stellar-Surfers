@@ -1,7 +1,7 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
-#define MAX_LOD_DIFFERENCE (2)
+#define MAX_LOD_DIFFERENCE (4)
 #define PATCH_QUADS ((1 << 4))
 #define PATCH_VERTS (PATCH_QUADS + 1)
 
@@ -17,11 +17,14 @@
 #define SOUTH_EAST 2
 #define SOUTH_WEST 3
 
-#define NEAR 0
+#define NEAR_ 0
 #define LEFT 1
-#define FAR 2
+#define FAR_ 2
 #define RIGHT 3
 #define UP 4
 #define DOWN 5
+
+int combine_dirs(int x, int cw);
+int opposite_dir(int dir);
 
 #endif // CONSTS_H

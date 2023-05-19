@@ -22,6 +22,11 @@ void TerrainFace::render(){
     root->render();
 }
 
+/* called only upon construction */
+void TerrainFace::addNeighbor(TerrainFace* neighborFace, int dir) {
+    this->root->neighbors[dir] = neighborFace->root;
+}
+
 bool TerrainFace::chechCollision(const QVector3D & relativePosition) {
     return root->chechCollision(relativePosition);
 }

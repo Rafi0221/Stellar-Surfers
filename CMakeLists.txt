@@ -58,6 +58,7 @@ set(PROJECT_SOURCES
         utils/camera.h
         utils/camera.cpp
         utils/consts.h
+        utils/consts.cpp
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/noise.h

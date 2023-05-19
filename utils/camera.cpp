@@ -10,7 +10,7 @@ Camera::Camera()
     pitch = 0;
     roll = 0;
     updateCameraVectors();
-    speed = 0.004f;
+    speed = 0.01f;
 }
 
 QMatrix4x4 Camera::getViewMatrix(){
@@ -94,7 +94,7 @@ void Camera::addAngles(float pitch, float yaw, float roll){
 
 void Camera::updateSpeed(float a) {
     const float slowdown = 0.000005f;
-    a = a * 0.00002f;
+    a = a * 0.00005f;
     speed = speed - slowdown + a;
     if(speed < 0)
         speed = 0.0f;
