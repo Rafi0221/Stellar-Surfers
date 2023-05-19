@@ -26,13 +26,21 @@ Planet::Planet(PatchFactory *factory, float radius)
     this->faces[DOWN] = new TerrainFace(this->factory, tmp);
     tmp.rotate(180, 1, 0, 0);
     this->faces[UP] = new TerrainFace(this->factory, tmp);
-    int neighbors[6][4] = {
+    /* int neighbors[6][4] = {
         {UP, LEFT, DOWN, RIGHT},  // NEAR_
         {UP, FAR_, DOWN, NEAR_},  // LEFT
         {UP, RIGHT, DOWN, LEFT},  // FAR_
         {UP, NEAR_, DOWN, FAR_},  // RIGHT
         {NEAR_, RIGHT, FAR_, LEFT},  // UP
         {FAR_, RIGHT, NEAR_, LEFT},  // DOWN
+    }; */
+    int neighbors[6][4] = {
+        {DOWN, RIGHT, UP, LEFT},  // NEAR_
+        {DOWN, NEAR_, UP, FAR_},  // LEFT
+        {DOWN, LEFT, UP, RIGHT},  // FAR_
+        {DOWN, FAR_, UP, NEAR_},  // RIGHT
+        {FAR_, LEFT, NEAR_, RIGHT},  // UP
+        {NEAR_, LEFT, FAR_, RIGHT},  // DOWN
     };
     for (int dir = 0; dir < 4; dir++) {
         for (int i = 0; i < 6; i++)

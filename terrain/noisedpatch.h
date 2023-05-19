@@ -21,7 +21,7 @@ private:
 public:
     NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, LayeredPerlinNoise *noise);
 
-    virtual void render();
+    virtual void render(int dNorth, int dEast, int dSouth, int dWest);
 };
 
 #endif // NOISEDPATCH_H

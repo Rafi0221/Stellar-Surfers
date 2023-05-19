@@ -102,8 +102,8 @@ void NoisedPatch::calculateBoundingSphere(){
     }
 }
 
-void NoisedPatch::render(){
-    this->indices = PatchIndices::getIndices(0, 0, 0, 0);
+void NoisedPatch::render(int dNorth, int dEast, int dSouth, int dWest){
+    this->indices = PatchIndices::getIndices(dNorth, dEast, dSouth, dWest);
     GL::funcs.glBindVertexArray(VAO);
     GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->getEBO());
     // GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -24,7 +24,7 @@ public:
     QVector3D getCenter();
     float getRadius();
 
-    virtual void render() = 0;
+    virtual void render(int dNorth, int dEast, int dSouth, int dWest) = 0;
 };
 
 #endif // PATCH_H

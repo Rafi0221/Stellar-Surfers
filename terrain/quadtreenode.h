@@ -35,6 +35,8 @@ private:
 public:
     QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
     ~QuadTreeNode();
+    void announceNewNeighbor(QuadTreeNode* added, int dir);
+    void announceDeletedNeighbor(QuadTreeNode* toDelete, int dir);
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
