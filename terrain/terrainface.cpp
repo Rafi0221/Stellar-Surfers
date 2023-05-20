@@ -27,6 +27,6 @@ void TerrainFace::addNeighbor(TerrainFace* neighborFace, int dir) {
     this->root->neighbors[dir] = neighborFace->root;
 }
 
-bool TerrainFace::chechCollision(const QVector3D & relativePosition) {
-    return root->chechCollision(relativePosition);
+bool TerrainFace::checkCollision(const QVector3D & relativePosition) {
+    return root->checkCollision(relativePosition);
 }

@@ -58,7 +58,7 @@ int Space::hashCoordinates(const QVector3D & coordinates) {
 }
 
 void Space::checkAddPlanet(const QVector3D & coordinates) {
-    const int hashCutoff = 4000000;
+    const int hashCutoff = 1000000;
     if(hashCoordinates(coordinates) < hashCutoff && !takenCoords[coordinates]) {
         qDebug() << hashCoordinates(coordinates) << coordinates;
         //we might need a new hash for planet seed

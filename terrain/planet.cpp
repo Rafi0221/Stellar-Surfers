@@ -67,7 +67,7 @@ void Planet::render(){
 bool Planet::checkCollision(QVector3D cameraPosition) {
     QVector3D relativePosition  = cameraPosition - position;
     for(int i = 0; i < 6; i++){
-        if(faces[i]->chechCollision(relativePosition))
+        if(faces[i]->checkCollision(relativePosition))
             return true;
     }
     return false;

@@ -40,7 +40,7 @@ public:
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
     void render();
-    bool chechCollision(const QVector3D & relativePosition);
+    bool checkCollision(const QVector3D & relativePosition);
 
     friend class TerrainFace;
 };

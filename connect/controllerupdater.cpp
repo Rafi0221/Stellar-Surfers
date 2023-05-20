@@ -9,7 +9,7 @@ ControllerUpdater::ControllerUpdater(ConnectManager* connectManager)
 }
 
 
-void ControllerUpdater::update(QVector3D position, float speed) {
+void ControllerUpdater::update(QVector3D position, float speed, int collision) {
 //    qDebug() << "got" << position << speed;
 
     QByteArray buffer;
@@ -20,6 +20,7 @@ void ControllerUpdater::update(QVector3D position, float speed) {
     buffer.append(reinterpret_cast<const char*>(&y), sizeof(y));
     buffer.append(reinterpret_cast<const char*>(&z), sizeof(z));
     buffer.append(reinterpret_cast<const char*>(&speed), sizeof(speed));
+    // buffer.append(reinterpret_cast<const char*>(&collision), sizeof(collision));
 
     connectManager->send(buffer);
 }

@@ -164,7 +164,7 @@ void QuadTreeNode::render(){
     }
 }
 
-bool QuadTreeNode::chechCollision(const QVector3D & relativePosition) {
+bool QuadTreeNode::checkCollision(const QVector3D & relativePosition) {
     if(isLeaf()) {
         QVector3D planetCenter = QVector3D(0,0,0);
         float distPosCenter = planetCenter.distanceToPoint(relativePosition);
@@ -182,5 +182,5 @@ bool QuadTreeNode::chechCollision(const QVector3D & relativePosition) {
             closestChildIndex = i;
         }
     }
-    return children[closestChildIndex]->chechCollision(relativePosition);
+    return children[closestChildIndex]->checkCollision(relativePosition);
 }
