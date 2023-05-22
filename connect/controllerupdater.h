@@ -6,6 +6,7 @@
 #include "connectmanager.h"
 
 #include <QObject>
+#include <QTime>
 
 
 class ControllerUpdater : public QObject
@@ -17,6 +18,7 @@ public:
 
 private:
     ConnectManager* connectManager;
+    QTime lastSend;
 };
 
 #endif // CONTROLLERUPDATER_H

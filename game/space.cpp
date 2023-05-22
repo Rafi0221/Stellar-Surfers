@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <functional>
 
-const int DIST = 50;
+const int DIST = 80;
 const int DISTincrement = 5;
 static int hashRange = 1e9;
 
@@ -60,7 +60,7 @@ int Space::hashCoordinates(const QVector3D & coordinates) {
 void Space::checkAddPlanet(const QVector3D & coordinates) {
     const int hashCutoff = 1000000;
     if(hashCoordinates(coordinates) < hashCutoff && !takenCoords[coordinates]) {
-        qDebug() << hashCoordinates(coordinates) << coordinates;
+        //qDebug() << hashCoordinates(coordinates) << coordinates;
         //we might need a new hash for planet seed
         Planet* planet = new Planet(new NoisedPatchFactory(hashCoordinates(coordinates)), 3.0f);
         planet->setPosition(coordinates);
@@ -85,9 +85,10 @@ void Space::initialize() {
 }
 
 bool Space::isInRange(const QVector3D & pos, const QVector3D & coordinates) {
-    return  pos.x()-DIST <= coordinates.x() && coordinates.x() <= pos.x()+DIST
-            && pos.y()-DIST <= coordinates.y() && coordinates.y() <= pos.y()+DIST
-            && pos.z()-DIST <= coordinates.z() && coordinates.z() <= pos.z()+DIST;
+    static const int dist = DIST + 2*DISTincrement;
+    return  pos.x()-dist <= coordinates.x() && coordinates.x() <= pos.x()+dist
+            && pos.y()-dist <= coordinates.y() && coordinates.y() <= pos.y()+dist
+            && pos.z()-dist <= coordinates.z() && coordinates.z() <= pos.z()+dist;
 }
 
 void Space::update(QVector3D cameraPosition) {

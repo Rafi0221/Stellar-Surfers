@@ -6,13 +6,20 @@
 ControllerUpdater::ControllerUpdater(ConnectManager* connectManager)
 {
     this->connectManager = connectManager;
+    lastSend = QTime::currentTime();
 }
 
 
 void ControllerUpdater::update(QVector3D position, float speed, int collision) {
 //    qDebug() << "got" << position << speed;
+    const int msecBreak = 20;
+    if(lastSend.msecsTo(QTime::currentTime()) < msecBreak) {
+        return;
+    }
+    lastSend = QTime::currentTime();
 
     QByteArray buffer;
+
     float x = position.x();
     float y = position.y();
     float z = position.z();
@@ -20,7 +27,7 @@ void ControllerUpdater::update(QVector3D position, float speed, int collision) {
     buffer.append(reinterpret_cast<const char*>(&y), sizeof(y));
     buffer.append(reinterpret_cast<const char*>(&z), sizeof(z));
     buffer.append(reinterpret_cast<const char*>(&speed), sizeof(speed));
-    // buffer.append(reinterpret_cast<const char*>(&collision), sizeof(collision));
+    buffer.append(reinterpret_cast<const char*>(&collision), sizeof(collision));
 
     connectManager->send(buffer);
 }
