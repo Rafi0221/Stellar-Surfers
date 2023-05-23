@@ -68,6 +68,7 @@ set(PROJECT_SOURCES
         utils/shader.cpp
         utils/shadermanager.h
         utils/shadermanager.cpp
+        images.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

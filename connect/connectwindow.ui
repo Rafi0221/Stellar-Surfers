@@ -6,28 +6,67 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>411</height>
+    <width>500</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Bluetooth Scanner</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(20, 14, 28);</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double click on &lt;span style=&quot; color:#00ff00;&quot;&gt;paired&lt;/span&gt; device to connect to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;
+&lt;span style=&quot; color:#E8E8E8;&quot;&gt;Double click on &lt;/span&gt; &lt;span style=&quot; color:#00AA00;&quot;&gt;paired&lt;/span&gt; 
+&lt;span style=&quot; color:#E8E8E8;&quot;&gt;device to connect to&lt;/span&gt; &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QListWidget" name="list"/>
+    <widget class="QListWidget" name="list">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255, 10);</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="power">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: bold 15pt;
+color: rgb(232, 232, 232);
+</string>
+     </property>
      <property name="text">
       <string>Bluetooth Powered On</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -35,6 +74,15 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="scan">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 50);
+border-style: outset;
+border-width: 2px;
+border-radius: 10px;
+border-color: beige;
+font: bold 20pt;
+color: rgb(232, 232, 232);</string>
+       </property>
        <property name="text">
         <string>Scan</string>
        </property>
@@ -42,6 +90,15 @@
      </item>
      <item>
       <widget class="QPushButton" name="stopScan">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 50);
+border-style: outset;
+border-width: 2px;
+border-radius: 10px;
+border-color: beige;
+font: bold 20pt;
+color: rgb(232, 232, 232);</string>
+       </property>
        <property name="text">
         <string>Stop scan</string>
        </property>
@@ -49,15 +106,17 @@
      </item>
      <item>
       <widget class="QPushButton" name="clear">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 50);
+border-style: outset;
+border-width: 2px;
+border-radius: 10px;
+border-color: beige;
+font: bold 20pt;
+color: rgb(232, 232, 232);</string>
+       </property>
        <property name="text">
         <string>Clear</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="play">
-       <property name="text">
-        <string>Play!</string>
        </property>
       </widget>
      </item>
@@ -67,22 +126,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>play</sender>
-   <signal>clicked()</signal>
-   <receiver>ConnectWindow</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>323</x>
-     <y>275</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>268</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>clear</sender>
    <signal>clicked()</signal>

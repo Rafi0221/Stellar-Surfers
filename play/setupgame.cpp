@@ -16,15 +16,35 @@ SetupGame::SetupGame(ConnectManager* connectManager, QWidget *parent)
     this->connectManager = connectManager;
 
     ui->setupUi(this);
+    this->setWindowState(Qt::WindowMaximized);
     this->setWindowTitle("Stellar Surfers");
+    this->setWindowIcon(QIcon(":/media/media/ic_launcher.png"));
 
+    QPixmap bkgnd(":/media/media/galaxy.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    connect(ui->connectButton, &QPushButton::clicked, this, &SetupGame::connectClicked);
     connect(ui->startButton, &QPushButton::clicked, this, &SetupGame::startClicked);
     connect(ui->saveListWidget, &QListWidget::itemActivated, this, &SetupGame::itemActivated);
+
+    connect(this, &SetupGame::startGame, connectManager, [=]() { connectManager->send("Start!"); } );
+    connect(connectManager, &ConnectManager::connectionLost, this, &SetupGame::disconnected);
+    connect(connectManager, &ConnectManager::deviceConnected, this, &SetupGame::connected);
+    if(connectManager->isConnected())
+        ui->disconnectedLabel->hide();
+    else
+        ui->connectedLabel->hide();
 
     saveList = DataSaver::read();
     updateSaveListWidget();
 }
 
+void SetupGame::connectClicked() {
+    connectManager->show();
+}
 
 void SetupGame::startClicked() {
     std::string seedString = ui->seedField->text().toStdString();
@@ -82,7 +102,7 @@ void SetupGame::startClicked() {
 void SetupGame::updateSaveListWidget() {
     ui->saveListWidget->clear();
     for(auto &s : saveList) {
-        const QString label = s.seedString + u' ' + s.date.toString();
+        const QString label = s.seedString + " - " + s.date.toString("HH:mm dd.MM.yyyy");
         QListWidgetItem *item = new QListWidgetItem(label);
         ui->saveListWidget->addItem(item);
     }
@@ -98,8 +118,28 @@ void SetupGame::itemActivated(QListWidgetItem *item)
     ui->seedField->setText(seed);
 }
 
+void SetupGame::connected() {
+    ui->disconnectedLabel->hide();
+    ui->connectedLabel->show();
+}
+
+void SetupGame::disconnected() {
+    ui->connectedLabel->hide();
+    ui->disconnectedLabel->show();
+}
+
 void SetupGame::closeEvent(QCloseEvent* event) {
     emit closed();
     event->accept();
+}
+
+void SetupGame::resizeEvent(QResizeEvent *event)
+{
+    QPixmap bkgnd(":/media/media/galaxy.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+    QMainWindow::resizeEvent(event);
 }
 

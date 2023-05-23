@@ -15,8 +15,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void resizeEvent(QResizeEvent *event);
+
     void playClicked();
-    void connectClicked();
     void testClicked();
 
 private:

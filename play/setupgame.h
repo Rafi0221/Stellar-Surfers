@@ -21,8 +21,12 @@ class SetupGame : public QMainWindow
     Q_OBJECT
 public:
     explicit SetupGame(ConnectManager* connectManager, QWidget *parent = nullptr);
+    void connectClicked();
     void startClicked();
+    void connected();
+    void disconnected();
     void closeEvent(QCloseEvent* event);
+    void resizeEvent(QResizeEvent *event);
 
     struct GameSeed {
         int seed;

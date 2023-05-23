@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/media">
+        <file>media/galaxy.jpg</file>
+        <file>media/ic_launcher.png</file>
+    </qresource>
+</RCC>

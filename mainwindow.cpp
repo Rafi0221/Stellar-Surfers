@@ -11,9 +11,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowState(Qt::WindowMaximized);
     this->setWindowTitle("Stellar Surfers");
+    this->setWindowIcon(QIcon(":/media/media/ic_launcher.png"));
+
+    QPixmap bkgnd(":/media/media/galaxy.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
     connect(ui->playButton, &QPushButton::clicked, this, &MainWindow::playClicked);
-    connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::connectClicked);
     connect(ui->testButton, &QPushButton::clicked, this, &MainWindow::testClicked);
 
     connectManager = new ConnectManager();
@@ -34,11 +42,6 @@ void MainWindow::playClicked()
 
 }
 
-void MainWindow::connectClicked()
-{
-    connectManager->show();
-}
-
 void MainWindow::testClicked()
 {
     QSurfaceFormat format;
@@ -53,4 +56,14 @@ void MainWindow::testClicked()
     gameWindow->showMaximized();
 
     gameWindow->setAnimating(true);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QPixmap bkgnd(":/media/media/galaxy.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+    QMainWindow::resizeEvent(event);
 }

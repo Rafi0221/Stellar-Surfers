@@ -27,10 +27,13 @@ public:
     ConnectManager(QWidget *parent = nullptr);
     ~ConnectManager();
 
+    bool isConnected();
+
 public slots:
     void addDevice(const QBluetoothDeviceInfo&);
     void powerClicked(bool clicked);
-    void connected(const QString &name);
+    void connected();
+    void disconnected();
     void send(const QByteArray &message);
 private slots:
     void startScan();
@@ -38,9 +41,13 @@ private slots:
     void scanFinished();
     void itemActivated(QListWidgetItem *item);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
-    void play();
+
+signals:
+    void deviceConnected();
+    void connectionLost();
 
 private:
+    bool _isConnected = false;
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;
     QBluetoothLocalDevice *localDevice;
     Ui_ConnectWindow *ui;
