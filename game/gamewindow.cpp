@@ -77,7 +77,7 @@ void GameWindow::render()
     skyboxShader->setInt("permutation", 0);
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
-//    skybox->render();
+    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -113,14 +113,14 @@ void GameWindow::render()
 
 //    skybox->render();
 
-//    if(space->checkCollision(camera->getPosition())) {
-//        qDebug() << "ALARAM!!!";
-//    }
+    /* if(space->checkCollision(camera->getPosition())) {
+        qDebug() << "ALARAM!!!";
+    }
 
-//    if(planet->checkCollision(camera->getPosition())) {
-//        qDebug() << "ALARAM!!!";
-//    }
-//    else qDebug() << "no collision";
+    if(planet->checkCollision(camera->getPosition())) {
+        qDebug() << "ALARAM!!!";
+    }
+    else qDebug() << "no collision"; */
 
-//    controllerUpdater->update(camera->getPosition(), camera->getSpeed());
+    controllerUpdater->update(camera->getPosition(), camera->getSpeed(), space->checkCollision(camera->getPosition()));
 }

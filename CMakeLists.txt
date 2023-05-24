@@ -65,6 +65,7 @@ set(PROJECT_SOURCES
         utils/camera.h
         utils/camera.cpp
         utils/consts.h
+        utils/consts.cpp
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/noise.h
@@ -74,6 +75,7 @@ set(PROJECT_SOURCES
         utils/shader.cpp
         utils/shadermanager.h
         utils/shadermanager.cpp
+        images.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

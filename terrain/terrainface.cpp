@@ -24,6 +24,11 @@ void TerrainFace::render(QMatrix4x4 model){
     root->render(model);
 }
 
-bool TerrainFace::chechCollision(const QVector3D & relativePosition) {
-    return root->chechCollision(relativePosition);
+/* called only upon construction */
+void TerrainFace::addNeighbor(TerrainFace* neighborFace, int dir) {
+    this->root->neighbors[dir] = neighborFace->root;
+}
+
+bool TerrainFace::checkCollision(const QVector3D & relativePosition) {
+    return root->checkCollision(relativePosition);
 }

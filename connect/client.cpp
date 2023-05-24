@@ -64,8 +64,10 @@ void Client::readSocket()
 void Client::sendMessage(const QByteArray &message)
 {
     //qDebug() << "sending" << message;
-    if(socket->state() == QBluetoothSocket::SocketState::ConnectedState)
+    if(socket && socket->state() == QBluetoothSocket::SocketState::ConnectedState) {
         socket->write(message);
+    }
+
 }
 
 void Client::onSocketErrorOccurred(QBluetoothSocket::SocketError error)
@@ -84,7 +86,7 @@ void Client::onSocketErrorOccurred(QBluetoothSocket::SocketError error)
 void Client::connected()
 {
     qDebug() << socket->peerName() << " connected";
-    emit deviceConnected(socket->peerName());
+    emit deviceConnected();
 }
 
 void Client::disconnected()

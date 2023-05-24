@@ -108,7 +108,8 @@ void NoisedPatch::calculateBoundingSphere(){
     }
 }
 
-void NoisedPatch::render(QMatrix4x4 model){
+void NoisedPatch::render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest){
+    this->indices = PatchIndices::getIndices(dNorth, dEast, dSouth, dWest);
     Shader *terrainShader = ShaderManager::getShader("terrainShader");
     terrainShader->use();
     terrainShader->setMat4("model", model);
@@ -117,6 +118,7 @@ void NoisedPatch::render(QMatrix4x4 model){
     GL::funcs.glBindTexture(GL_TEXTURE_2D, normalMapTexture);
 
     GL::funcs.glBindVertexArray(VAO);
+    GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->getEBO());
 //    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     GL::funcs.glDrawElements(GL_TRIANGLES, indices->getSize(), GL_UNSIGNED_INT, 0);
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -186,7 +188,7 @@ void NoisedPatch::generateNormalMap(){
     GL::funcs.glEnableVertexAttribArray(0);
     GL::funcs.glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
     GL::funcs.glEnableVertexAttribArray(1);
-    
+
     unsigned int fbo;
     GL::funcs.glGenFramebuffers(1, &fbo);
     GL::funcs.glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -194,7 +196,7 @@ void NoisedPatch::generateNormalMap(){
     unsigned int positionTexture;
     GL::funcs.glGenTextures(1, &positionTexture);
     GL::funcs.glBindTexture(GL_TEXTURE_2D, positionTexture);
-    
+
     GL::funcs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, NORMAL_MAP_SIZE + 2, NORMAL_MAP_SIZE + 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

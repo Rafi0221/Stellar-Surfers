@@ -4,7 +4,6 @@
 #include "connectmanager.h"
 #include "ui_connectwindow.h"
 #include "client.h"
-#include "../play/setupgame.h"
 
 #include <qbluetoothaddress.h>
 #include <qbluetoothdevicediscoveryagent.h>
@@ -19,7 +18,7 @@ static QColor colorForPairing(QBluetoothLocalDevice::Pairing pairing)
 {
     return pairing == QBluetoothLocalDevice::Paired
            || pairing == QBluetoothLocalDevice::AuthorizedPaired
-           ? QColor(Qt::green) : QColor(Qt::red);
+           ? QColor(0, 170, 0) : QColor(232, 0, 0);
 }
 
 ConnectManager::ConnectManager(QWidget *parent) :
@@ -28,6 +27,7 @@ ConnectManager::ConnectManager(QWidget *parent) :
     ui(new Ui_ConnectWindow)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/media/media/ic_launcher.png"));
     ui->stopScan->setVisible(false);
 
     discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
@@ -35,7 +35,6 @@ ConnectManager::ConnectManager(QWidget *parent) :
     connect(ui->scan, &QAbstractButton::clicked, this, &ConnectManager::startScan);
     connect(ui->stopScan, &QAbstractButton::clicked, this, &ConnectManager::stopScan);
     connect(ui->power, &QPushButton::clicked, this, &ConnectManager::powerClicked);
-    connect(ui->play, &QPushButton::clicked, this, &ConnectManager::play);
 
     connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &ConnectManager::addDevice);
@@ -52,6 +51,7 @@ ConnectManager::ConnectManager(QWidget *parent) :
 
     glupdater = new GLUpdater();
     connect(client, &Client::connectionLost, glupdater, &GLUpdater::setToDefault);
+    connect(client, &Client::connectionLost, this, &ConnectManager::disconnected);
     connect(client, &Client::deviceConnected, this, &ConnectManager::connected);
 
     parser = new Parser(glupdater);
@@ -128,29 +128,20 @@ void ConnectManager::hostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
     ui->scan->setEnabled(on);
 }
 
-void ConnectManager::play()
-{
-    SetupGame *s = new SetupGame(this);
-    connect(s, &SetupGame::startGame, client, [=]() { client->sendMessage("Start!"); } );
+void ConnectManager::connected() {
+    _isConnected = true;
+    emit deviceConnected();
     this->hide();
-    s->show();
 }
 
-void ConnectManager::connected(const QString &name) {
-    QMessageBox msg;
-    msg.setText("Connected");
+void ConnectManager::disconnected() {
+    _isConnected = false;
+    emit connectionLost();
+    this->show();
+}
 
-    int cnt = 1;
-
-    QTimer cntDown;
-    QObject::connect(&cntDown, &QTimer::timeout, [&msg,&cnt, &cntDown]()->void{
-        if(--cnt < 0){
-            cntDown.stop();
-            msg.close();
-        }
-    });
-    cntDown.start(1000);
-    msg.exec();
+bool ConnectManager::isConnected() {
+    return _isConnected;
 }
 
 void ConnectManager::send(const QByteArray &message) {
