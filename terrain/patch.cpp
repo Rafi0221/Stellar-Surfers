@@ -5,11 +5,11 @@
 #include <QMatrix4x4>
 
 QVector3D Patch::getCenter(){
-    return center;
+    return boundingSphereCenter;
 }
 
 float Patch::getRadius(){
-    return radius;
+    return boundingSphereRadius;
 }
 
 QVector3D Patch::cubeToSphere(QVector3D position, float r){

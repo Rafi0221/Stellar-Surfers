@@ -4,13 +4,15 @@
 #include "../opengl/gl.h"
 #include "../skybox/skybox.h"
 #include "../terrain/noisedpatchfactory.h"
+#include "../terrain/waterpatchfactory.h"
 #include "../terrain/patchindices.h"
 #include "../terrain/planet.h"
+#include "../terrain/planetlayer.h"
+#include "../terrain/planetproperties.h"
 #include "../utils/camera.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 #include "../utils/perlinnoise.h"
-
 
 void GameWindow::initialize()
 {
@@ -19,13 +21,14 @@ void GameWindow::initialize()
     ShaderManager::initialize();
     PatchIndices::initialize();
 
-//    planet = new Planet(new NoisedPatchFactory(0), 5.0f);
-//    planet->setPosition(QVector3D(0,0,11));
+//    planet = new Planet(2137, 5);
+//    planet->setPosition(QVector3D(0,0,13));
 
     space = new Space(seed.seed);
     space->initialize();
 
     skybox = new SkyBox();
+
 }
 
 void GameWindow::setSeed(SetupGame::GameSeed value) {
@@ -56,6 +59,7 @@ void GameWindow::render()
     srand(time(NULL));
 
     counter++;
+    GL::time = counter;
     QMatrix4x4 projection;
     projection.perspective(60.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
 
@@ -79,23 +83,33 @@ void GameWindow::render()
 
     Shader *terrainShader = ShaderManager::getShader("terrainShader");
     terrainShader->use();
-
     terrainShader->setVec3("dirLight.direction", QVector3D(-0.2f, -1.0f, -0.3f));
     terrainShader->setVec3("dirLight.ambient", QVector3D(0.5f, 0.5f, 0.5f));
     terrainShader->setVec3("dirLight.diffuse", QVector3D(0.3f, 0.3f, 0.3f));
     terrainShader->setVec3("dirLight.specular", QVector3D(0.4f, 0.4f, 0.4f));
-
-    terrainShader->setFloat("shininess", 2.0f);
-
+    terrainShader->setFloat("shininess", 8.0f);
     terrainShader->setVec3("viewPos", camera->getPosition());
-
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
 
-    space->render();
+    Shader *waterShader = ShaderManager::getShader("waterShader");
+    waterShader->use();
+    waterShader->setVec3("dirLight.direction", QVector3D(-0.2f, -1.0f, -0.3f));
+    waterShader->setVec3("dirLight.ambient", QVector3D(0.5f, 0.5f, 0.5f));
+    waterShader->setVec3("dirLight.diffuse", QVector3D(0.3f, 0.3f, 0.3f));
+    waterShader->setVec3("dirLight.specular", QVector3D(0.4f, 0.4f, 0.4f));
+    waterShader->setFloat("shininess", 32.0f);
+    waterShader->setVec3("viewPos", camera->getPosition());
+    waterShader->setMat4("projection", projection);
+    waterShader->setMat4("view", view);
 
+    space->render();
+//    planet->setRotation(QVector3D(0, counter/10.0f, 0));
 //    planet->update(camera->getPosition());
 //    planet->render();
+//    planet2->setRotation(QVector3D(0, 55, 0));
+//    planet2->update(camera->getPosition());
+//    planet2->render();
 
 //    skybox->render();
 
@@ -108,5 +122,5 @@ void GameWindow::render()
 //    }
 //    else qDebug() << "no collision";
 
-    controllerUpdater->update(camera->getPosition(), camera->getSpeed());
+//    controllerUpdater->update(camera->getPosition(), camera->getSpeed());
 }

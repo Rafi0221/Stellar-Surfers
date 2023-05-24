@@ -9,12 +9,14 @@
 
 class Patch;
 
+class PlanetProperties;
+
 class PatchFactory
 {
 public:
     PatchFactory();
 
-    virtual Patch* getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition) = 0;
+    virtual Patch* getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, PlanetProperties *properties) = 0;
 };
 
 #endif // PATCHFACTORY_H

@@ -1,12 +1,17 @@
 //#version 330 core
-#define octaves (15)
-#define baseFrequency (0.6)
-#define persistance (0.5)
-#define lacunarity (2.0)
+//#define octaves (15)
+//#define baseFrequency (0.6)
+//#define persistance (0.5)
+//#define lacunarity (2.0)
 
 out vec4 FragColor;
 
 in vec3 CubePos;
+
+uniform int octaves;
+uniform float baseFrequency;
+uniform float persistance;
+uniform float lacunarity;
 
 vec3 cubeToSphere(vec3 position){
     float x2 = position.x * position.x;
@@ -36,8 +41,8 @@ void main()
         amplitude *= persistance;
     }
     value *= multiplier;
-
+    value = 1 + (value * 2.0 - 1.0) * 0.2;
 //    height in range (0.8, 1.2)
-    FragColor = vec4(SpherePos, 1 + (value * 2.0 - 1.0) * 0.2);
+    FragColor = vec4(SpherePos * value, value);
 //    FragColor = vec4(vec3(perlin(normalize(SpherePos) * 5)), 1.0);
 }

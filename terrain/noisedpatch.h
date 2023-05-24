@@ -13,6 +13,7 @@ class NoisedPatch : public Patch
 {
 private:
     LayeredPerlinNoise *noise;
+    float radius;
 
     unsigned int VAO, VBO, EBO;
     float vertices[PATCH_VERTS * PATCH_VERTS * DATA_SIZE];
@@ -23,9 +24,9 @@ private:
     void generateNormalMap();
 
 public:
-    NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, LayeredPerlinNoise *noise);
+    NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise);
 
-    virtual void render();
+    virtual void render(QMatrix4x4 model);
 };
 
 #endif // NOISEDPATCH_H

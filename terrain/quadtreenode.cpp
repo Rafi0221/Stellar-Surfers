@@ -4,14 +4,16 @@
 #include <QMatrix4x4>
 
 #include "../utils/consts.h"
+#include "planetproperties.h"
 #include "patchfactory.h"
 #include "patch.h"
 
-QuadTreeNode::QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, QuadTreeNode *parent, QVector2D relativePosition)
+QuadTreeNode::QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, PlanetProperties *properties, QuadTreeNode *parent, QVector2D relativePosition)
 {
     this->face = face;
     this->factory = factory;
     this->relativeRotation = relativeRotation;
+    this->properties = properties;
     this->parent = parent;
     this->relativePosition = relativePosition;
 
@@ -26,7 +28,7 @@ QuadTreeNode::QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 
     for(int i = 0; i < 4; i++){
         this->children[i] = nullptr;
     }
-    this->patch = factory->getPatch(this->relativeRotation, this->scale, this->relativePosition);
+    this->patch = factory->getPatch(this->relativeRotation, this->scale, this->relativePosition, this->properties);
 //    this->patch = new TerrainPatch(type, this->relativeRotation, this->scale, this->relativePosition);
 }
 
@@ -53,22 +55,16 @@ void QuadTreeNode::merge(){
 void QuadTreeNode::split(){
     if(!isLeaf())
         return;
-    children[NORTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this, relativePosition);
-    children[NORTH_WEST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this, relativePosition + QVector2D(scale / 2.0 ,0));
-    children[SOUTH_WEST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this, relativePosition + QVector2D(scale / 2.0, scale / 2.0));
-    children[SOUTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this, relativePosition + QVector2D(0, scale / 2.0));
+    children[NORTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition);
+    children[NORTH_WEST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition + QVector2D(scale / 2.0 ,0));
+    children[SOUTH_WEST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition + QVector2D(scale / 2.0, scale / 2.0));
+    children[SOUTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition + QVector2D(0, scale / 2.0));
 }
 
 void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
     QVector3D center = patch->getCenter();
     float distance = modelMatrix.map(center).distanceToPoint(cameraPosition);
-//    qDebug() << center;
-//    qDebug() << center << " " << modelMatrix.map(center) << " " << distance << " " << patch->getRadius();
-//    if(isLeaf() && depth <= 2 && distance <= (patch->getRadius() * 1.5)){
-//        qDebug() << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
-//    }else if(isLeaf() && depth <= 2){
-//        qDebug() << ":(((    " << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
-//    }
+//    qDebug() << cameraPosition << patch->getCenter() << distance << patch->getRadius() * 2;
     if(distance <= (patch->getRadius() * 2) && depth <= 10)
         split();
     else
@@ -81,12 +77,12 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
     }
 }
 
-void QuadTreeNode::render(){
+void QuadTreeNode::render(QMatrix4x4 model){
     if(isLeaf()){
-        patch->render();
+        patch->render(model);
     }else{
         for(int i = 0; i < 4; i++){
-            children[i]->render();
+            children[i]->render(model);
         }
     }
 }

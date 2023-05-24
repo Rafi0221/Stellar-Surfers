@@ -47,10 +47,17 @@ set(PROJECT_SOURCES
         terrain/patchfactory.cpp
         terrain/planet.h
         terrain/planet.cpp
-        terrain/terrainface.h
-        terrain/terrainface.cpp
+        terrain/planetlayer.h
+        terrain/planetlayer.cpp
+        terrain/planetproperties.h
         terrain/quadtreenode.h
         terrain/quadtreenode.cpp
+        terrain/terrainface.h
+        terrain/terrainface.cpp
+        terrain/waterpatch.h
+        terrain/waterpatch.cpp
+        terrain/waterpatchfactory.h
+        terrain/waterpatchfactory.cpp
         game/gamewindow.h
         game/gamewindow.cpp
         game/space.h

@@ -10,3 +10,6 @@ QVector3D GL::rotation;
 
 // currently 0 or 1
 float GL::acceleration;
+
+float GL::time;
+

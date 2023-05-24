@@ -6,6 +6,7 @@
 
 class Patch;
 class PatchFactory;
+class PlanetProperties;
 class TerrainFace;
 
 class QuadTreeNode
@@ -13,7 +14,7 @@ class QuadTreeNode
 private:
     TerrainFace *face;
     Patch *patch;
-
+    PlanetProperties *properties;
     PatchFactory *factory;
 
     QuadTreeNode *parent;
@@ -32,11 +33,11 @@ private:
 
     int counter = 0;
 public:
-    QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
+    QuadTreeNode(TerrainFace *face, PatchFactory *factory, QMatrix4x4 relativeRotation, PlanetProperties *properties, QuadTreeNode *parent = nullptr, QVector2D relativePosition = QVector2D(-1,-1));
     ~QuadTreeNode();
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
-    void render();
+    void render(QMatrix4x4 model);
     bool chechCollision(const QVector3D & relativePosition);
 
 };

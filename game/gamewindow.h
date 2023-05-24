@@ -9,6 +9,7 @@
 
 class Camera;
 class Planet;
+class PlanetLayer;
 class Shader;
 class TerrainFace;
 class SkyBox;
@@ -36,7 +37,7 @@ private:
 
     unsigned int VAO, VBO;
 
-    Planet *planets[100];
+    PlanetLayer *planets[100];
     SkyBox *skybox;
     int counter = 0;
     SetupGame::GameSeed seed;

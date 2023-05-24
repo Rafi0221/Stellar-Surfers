@@ -24,4 +24,9 @@
 #define UP 4
 #define DOWN 5
 
+#define WAVES_AMOUNT 3
+
+#define WATER_CUTOFF 0.0
+#define TERRAIN_CUTOFF 0.8
+
 #endif // CONSTS_H

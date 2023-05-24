@@ -16,15 +16,15 @@ protected:
 
     PatchIndices *indices;
 
-    QVector3D center;
-    float radius;
+    QVector3D boundingSphereCenter;
+    float boundingSphereRadius;
 
     QVector3D cubeToSphere(QVector3D position, float r);
 public:
     QVector3D getCenter();
     float getRadius();
 
-    virtual void render() = 0;
+    virtual void render(QMatrix4x4 model) = 0;
 };
 
 #endif // PATCH_H

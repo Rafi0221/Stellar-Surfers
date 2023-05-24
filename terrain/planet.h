@@ -1,25 +1,17 @@
 #ifndef PLANET_H
 #define PLANET_H
 
-#include <QVector3D>
+class PlanetLayer;
+class PlanetProperties;
 
-class PatchFactory;
-class TerrainFace;
+#include <QVector3D>
+#include <QMatrix4x4>
 
 class Planet
 {
-private:
-    TerrainFace *faces[6];
-
-    QVector3D position;
-    QVector3D rotation;
-
-    float radius;
-
-    PatchFactory *factory;
-
 public:
-    Planet(PatchFactory *factory, float radius = 1.0f);
+    Planet(int seed, float radius);
+
     void update(QVector3D cameraPosition);
     void render();
     bool checkCollision(QVector3D cameraPosition);
@@ -27,6 +19,15 @@ public:
     void setRotation(QVector3D rotation);
     QVector3D getPosition();
     float getRadius();
+private:
+    PlanetLayer *solidLayer = nullptr;
+    PlanetLayer *waterLayer = nullptr;
+    PlanetProperties *properties;
+
+    QVector3D position;
+    QVector3D rotation;
+
+    float radius;
 };
 
 #endif // PLANET_H

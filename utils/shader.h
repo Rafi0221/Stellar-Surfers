@@ -12,6 +12,7 @@ public:
     Shader(const std::string vertexPath, const std::string fragmentPath,
            const std::vector<std::string> vertexIncludes = {}, const std::vector<std::string> fragmentIncludes = {});
     void use();
+    unsigned int getID();
 
     void setInt(const std::string name, int value);
     void setFloat(const std::string name, float value);

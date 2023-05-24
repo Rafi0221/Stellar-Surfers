@@ -1,4 +1,4 @@
-#include "noisedpatch.h"
+#include "waterpatch.h"
 
 #include "../opengl/gl.h"
 #include "../utils/layeredperlinnoise.h"
@@ -16,13 +16,14 @@ namespace {
     }
 }
 
-NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise)
+WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer)
 {
     this->relativeRotation = relativeRotation;
     this->scale = scale;
     this->relativePosition = relativePosition;
     this->radius = radius;
     this->noise = noise;
+    this->wavesBuffer = wavesBuffer;
     for(int x = 0; x < PATCH_VERTS; x++){
         for(int y = 0; y < PATCH_VERTS; y++){
             float xPos = relativePosition.x() + scale / PATCH_QUADS * x;
@@ -32,30 +33,15 @@ NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D rel
             QVector3D pos(xPos, yPos, zPos);
             pos = this->relativeRotation.map(pos);
 
-            QVector3D cubePos = cubeToSphere(pos, radius);
-            QVector3D newPos = cubePos * terrainHeight(cubePos );
+            QVector3D spherePos = cubeToSphere(pos, radius);
+//            QVector3D newPos = cubePos * terrainHeight(cubePos);
 
-            this->vertices[toID(x,y) * DATA_SIZE] = newPos.x();
-            this->vertices[toID(x,y) * DATA_SIZE + 1] = newPos.y();
-            this->vertices[toID(x,y) * DATA_SIZE + 2] = newPos.z();
+            this->vertices[toID(x,y) * DATA_SIZE] = spherePos.x();
+            this->vertices[toID(x,y) * DATA_SIZE + 1] = spherePos.y();
+            this->vertices[toID(x,y) * DATA_SIZE + 2] = spherePos.z();
 
             this->vertices[toID(x,y) * DATA_SIZE + 3] = (float)x / (PATCH_QUADS);
             this->vertices[toID(x,y) * DATA_SIZE + 4] = (float)y / (PATCH_QUADS);
-
-//            this->vertices[(toID(x,y) * DATA_SIZE + 3)] = (float)x/(PATCH_QUADS);
-//            this->vertices[(toID(x,y) * DATA_SIZE + 4)] = (float)y/(PATCH_QUADS);
-//            this->vertices[toID(x,y) * DATA_SIZE + 3] = cubePos.x();
-//            this->vertices[toID(x,y) * DATA_SIZE + 4] = cubePos.y();
-//            this->vertices[toID(x,y) * DATA_SIZE + 5] = cubePos.z();
-
-//            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.1 + 2 * (terrainHeight(pos) - 0.8);
-//            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.2;
-//            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.9 - 2 * (terrainHeight(pos) - 0.8);
-//            qDebug() << this->vertices[ToID(x,y) * 6 + 5];
-
-//            this->vertices[toID(x,y) * DATA_SIZE + 6] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
-//            this->vertices[toID(x,y) * DATA_SIZE + 7] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
-//            this->vertices[toID(x,y) * DATA_SIZE + 8] = 0.8 - (terrainHeight(cubePos) - 0.8) * 2;
         }
     }
 
@@ -64,7 +50,6 @@ NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D rel
     GL::funcs.glGenVertexArrays(1, &VAO);
     GL::funcs.glGenBuffers(1, &VBO);
     EBO = indices->getEBO();
-//    GL::funcs.glGenBuffers(1, &EBO);
 
     GL::funcs.glBindVertexArray(VAO);
 
@@ -72,14 +57,11 @@ NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D rel
     GL::funcs.glBufferData(GL_ARRAY_BUFFER, sizeof(this->vertices), this->vertices, GL_STATIC_DRAW);
 
     GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    GL::funcs.glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(this->indices), this->indices, GL_STATIC_DRAW);
 
     GL::funcs.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)0);
     GL::funcs.glEnableVertexAttribArray(0);
     GL::funcs.glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)(3* sizeof(float)));
     GL::funcs.glEnableVertexAttribArray(1);
-//    GL::funcs.glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(float), (void*)(6* sizeof(float)));
-//    GL::funcs.glEnableVertexAttribArray(2);
 
     GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -89,13 +71,7 @@ NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D rel
     generateNormalMap();
 }
 
-float NoisedPatch::terrainHeight(QVector3D position){
-    float tmp = noise->getValue(position.x(), position.y(), position.z());
-    tmp = (tmp * 2.0) - 1.0;
-    return (1 + tmp * 0.2);
-}
-
-void NoisedPatch::calculateBoundingSphere(){
+void WaterPatch::calculateBoundingSphere(){
     boundingSphereCenter = QVector3D(0,0,0);
     for(int i = 0; i < PATCH_VERTS * PATCH_VERTS; i++){
         boundingSphereCenter += QVector3D(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2]);
@@ -108,11 +84,17 @@ void NoisedPatch::calculateBoundingSphere(){
     }
 }
 
-void NoisedPatch::render(QMatrix4x4 model){
-    Shader *terrainShader = ShaderManager::getShader("terrainShader");
-    terrainShader->use();
-    terrainShader->setMat4("model", model);
-    terrainShader->setInt("normalMapTexture", 0);
+void WaterPatch::render(QMatrix4x4 model){
+    Shader *waterShader = ShaderManager::getShader("waterShader");
+    waterShader->use();
+    waterShader->setMat4("model", model);
+    waterShader->setInt("normalMapTexture", 0);
+    waterShader->setFloat("time", GL::time/30.0f);
+//    waterShader->setFloat("time", 15000.0f);
+    waterShader->setFloat("radius", radius);
+    waterShader->setInt("waveNumber", 10);
+    GL::funcs.glBindBufferBase(GL_UNIFORM_BUFFER, 0, wavesBuffer);
+
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_2D, normalMapTexture);
 
@@ -122,15 +104,14 @@ void NoisedPatch::render(QMatrix4x4 model){
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-
-void NoisedPatch::generateNormalMap(){
+void WaterPatch::generateNormalMap(){
     Shader *positionShader = ShaderManager::getShader("positionTextureShader");
     positionShader->use();
 
     positionShader->setFloat("multiplier", noise->getMultiplier());
     positionShader->setInt("permutation", 0);
     positionShader->setInt("octaves", 15);
-    positionShader->setFloat("baseFrequency", 0.6f);
+    positionShader->setFloat("baseFrequency", radius * 10);
     positionShader->setFloat("persistance", 0.5f);
     positionShader->setFloat("lacunarity", 2.0f);
 
@@ -186,7 +167,7 @@ void NoisedPatch::generateNormalMap(){
     GL::funcs.glEnableVertexAttribArray(0);
     GL::funcs.glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
     GL::funcs.glEnableVertexAttribArray(1);
-    
+
     unsigned int fbo;
     GL::funcs.glGenFramebuffers(1, &fbo);
     GL::funcs.glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -194,7 +175,7 @@ void NoisedPatch::generateNormalMap(){
     unsigned int positionTexture;
     GL::funcs.glGenTextures(1, &positionTexture);
     GL::funcs.glBindTexture(GL_TEXTURE_2D, positionTexture);
-    
+
     GL::funcs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, NORMAL_MAP_SIZE + 2, NORMAL_MAP_SIZE + 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

@@ -1,5 +1,5 @@
-#ifndef NOISEDPATCHFACTORY_H
-#define NOISEDPATCHFACTORY_H
+#ifndef WATERPATCHFACTORY_H
+#define WATERPATCHFACTORY_H
 
 #include "patchfactory.h"
 
@@ -9,15 +9,15 @@
 class LayeredPerlinNoise;
 class PlanetProperties;
 
-class NoisedPatchFactory : public PatchFactory
+class WaterPatchFactory : public PatchFactory
 {
 private:
     int seed;
     LayeredPerlinNoise *noise;
 public:
-    NoisedPatchFactory(int seed);
+    WaterPatchFactory(int seed);
 
     virtual Patch* getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, PlanetProperties *properties) override;
 };
 
-#endif // NOISEDPATCHFACTORY_H
+#endif // WATERPATCHFACTORY_H

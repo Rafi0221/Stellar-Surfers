@@ -11,8 +11,7 @@ struct DirLight {
 
 in vec3 FragPos;
 in vec2 TexCoord;
-//in vec3 Normal;
-//in vec3 Color;
+in vec3 Normal;
 
 uniform float shininess;
 
@@ -27,13 +26,13 @@ uniform sampler2D normalMapTexture;
 
 void main()
 {
+    vec3 color = vec3(0.2f, 0.3f, 0.8f);
     vec3 normal = texture(normalMapTexture, TexCoord).rgb;
     normal = mat3(transpose(inverse(model))) * normal;
     normal = normalize(normal);
-
-    vec3 color = vec3(1.0 - (texture(normalMapTexture, TexCoord).a - 0.8) * 2.5);
+    normal = mix(normal, normalize(Normal), 0.97);
 //    vec3 color = normal;
-
+//    color = normal;
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, normal);
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -52,4 +51,6 @@ void main()
 
     FragColor = vec4((ambient + diffuse + specular), 1.0f);
 //    FragColor = vec4(color, 1.0f);
+
+
 }
