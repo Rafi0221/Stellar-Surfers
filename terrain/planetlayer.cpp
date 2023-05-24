@@ -13,20 +13,31 @@ PlanetLayer::PlanetLayer(PatchFactory *factory, PlanetProperties *properties)
 {
     this->factory = factory;
     this->properties = properties;
-
-    this->faces[2] = new TerrainFace(this->factory, QMatrix4x4(), properties);
+    this->faces[FAR_] = new TerrainFace(this->factory, QMatrix4x4());
     QMatrix4x4 tmp;
     tmp.rotate(90, 0, 1, 0);
-    this->faces[LEFT] = new TerrainFace(this->factory, tmp, properties);
+    this->faces[LEFT] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[0] = new TerrainFace(this->factory, tmp, properties);
+    this->faces[NEAR_] = new TerrainFace(this->factory, tmp);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[RIGHT] = new TerrainFace(this->factory, tmp, properties);
+    this->faces[RIGHT] = new TerrainFace(this->factory, tmp);
     tmp = QMatrix4x4();
     tmp.rotate(90, 1, 0, 0);
-    this->faces[DOWN] = new TerrainFace(this->factory, tmp, properties);
+    this->faces[DOWN] = new TerrainFace(this->factory, tmp);
     tmp.rotate(180, 1, 0, 0);
-    this->faces[UP] = new TerrainFace(this->factory, tmp, properties);
+    this->faces[UP] = new TerrainFace(this->factory, tmp);
+    int neighbors[6][4] = {
+        {DOWN, RIGHT, UP, LEFT},  // NEAR_
+        {DOWN, NEAR_, UP, FAR_},  // LEFT
+        {DOWN, LEFT, UP, RIGHT},  // FAR_
+        {DOWN, FAR_, UP, NEAR_},  // RIGHT
+        {FAR_, LEFT, NEAR_, RIGHT},  // UP
+        {NEAR_, LEFT, FAR_, RIGHT},  // DOWN
+    };
+    for (int dir = 0; dir < 4; dir++) {
+        for (int i = 0; i < 6; i++)
+            this->faces[i]->addNeighbor(this->faces[neighbors[i][dir]], dir);
+    }
 }
 
 void PlanetLayer::update(QVector3D cameraPosition){
@@ -56,7 +67,7 @@ void PlanetLayer::render(){
 bool PlanetLayer::checkCollision(QVector3D cameraPosition) {
     QVector3D relativePosition  = cameraPosition - position;
     for(int i = 0; i < 6; i++){
-        if(faces[i]->chechCollision(relativePosition))
+        if(faces[i]->checkCollision(relativePosition))
             return true;
     }
     return false;
