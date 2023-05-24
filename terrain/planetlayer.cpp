@@ -13,19 +13,19 @@ PlanetLayer::PlanetLayer(PatchFactory *factory, PlanetProperties *properties)
 {
     this->factory = factory;
     this->properties = properties;
-    this->faces[FAR_] = new TerrainFace(this->factory, QMatrix4x4());
+    this->faces[FAR_] = new TerrainFace(this->factory, QMatrix4x4(), properties);
     QMatrix4x4 tmp;
     tmp.rotate(90, 0, 1, 0);
-    this->faces[LEFT] = new TerrainFace(this->factory, tmp);
+    this->faces[LEFT] = new TerrainFace(this->factory, tmp, properties);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[NEAR_] = new TerrainFace(this->factory, tmp);
+    this->faces[NEAR_] = new TerrainFace(this->factory, tmp, properties);
     tmp.rotate(90, 0, 1, 0);
-    this->faces[RIGHT] = new TerrainFace(this->factory, tmp);
+    this->faces[RIGHT] = new TerrainFace(this->factory, tmp, properties);
     tmp = QMatrix4x4();
     tmp.rotate(90, 1, 0, 0);
-    this->faces[DOWN] = new TerrainFace(this->factory, tmp);
+    this->faces[DOWN] = new TerrainFace(this->factory, tmp, properties);
     tmp.rotate(180, 1, 0, 0);
-    this->faces[UP] = new TerrainFace(this->factory, tmp);
+    this->faces[UP] = new TerrainFace(this->factory, tmp, properties);
     int neighbors[6][4] = {
         {DOWN, RIGHT, UP, LEFT},  // NEAR_
         {DOWN, NEAR_, UP, FAR_},  // LEFT

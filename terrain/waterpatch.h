@@ -14,7 +14,7 @@ class WaterPatch : public Patch
 public:
     WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer);
 
-    virtual void render(QMatrix4x4 model);
+    virtual void render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest);
 private:
     LayeredPerlinNoise *noise;
     float radius;

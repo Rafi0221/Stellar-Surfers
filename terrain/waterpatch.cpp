@@ -84,7 +84,8 @@ void WaterPatch::calculateBoundingSphere(){
     }
 }
 
-void WaterPatch::render(QMatrix4x4 model){
+void WaterPatch::render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest){
+    this->indices = PatchIndices::getIndices(dNorth, dEast, dSouth, dWest);
     Shader *waterShader = ShaderManager::getShader("waterShader");
     waterShader->use();
     waterShader->setMat4("model", model);
@@ -99,6 +100,7 @@ void WaterPatch::render(QMatrix4x4 model){
     GL::funcs.glBindTexture(GL_TEXTURE_2D, normalMapTexture);
 
     GL::funcs.glBindVertexArray(VAO);
+    GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->getEBO());
 //    GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     GL::funcs.glDrawElements(GL_TRIANGLES, indices->getSize(), GL_UNSIGNED_INT, 0);
     GL::funcs.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
