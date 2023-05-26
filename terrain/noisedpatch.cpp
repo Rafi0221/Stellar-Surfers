@@ -16,13 +16,14 @@ namespace {
     }
 }
 
-NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise)
+NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int colorMapTexture)
 {
     this->relativeRotation = relativeRotation;
     this->scale = scale;
     this->relativePosition = relativePosition;
     this->radius = radius;
     this->noise = noise;
+    this->colorMapTexture = colorMapTexture;
     for(int x = 0; x < PATCH_VERTS; x++){
         for(int y = 0; y < PATCH_VERTS; y++){
             float xPos = relativePosition.x() + scale / PATCH_QUADS * x;
@@ -116,6 +117,10 @@ void NoisedPatch::render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, in
     terrainShader->setInt("normalMapTexture", 0);
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_2D, normalMapTexture);
+
+    terrainShader->setInt("colorMapTexture", 1);
+    GL::funcs.glActiveTexture(GL_TEXTURE1);
+    GL::funcs.glBindTexture(GL_TEXTURE_1D, colorMapTexture);
 
     GL::funcs.glBindVertexArray(VAO);
     GL::funcs.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->getEBO());

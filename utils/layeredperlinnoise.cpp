@@ -18,6 +18,7 @@ LayeredPerlinNoise::LayeredPerlinNoise(unsigned int seed, int octaves, double ma
         realMaxValue += amplitude;
         amplitude *= this->persistance;
     }
+    realMaxValue *= 0.707;
     this->multiplier = maxValue/realMaxValue;
 }
 

@@ -10,5 +10,5 @@ NoisedPatchFactory::NoisedPatchFactory(int seed)
 }
 
 Patch* NoisedPatchFactory::getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition,  PlanetProperties *properties){
-    return new NoisedPatch(relativeRotation, scale, relativePosition, properties->radius, noise);
+    return new NoisedPatch(relativeRotation, scale, relativePosition, properties->radius, noise, properties->colorMapTexture);
 }

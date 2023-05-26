@@ -24,15 +24,21 @@ uniform mat4 view;
 uniform mat4 projection;
 
 uniform sampler2D normalMapTexture;
-
+uniform sampler1D colorMapTexture;
 void main()
 {
     vec3 normal = texture(normalMapTexture, TexCoord).rgb;
     normal = mat3(transpose(inverse(model))) * normal;
     normal = normalize(normal);
 
-    vec3 color = vec3(1.0 - (texture(normalMapTexture, TexCoord).a - 0.8) * 2.5);
+//    vec3 color = vec3(1.0 - (texture(normalMapTexture, TexCoord).a - 0.8) * 2.5);
 //    vec3 color = normal;
+
+//in range (0.8, 1.2)
+    float height = texture(normalMapTexture, TexCoord).a;
+
+    height = (height - 0.8) * 2.5;
+    vec3 color = texture(colorMapTexture, height).rgb;
 
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, normal);

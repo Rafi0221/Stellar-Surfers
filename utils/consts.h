@@ -29,6 +29,8 @@
 #define WATER_CUTOFF 0.0
 #define TERRAIN_CUTOFF 0.8
 
+#define COLOR_TEXTURE_RESOLUTION 512
+
 int combine_dirs(int x, int cw);
 int opposite_dir(int dir);
 

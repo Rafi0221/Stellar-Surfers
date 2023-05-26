@@ -23,8 +23,9 @@ private:
     unsigned int normalMapTexture;
     void generateNormalMap();
 
+    unsigned int colorMapTexture;
 public:
-    NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise);
+    NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int colorMapTexture);
 
     virtual void render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest);
 };
