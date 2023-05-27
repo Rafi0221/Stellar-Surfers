@@ -3,6 +3,7 @@
 
 #include "../opengl/gl.h"
 #include "../utils/consts.h"
+#include "../utils/colors.h"
 
 #include <QOpenGLFunctions_3_3_Core>
 #include <random>
@@ -50,33 +51,9 @@ public:
             hasTerrain = true;
 
             float colorData[COLOR_TEXTURE_RESOLUTION * 3];
-
-            for(int i = 0; i < COLOR_TEXTURE_RESOLUTION; i++){
-                if(i > 256){
-                    if(i > 300){
-                        if(i > 400){
-                            colorData[i * 3] = 0.35 + (1.0 - 0.35) * (i-300.0) / (512.0 - 300.0);
-                            colorData[i * 3 + 1] = 0.30 + (0.97 - 0.30) * (i-300.0) / (512.0 - 300.0);
-                            colorData[i * 3 + 2] = 0.25 + (0.97 - 0.25) * (i-300.0) / (512.0 - 300.0);
-                        }else{
-                            colorData[i * 3] = 0.0 + (0.35 - 0.0) * (i-300.0) / (512.0 - 300.0);
-                            colorData[i * 3 + 1] = 0.6 + (0.30 - 0.6) * (i-300.0) / (512.0 - 300.0);
-                            colorData[i * 3 + 2] = 0.1 + (0.25 - 0.1) * (i-300.0) / (512.0 - 300.0);
-                        }
-                    }else{
-                        colorData[i * 3] = 0.76 + (0.0 - 0.76) * (i-256.0) / (300.0 - 256.0);
-                        colorData[i * 3 + 1] = 0.7 + (0.6 - 0.7) * (i-256.0) / (300.0 - 256.0);
-                        colorData[i * 3 + 2] = 0.5 + (0.1 - 0.5) * (i-256.0) / (300.0 - 256.0);
-                    }
-                }else{
-                    colorData[i * 3] = 0.76;
-                    colorData[i * 3 + 1] = 0.7;
-                    colorData[i * 3 + 2] = 0.5;
-                }
-//                colorData[i * 3] = (float)i / (COLOR_TEXTURE_RESOLUTION-1);
-//                colorData[i * 3 + 1] = (float)i / (COLOR_TEXTURE_RESOLUTION-1);
-//                colorData[i * 3 + 2] = (float)i / (COLOR_TEXTURE_RESOLUTION-1);
-            }
+            genMountainousScheme(colorData);
+            // genTwoColorScheme(colorData);
+            // genYoloScheme(colorData);
 
             GL::funcs.glGenTextures(1, &colorMapTexture);
             GL::funcs.glBindTexture(GL_TEXTURE_1D, colorMapTexture);
