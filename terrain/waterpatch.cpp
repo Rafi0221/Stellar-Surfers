@@ -71,6 +71,13 @@ WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relat
     generateNormalMap();
 }
 
+WaterPatch::~WaterPatch(){
+    GL::funcs.glDeleteBuffers(1, &VBO);
+//    GL::funcs.glDeleteBuffers(1, &EBO);
+    GL::funcs.glDeleteVertexArrays(1, &VAO);
+    GL::funcs.glDeleteTextures(1, &normalMapTexture);
+}
+
 void WaterPatch::calculateBoundingSphere(){
     boundingSphereCenter = QVector3D(0,0,0);
     for(int i = 0; i < PATCH_VERTS * PATCH_VERTS; i++){

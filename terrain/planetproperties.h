@@ -77,6 +77,13 @@ public:
     unsigned int wavesBuffer;
 
     unsigned int colorMapTexture;
+
+    ~PlanetProperties(){
+        if(hasWater)
+            GL::funcs.glDeleteBuffers(1, &wavesBuffer);
+        if(hasTerrain)
+            GL::funcs.glDeleteTextures(1, &colorMapTexture);
+    }
 };
 
 #endif // PLANETPROPERTIES_H

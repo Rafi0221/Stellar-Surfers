@@ -18,6 +18,7 @@ class PerlinNoise : public Noise {
 public:
     // Initialize with the reference values for the permutation vector
     PerlinNoise();
+    ~PerlinNoise();
     // Generate a new permutation vector based on the value of seed
     PerlinNoise(unsigned int seed = rand());
     // Get a noise value, for 2D images z can have any value

@@ -22,6 +22,7 @@ private:
 
 public:
     PlanetLayer(PatchFactory *factory, PlanetProperties* properties);
+    ~PlanetLayer();
     void update(QVector3D cameraPosition);
     void render();
     bool checkCollision(QVector3D cameraPosition);

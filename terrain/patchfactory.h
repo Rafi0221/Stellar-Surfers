@@ -15,7 +15,7 @@ class PatchFactory
 {
 public:
     PatchFactory();
-
+    virtual ~PatchFactory() = default;
     virtual Patch* getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, PlanetProperties *properties) = 0;
 };
 

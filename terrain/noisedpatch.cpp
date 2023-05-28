@@ -90,6 +90,13 @@ NoisedPatch::NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D rel
     generateNormalMap();
 }
 
+NoisedPatch::~NoisedPatch(){
+    GL::funcs.glDeleteBuffers(1, &VBO);
+//    GL::funcs.glDeleteBuffers(1, &EBO);
+    GL::funcs.glDeleteVertexArrays(1, &VAO);
+    GL::funcs.glDeleteTextures(1, &normalMapTexture);
+}
+
 float NoisedPatch::terrainHeight(QVector3D position){
     float tmp = noise->getValue(position.x(), position.y(), position.z());
     tmp = (tmp * 2.0) - 1.0;
@@ -271,8 +278,6 @@ void NoisedPatch::generateNormalMap(){
 
     GL::funcs.glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-    //TODO: clear everything
     GL::funcs.glDeleteBuffers(1,&tmpVBO);
     GL::funcs.glDeleteBuffers(1,&tmpEBO);
     GL::funcs.glDeleteBuffers(1,&texVBO);

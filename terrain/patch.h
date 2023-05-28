@@ -21,6 +21,7 @@ protected:
 
     QVector3D cubeToSphere(QVector3D position, float r);
 public:
+    virtual ~Patch() = default;
     QVector3D getCenter();
     float getRadius();
 
