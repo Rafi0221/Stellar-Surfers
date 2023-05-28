@@ -64,6 +64,8 @@ set(PROJECT_SOURCES
         game/space.cpp
         utils/camera.h
         utils/camera.cpp
+        utils/colors.h
+        utils/colors.cpp
         utils/consts.h
         utils/consts.cpp
         utils/layeredperlinnoise.h
