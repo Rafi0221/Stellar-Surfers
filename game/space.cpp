@@ -4,6 +4,7 @@
 #include "../terrain/noisedpatchfactory.h"
 #include "../terrain/planetproperties.h"
 #include "../terrain/planet.h"
+#include "../utils/consts.h"
 
 #include <QVector3D>
 #include <cmath>
@@ -11,9 +12,6 @@
 #include <QDebug>
 #include <functional>
 
-const int DIST = 80;
-const int DISTincrement = 5;
-static int hashRange = 1e9;
 
 // for QHash takenCoords
 inline uint qHash(const QVector3D &v, uint seed)
@@ -59,12 +57,18 @@ int Space::hashCoordinates(const QVector3D & coordinates) {
     return hash;
 }
 
-void Space::checkAddPlanet(const QVector3D & coordinates) {
-    const int hashCutoff = 1000000;
-    if(hashCoordinates(coordinates) < hashCutoff && !takenCoords[coordinates]) {
+void Space::checkAddObject(const QVector3D & coordinates) {
+    const int planetHashCutoff = 2000000;
+    const int asteroidHashCutoff = 2700000;
+
+    if(takenCoords[coordinates])
+        return;
+
+    int hash = hashCoordinates(coordinates);
+    if(hash < planetHashCutoff) {
         //qDebug() << hashCoordinates(coordinates) << coordinates;
         //we might need a new hash for planet seed
-        Planet* planet = new Planet(hashCoordinates(coordinates), 3.0f);
+        Planet* planet = new Planet(hash, 5.0f);
 //        PlanetLayer* planet = new PlanetLayer(new NoisedPatchFactory(hashCoordinates(coordinates)),
 //                                              new PlanetProperties{hashCoordinates(coordinates),3.0f});
         planet->setPosition(coordinates);
@@ -72,18 +76,59 @@ void Space::checkAddPlanet(const QVector3D & coordinates) {
         takenCoords[coordinates] = true;
         qDebug() << "adding planet, number of planets" << planets.size();
     }
+    else if(hash < asteroidHashCutoff) {
+        AsteroidCluster* asteroidCluster = new AsteroidCluster(hash, coordinates);
+        asteroidClusters.push_back(asteroidCluster);
+        takenCoords[coordinates] = true;
+        qDebug() << "adding asteroid, number of asteroids" << asteroidClusters.size();
+    }
 }
 
 
 void Space::initialize() {
+    asteroidModel = new Model("media/rock.obj", "media/rock_diffuse.png", "media/rock_specular.png", "media/rock_normal.png");
+
+//    models = new float[10000 * 16];
+//    int amount = 1000;
+//    for(int i = 0; i < amount; i++){
+//        QMatrix4x4 tmp;
+//        tmp.translate(rand()%100 - 50, rand()%100 - 50, rand()%100 + 5);
+//        tmp.scale(0.01);
+//        memcpy(models + i * 16, tmp.data(), 16 * sizeof(float));
+//    }
+
+    GL::funcs.glGenBuffers(1, &buffer);
+    GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, buffer);
+//    GL::funcs.glBufferData(GL_ARRAY_BUFFER, 16 * amount * sizeof(float), &models[0], GL_STATIC_DRAW);
+
+    unsigned int VAO = asteroidModel->getVAO();
+    GL::funcs.glBindVertexArray(VAO);
+
+    GL::funcs.glEnableVertexAttribArray(3);
+    GL::funcs.glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)0);
+    GL::funcs.glEnableVertexAttribArray(4);
+    GL::funcs.glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(4 * sizeof(float)));
+    GL::funcs.glEnableVertexAttribArray(5);
+    GL::funcs.glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(8 * sizeof(float)));
+    GL::funcs.glEnableVertexAttribArray(6);
+    GL::funcs.glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(12 * sizeof(float)));
+
+    GL::funcs.glVertexAttribDivisor(3, 1);
+    GL::funcs.glVertexAttribDivisor(4, 1);
+    GL::funcs.glVertexAttribDivisor(5, 1);
+    GL::funcs.glVertexAttribDivisor(6, 1);
+
+    GL::funcs.glBindVertexArray(0);
+
     for(int x = -DIST; x <= DIST; x += DISTincrement) {
         for(int y = -DIST; y <= DIST; y += DISTincrement) {
             for(int z = -DIST; z <= DIST; z += DISTincrement) {
-                checkAddPlanet(QVector3D(x, y, z));
+                checkAddObject(QVector3D(x, y, z));
             }
         }
     }
     qDebug() << "number of planets" << planets.size();
+    qDebug() << "number of asteroids" << asteroidClusters.size();
 
     position = QVector3D(0, 0, 0);
 }
@@ -107,6 +152,17 @@ void Space::update(QVector3D cameraPosition) {
     }
     planets = planetsUpdated;
 
+    QVector<AsteroidCluster*> asteroidsUpdated;
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        if(isInRange(cameraPosition, asteroidCluster->getPosition()))
+            asteroidsUpdated.push_back(asteroidCluster);
+        else {
+            takenCoords[asteroidCluster->getPosition()] = false;
+            delete asteroidCluster;
+        }
+    }
+    asteroidClusters = asteroidsUpdated;
+
     int oldX, newX;
     if(cameraPosition.x() < position.x())
         oldX = position.x()-DIST, newX = cameraPosition.x()-DIST;
@@ -115,7 +171,7 @@ void Space::update(QVector3D cameraPosition) {
     if(oldX != newX && newX % DISTincrement == 0) {
         for(int y = cameraPosition.y()-DIST; y <= cameraPosition.y()+DIST; y += DISTincrement) {
             for(int z = cameraPosition.z()-DIST; z <= cameraPosition.z()+DIST; z += DISTincrement){
-                checkAddPlanet(QVector3D(newX, y, z));
+                checkAddObject(QVector3D(newX, y, z));
             }
         }
     }
@@ -128,7 +184,7 @@ void Space::update(QVector3D cameraPosition) {
     if(oldY != newY && newY % DISTincrement == 0) {
         for(int x = cameraPosition.x()-DIST; x <= cameraPosition.x()+DIST; x += DISTincrement) {
             for(int z = cameraPosition.z()-DIST; z <= cameraPosition.z()+DIST; z += DISTincrement){
-                checkAddPlanet(QVector3D(x, newY, z));
+                checkAddObject(QVector3D(x, newY, z));
             }
         }
     }
@@ -141,7 +197,7 @@ void Space::update(QVector3D cameraPosition) {
     if(oldZ != newZ && newZ % DISTincrement == 0) {
         for(int x = cameraPosition.x()-DIST; x <= cameraPosition.x()+DIST; x += DISTincrement) {
             for(int y = cameraPosition.y()-DIST; y <= cameraPosition.y()+DIST; y += DISTincrement){
-                checkAddPlanet(QVector3D(x, y, newZ));
+                checkAddObject(QVector3D(x, y, newZ));
             }
         }
     }
@@ -154,7 +210,37 @@ void Space::update(QVector3D cameraPosition) {
 }
 
 
-void Space::render() {
+void Space::render(Shader *asteroidShader) {
+    asteroidModel->setupShader(asteroidShader);
+    GL::funcs.glBindVertexArray(asteroidModel->getVAO());
+
+    int amount = 0;
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        amount += asteroidCluster->getNumberOfAsteroids();
+    }
+    models.resize(16 * amount);
+
+    int cnt = 0;
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        QVector<QMatrix4x4> rotationMatrices = asteroidCluster->getRotationMatrices();
+        for(QMatrix4x4 rotMatrix: rotationMatrices) {
+            memcpy(models.data() + cnt * 16, rotMatrix.data(), 16 * sizeof(float));
+            cnt++;
+        }
+    }
+//    for(int i = 0; i < amount; i++){
+//        QMatrix4x4 tmp;
+//        tmp.translate(rand()%100 - 50, rand()%100 - 50, rand()%100 + 5);
+//        //        tmp.translate(0,0,100);
+//        tmp.scale(0.01);
+//        memcpy(models + i * 16, tmp.data(), 16 * sizeof(float));
+//    }
+
+    GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    //GL::funcs.glBufferData(GL_ARRAY_BUFFER, 16 * amount * sizeof(float), &models[0], GL_STATIC_DRAW);
+    GL::funcs.glBufferData(GL_ARRAY_BUFFER, 16 * amount * sizeof(float), models.constData(), GL_STATIC_DRAW);
+    GL::funcs.glDrawArraysInstanced(GL_TRIANGLES, 0, asteroidModel->getSize(), amount);
+
     for(Planet* planet: planets) {
         planet->render();
     }

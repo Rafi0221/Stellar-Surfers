@@ -46,10 +46,6 @@ private:
     //for testing
     Planet *planet;
 
-    Model *asteroidModel;
-    unsigned int buffer;
-    float *models;
-    int amount = 3000;
     int frameCounter = 0;
     float oldTime = 0.0f;
 };

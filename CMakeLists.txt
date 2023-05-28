@@ -35,6 +35,7 @@ set(PROJECT_SOURCES
         play/saves/datasaver.h play/saves/datasaver.cpp
         skybox/skybox.h
         skybox/skybox.cpp
+        terrain/asteroidcluster.h terrain/asteroidcluster.cpp
         terrain/noisedpatch.h
         terrain/noisedpatch.cpp
         terrain/noisedpatchfactory.h

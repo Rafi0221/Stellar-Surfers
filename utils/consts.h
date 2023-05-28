@@ -31,6 +31,10 @@
 
 #define COLOR_TEXTURE_RESOLUTION 512
 
+const int DIST = 240;
+const int DISTincrement = 12;
+const int hashRange = 1e9;
+
 int combine_dirs(int x, int cw);
 int opposite_dir(int dir);
 

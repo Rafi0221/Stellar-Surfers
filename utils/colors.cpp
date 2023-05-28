@@ -1,6 +1,10 @@
 #include "colors.h"
 #include "consts.h"
 
+#include <random>
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 // source: https://stackoverflow.com/questions/7530627/hcl-color-to-rgb-and-backward
 
 Color::Color(float r, float g, float b) {

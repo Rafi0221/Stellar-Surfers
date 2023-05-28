@@ -30,39 +30,6 @@ void GameWindow::initialize()
 
     skybox = new SkyBox();
 
-    asteroidModel = new Model("media/rock.obj", "media/rock_diffuse.png", "media/rock_specular.png", "media/rock_normal.png");
-
-    models = new float[amount * 16];
-    for(int i = 0; i < amount; i++){
-        QMatrix4x4 tmp;
-        tmp.translate(rand()%100 - 50, rand()%100 - 50, rand()%100 + 5);
-        tmp.scale(0.01);
-        memcpy(models + i * 16, tmp.data(), 16 * sizeof(float));
-    }
-
-    GL::funcs.glGenBuffers(1, &buffer);
-    GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    GL::funcs.glBufferData(GL_ARRAY_BUFFER, 16 * amount * sizeof(float), &models[0], GL_STATIC_DRAW);
-
-    unsigned int VAO = asteroidModel->getVAO();
-    GL::funcs.glBindVertexArray(VAO);
-
-    GL::funcs.glEnableVertexAttribArray(3);
-    GL::funcs.glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)0);
-    GL::funcs.glEnableVertexAttribArray(4);
-    GL::funcs.glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(4 * sizeof(float)));
-    GL::funcs.glEnableVertexAttribArray(5);
-    GL::funcs.glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(8 * sizeof(float)));
-    GL::funcs.glEnableVertexAttribArray(6);
-    GL::funcs.glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(12 * sizeof(float)));
-
-    GL::funcs.glVertexAttribDivisor(3, 1);
-    GL::funcs.glVertexAttribDivisor(4, 1);
-    GL::funcs.glVertexAttribDivisor(5, 1);
-    GL::funcs.glVertexAttribDivisor(6, 1);
-
-    GL::funcs.glBindVertexArray(0);
-
 }
 
 void GameWindow::setSeed(SetupGame::GameSeed value) {
@@ -85,7 +52,7 @@ void GameWindow::render()
 
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
-    camera->move(-camera->getSpeed());
+    camera->move(camera->getSpeed());
 
     space->update(camera->getPosition());
 
@@ -119,7 +86,7 @@ void GameWindow::render()
     skyboxShader->setInt("permutation", 0);
     GL::funcs.glActiveTexture(GL_TEXTURE0);
     GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
-//    skybox->render();
+    skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -156,22 +123,7 @@ void GameWindow::render()
     asteroidShader->setMat4("projection", projection);
     asteroidShader->setMat4("view", view);
 
-    asteroidModel->setupShader(asteroidShader);
-
-//    GL::funcs.glBindVertexArray(asteroidModel->getVAO());
-//    for(int i = 0; i < amount; i++){
-//        QMatrix4x4 tmp;
-//        tmp.translate(rand()%100 - 50, rand()%100 - 50, rand()%100 + 5);
-////        tmp.translate(0,0,100);
-//        tmp.scale(0.01);
-//        memcpy(models + i * 16, tmp.data(), 16 * sizeof(float));
-//    }
-
-//    GL::funcs.glBindBuffer(GL_ARRAY_BUFFER, buffer);
-//    GL::funcs.glBufferData(GL_ARRAY_BUFFER, 16 * amount * sizeof(float), &models[0], GL_STATIC_DRAW);
-//    GL::funcs.glDrawArraysInstanced(GL_TRIANGLES, 0, asteroidModel->getSize(), 3000);
-
-    space->render();
+    space->render(asteroidShader);
 //    planet->setRotation(QVector3D(0, counter/10.0f, 0));
 //    planet->update(camera->getPosition());
 //    planet->render();
