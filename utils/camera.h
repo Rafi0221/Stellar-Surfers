@@ -32,6 +32,7 @@ public:
     void updateCameraVectors();
 
     void updateSpeed(float acceleration);
+    void notifyCollision();
     float getSpeed();
 private:
     QVector3D position;

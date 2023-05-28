@@ -93,14 +93,18 @@ void Camera::addAngles(float pitch, float yaw, float roll){
 }
 
 void Camera::updateSpeed(float a) {
-    const float slowdown = 0.000005f;
+    // const float slowdown = 0.000005f;
     a = a * 0.00005f;
-    speed = speed - slowdown + a;
-    if(speed < 0)
-        speed = 0.0f;
+    // we don't want to make negative speed even lower
+    if (speed + a > 0 or a > 0)
+        speed = speed + a;
 }
 
 float Camera::getSpeed() {
     return speed;
 }
 
+void Camera::notifyCollision() {
+    if (speed > 0)
+        speed=-speed*0.5;
+}
