@@ -16,7 +16,7 @@ namespace {
     }
 }
 
-WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer)
+WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer, float oceanLevel)
 {
     this->relativeRotation = relativeRotation;
     this->scale = scale;
@@ -24,6 +24,7 @@ WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relat
     this->radius = radius;
     this->noise = noise;
     this->wavesBuffer = wavesBuffer;
+    this->oceanLevel = oceanLevel;
     for(int x = 0; x < PATCH_VERTS; x++){
         for(int y = 0; y < PATCH_VERTS; y++){
             float xPos = relativePosition.x() + scale / PATCH_QUADS * x;
@@ -33,7 +34,7 @@ WaterPatch::WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relat
             QVector3D pos(xPos, yPos, zPos);
             pos = this->relativeRotation.map(pos);
 
-            QVector3D spherePos = cubeToSphere(pos, radius);
+            QVector3D spherePos = cubeToSphere(pos, radius) * oceanLevel;
 //            QVector3D newPos = cubePos * terrainHeight(cubePos);
 
             this->vertices[toID(x,y) * DATA_SIZE] = spherePos.x();
@@ -99,7 +100,7 @@ void WaterPatch::render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int
     waterShader->setInt("normalMapTexture", 0);
     waterShader->setFloat("time", GL::time/30.0f);
 //    waterShader->setFloat("time", 15000.0f);
-    waterShader->setFloat("radius", radius);
+    waterShader->setFloat("radius", radius * oceanLevel);
     waterShader->setInt("waveNumber", 10);
     GL::funcs.glBindBufferBase(GL_UNIFORM_BUFFER, 0, wavesBuffer);
 

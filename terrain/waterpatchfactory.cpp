@@ -14,5 +14,5 @@ WaterPatchFactory::~WaterPatchFactory(){
 }
 
 Patch* WaterPatchFactory::getPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, PlanetProperties *properties){
-    return new WaterPatch(relativeRotation, scale, relativePosition, properties->radius, noise, properties->wavesBuffer);
+    return new WaterPatch(relativeRotation, scale, relativePosition, properties->radius, noise, properties->wavesBuffer, properties->oceanLevel);
 }
