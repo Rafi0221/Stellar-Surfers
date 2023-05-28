@@ -14,6 +14,7 @@ void ShaderManager::initialize(){
     shaders["skyboxShader"] = new Shader("shaders/skyboxShader.vs", "shaders/skyboxShader.fs", {} , {"shaders/perlin.fs"});
     shaders["normalMapShader"] = new Shader("shaders/normalMap.vs", "shaders/normalMap.fs");
     shaders["positionTextureShader"] = new Shader("shaders/positionTexture.vs", "shaders/positionTexture.fs", {}, {"shaders/perlin.fs"});
+    shaders["asteroidShader"] = new Shader("shaders/asteroidShader.vs", "shaders/asteroidShader.fs");
 
     Shader *waterShader = shaders["waterShader"];
     waterShader->use();

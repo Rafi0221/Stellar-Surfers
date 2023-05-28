@@ -8,6 +8,7 @@
 #include "space.h"
 
 class Camera;
+class Model;
 class Planet;
 class PlanetLayer;
 class Shader;
@@ -44,5 +45,12 @@ private:
 
     //for testing
     Planet *planet;
+
+    Model *asteroidModel;
+    unsigned int buffer;
+    float *models;
+    int amount = 3000;
+    int frameCounter = 0;
+    float oldTime = 0.0f;
 };
 #endif // TRIANGLEWINDOW_H

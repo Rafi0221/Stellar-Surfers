@@ -68,7 +68,11 @@ set(PROJECT_SOURCES
         utils/consts.cpp
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
+        utils/model.h
+        utils/model.cpp
         utils/noise.h
+        utils/obj_loader.h
+        utils/obj_loader.cpp
         utils/perlinnoise.h
         utils/perlinnoise.cpp
         utils/shader.h
@@ -129,3 +133,10 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_SOURCE_DIR}/shaders/
                 ${CMAKE_BINARY_DIR}/shaders/)
+
+add_custom_command(
+        TARGET Stellar-Surfers POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_SOURCE_DIR}/media/
+                ${CMAKE_BINARY_DIR}/media/)
+
