@@ -17,6 +17,14 @@ Planet::Planet(int seed, float radius)
     }
 }
 
+Planet::~Planet(){
+    if(solidLayer != nullptr)
+        delete solidLayer;
+    if(waterLayer != nullptr)
+        delete waterLayer;
+    delete properties;
+}
+
 void Planet::update(QVector3D cameraPosition){
     if(solidLayer != nullptr)
         solidLayer->update(cameraPosition);

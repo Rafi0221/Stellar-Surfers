@@ -85,7 +85,7 @@ void GameWindow::render()
 
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
-    camera->move(-camera->getSpeed());
+    camera->move(camera->getSpeed());
 
     space->update(camera->getPosition());
 

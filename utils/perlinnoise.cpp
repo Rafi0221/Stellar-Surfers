@@ -37,6 +37,10 @@ PerlinNoise::PerlinNoise() {
     createPermutationTexture();
 }
 
+PerlinNoise::~PerlinNoise(){
+    GL::funcs.glDeleteTextures(1, &textureID);
+}
+
 // Generate a new permutation vector based on the value of seed
 PerlinNoise::PerlinNoise(unsigned int seed) {
     p.resize(256);

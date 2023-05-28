@@ -40,6 +40,13 @@ PlanetLayer::PlanetLayer(PatchFactory *factory, PlanetProperties *properties)
     }
 }
 
+PlanetLayer::~PlanetLayer(){
+    for(int i = 0; i < 6; i++){
+        delete faces[i];
+    }
+    delete factory;
+}
+
 void PlanetLayer::update(QVector3D cameraPosition){
     QMatrix4x4 modelMatrix;
     modelMatrix.translate(position);

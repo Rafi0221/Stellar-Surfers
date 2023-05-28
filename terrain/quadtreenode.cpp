@@ -41,7 +41,7 @@ QuadTreeNode::~QuadTreeNode(){
     for(int i = 0; i < 4; i++){
         delete children[i];
     }
-//    delete patch;
+    delete patch;
 }
 
 bool QuadTreeNode::isLeaf(){
