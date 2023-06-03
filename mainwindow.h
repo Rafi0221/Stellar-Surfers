@@ -18,7 +18,7 @@ public:
     void resizeEvent(QResizeEvent *event);
 
     void playClicked();
-    void testClicked();
+    void settingsClicked();
 
 private:
     Ui::MainWindow *ui;

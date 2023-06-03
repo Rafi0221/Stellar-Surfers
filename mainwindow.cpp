@@ -2,7 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "connect/connectmanager.h"
 #include "play/setupgame.h"
-#include "game/gamewindow.h"
+#include "play/settings.h"
 
 #include <QSurfaceFormat>
 
@@ -22,7 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setPalette(palette);
 
     connect(ui->playButton, &QPushButton::clicked, this, &MainWindow::playClicked);
-    connect(ui->testButton, &QPushButton::clicked, this, &MainWindow::testClicked);
+    //connect(ui->testButton, &QPushButton::clicked, this, &MainWindow::testClicked);
+    connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::settingsClicked);
 
     connectManager = new ConnectManager();
 }
@@ -42,20 +43,10 @@ void MainWindow::playClicked()
 
 }
 
-void MainWindow::testClicked()
+void MainWindow::settingsClicked()
 {
-    QSurfaceFormat format;
-//    format.setSamples(16);
-    format.setDepthBufferSize(24);
-    format.setVersion(3, 3);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    QSurfaceFormat::setDefaultFormat(format);
-
-    GameWindow *gameWindow = new GameWindow();
-    gameWindow->resize(640, 480);
-    gameWindow->showMaximized();
-
-    gameWindow->setAnimating(true);
+    Settings *s = new Settings();
+    s->show();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

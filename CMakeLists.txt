@@ -33,6 +33,10 @@ set(PROJECT_SOURCES
         play/setupwindow.ui
         play/saves/gamesave.h play/saves/gamesave.cpp
         play/saves/datasaver.h play/saves/datasaver.cpp
+        play/saves/settingssave.h play/saves/settingssave.cpp
+        play/saves/settingssaver.h play/saves/settingssaver.cpp
+        play/settings.h play/settings.cpp
+        play/settingswindow.ui
         skybox/skybox.h
         skybox/skybox.cpp
         terrain/asteroidcluster.h terrain/asteroidcluster.cpp

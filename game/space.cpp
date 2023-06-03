@@ -119,10 +119,10 @@ void Space::initialize() {
     GL::funcs.glVertexAttribDivisor(6, 1);
 
     GL::funcs.glBindVertexArray(0);
-
-    for(int x = -DIST; x <= DIST; x += DISTincrement) {
-        for(int y = -DIST; y <= DIST; y += DISTincrement) {
-            for(int z = -DIST; z <= DIST; z += DISTincrement) {
+    
+    for(int x = -RENDER_DIST; x <= RENDER_DIST; x += DISTincrement) {
+        for(int y = -RENDER_DIST; y <= RENDER_DIST; y += DISTincrement) {
+            for(int z = -RENDER_DIST; z <= RENDER_DIST; z += DISTincrement) {
                 checkAddObject(QVector3D(x, y, z));
             }
         }
@@ -134,7 +134,7 @@ void Space::initialize() {
 }
 
 bool Space::isInRange(const QVector3D & pos, const QVector3D & coordinates) {
-    static const int dist = DIST + 2*DISTincrement;
+    static const int dist = RENDER_DIST + 2*DISTincrement;
     return  pos.x()-dist <= coordinates.x() && coordinates.x() <= pos.x()+dist
             && pos.y()-dist <= coordinates.y() && coordinates.y() <= pos.y()+dist
             && pos.z()-dist <= coordinates.z() && coordinates.z() <= pos.z()+dist;
@@ -165,12 +165,12 @@ void Space::update(QVector3D cameraPosition) {
 
     int oldX, newX;
     if(cameraPosition.x() < position.x())
-        oldX = position.x()-DIST, newX = cameraPosition.x()-DIST;
+        oldX = position.x()-RENDER_DIST, newX = cameraPosition.x()-RENDER_DIST;
     else
-        oldX = position.x()+DIST, newX = cameraPosition.x()+DIST;
+        oldX = position.x()+RENDER_DIST, newX = cameraPosition.x()+RENDER_DIST;
     if(oldX != newX && newX % DISTincrement == 0) {
-        for(int y = cameraPosition.y()-DIST; y <= cameraPosition.y()+DIST; y += DISTincrement) {
-            for(int z = cameraPosition.z()-DIST; z <= cameraPosition.z()+DIST; z += DISTincrement){
+        for(int y = cameraPosition.y()-RENDER_DIST; y <= cameraPosition.y()+RENDER_DIST; y += DISTincrement) {
+            for(int z = cameraPosition.z()-RENDER_DIST; z <= cameraPosition.z()+RENDER_DIST; z += DISTincrement){
                 checkAddObject(QVector3D(newX, y, z));
             }
         }
@@ -178,12 +178,12 @@ void Space::update(QVector3D cameraPosition) {
 
     int oldY, newY;
     if(cameraPosition.y() < position.y())
-        oldY = position.y()-DIST, newY = cameraPosition.y()-DIST;
+        oldY = position.y()-RENDER_DIST, newY = cameraPosition.y()-RENDER_DIST;
     else
-        oldY = position.y()+DIST, newY = cameraPosition.y()+DIST;
+        oldY = position.y()+RENDER_DIST, newY = cameraPosition.y()+RENDER_DIST;
     if(oldY != newY && newY % DISTincrement == 0) {
-        for(int x = cameraPosition.x()-DIST; x <= cameraPosition.x()+DIST; x += DISTincrement) {
-            for(int z = cameraPosition.z()-DIST; z <= cameraPosition.z()+DIST; z += DISTincrement){
+        for(int x = cameraPosition.x()-RENDER_DIST; x <= cameraPosition.x()+RENDER_DIST; x += DISTincrement) {
+            for(int z = cameraPosition.z()-RENDER_DIST; z <= cameraPosition.z()+RENDER_DIST; z += DISTincrement){
                 checkAddObject(QVector3D(x, newY, z));
             }
         }
@@ -191,12 +191,12 @@ void Space::update(QVector3D cameraPosition) {
 
     int oldZ, newZ;
     if(cameraPosition.z() < position.z())
-        oldZ = position.z()-DIST, newZ = cameraPosition.z()-DIST;
+        oldZ = position.z()-RENDER_DIST, newZ = cameraPosition.z()-RENDER_DIST;
     else
-        oldZ = position.z()+DIST, newZ = cameraPosition.z()+DIST;
+        oldZ = position.z()+RENDER_DIST, newZ = cameraPosition.z()+RENDER_DIST;
     if(oldZ != newZ && newZ % DISTincrement == 0) {
-        for(int x = cameraPosition.x()-DIST; x <= cameraPosition.x()+DIST; x += DISTincrement) {
-            for(int y = cameraPosition.y()-DIST; y <= cameraPosition.y()+DIST; y += DISTincrement){
+        for(int x = cameraPosition.x()-RENDER_DIST; x <= cameraPosition.x()+RENDER_DIST; x += DISTincrement) {
+            for(int y = cameraPosition.y()-RENDER_DIST; y <= cameraPosition.y()+RENDER_DIST; y += DISTincrement){
                 checkAddObject(QVector3D(x, y, newZ));
             }
         }
