@@ -133,12 +133,12 @@ void GameWindow::render()
 
 //    skybox->render();
 
-    /* if(space->checkCollision(camera->getPosition())) {
-        qDebug() << "ALARAM!!!";
+    if(space->checkCollision(camera->getPosition())) {
+        camera->notifyCollision();
     }
 
-    if(planet->checkCollision(camera->getPosition())) {
-        qDebug() << "ALARAM!!!";
+    /* if(planet->checkCollision(camera->getPosition())) {
+        qDebug() << "ALARM!!!";
     }
     else qDebug() << "no collision"; */
 

@@ -12,13 +12,14 @@ class LayeredPerlinNoise;
 class WaterPatch : public Patch
 {
 public:
-    WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer);
+    WaterPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int wavesBuffer, float oceanLevel);
     ~WaterPatch();
     virtual void render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest);
 private:
     LayeredPerlinNoise *noise;
     float radius;
     unsigned int wavesBuffer;
+    float oceanLevel;
     unsigned int VAO, VBO, EBO;
     float vertices[PATCH_VERTS * PATCH_VERTS * DATA_SIZE];
 

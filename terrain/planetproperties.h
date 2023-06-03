@@ -27,17 +27,16 @@ public:
 
         if(distr(gen) <= WATER_CUTOFF){
             hasWater = true;
-
+            oceanLevel = 0.9 + distr(gen) * 0.2;
             Wave *waves = (Wave*)malloc(sizeof(Wave) * WAVES_AMOUNT);
             for(int i = 0; i < WAVES_AMOUNT; i++){
-//                waves[i].amplitude = distr(gen) / 50.0f + 0.01f;
-                waves[i].amplitude = 0.007f;
-        //        waves[i].frequency = rand() % 150 + 150;
-                waves[i].frequency = (i * 3) * (0.5 + (rand()%100 / 100.0f));
-                waves[i].speed = 0.5;
-                waves[i].steepness = 0.6;
+                float p = (i+1);
+                waves[i].amplitude = (0.3 + 0.7 * distr(gen)) / 3.0f / ((1 << (i+1)) + 3);
+                waves[i].frequency = (0.3 + distr(gen)) * p * p * 1.0f;
+                waves[i].speed = (0.3 + distr(gen)) * 0.5 * p;
+                waves[i].steepness = (0.3 + 0.7 * distr(gen)) * (1.0-1.0/p);
                 for(int j = 0; j < 3; j++){
-                    waves[j].direction[j] = (rand()%1000 + 1) / 500.0f - 1.0f;
+                    waves[i].direction[j] = (distr(gen) - 0.5) * 2.0;
                 }
             }
             GL::funcs.glGenBuffers(1, &wavesBuffer);
@@ -70,6 +69,7 @@ public:
 
     int seed;
     float radius;
+    float oceanLevel;
 
     bool hasWater;
     bool hasTerrain;

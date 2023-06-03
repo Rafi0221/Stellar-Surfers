@@ -29,9 +29,9 @@ constexpr int NORMAL_MAP_SIZE = (10 * PATCH_QUADS);
 #define UP 4
 #define DOWN 5
 
-#define WAVES_AMOUNT 3
+#define WAVES_AMOUNT 10
 
-#define WATER_CUTOFF 0.0
+#define WATER_CUTOFF 1.0
 #define TERRAIN_CUTOFF 0.8
 
 #define COLOR_TEXTURE_RESOLUTION 512
