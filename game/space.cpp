@@ -253,6 +253,12 @@ bool Space::checkCollision(QVector3D cameraPosition) {
                 return true;
         }
     }
+
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        if(asteroidCluster->checkCollision(cameraPosition))
+            return true;
+    }
+
     return false;
 }
 

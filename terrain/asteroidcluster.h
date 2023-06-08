@@ -13,11 +13,13 @@ public:
     QVector3D getPosition();
     int getNumberOfAsteroids();
     QVector<QMatrix4x4> getRotationMatrices();
+    bool checkCollision(QVector3D cameraPosition);
 
 private:
     int seed;
     QVector3D position;
     QVector<QMatrix4x4> rotationMatrices;
+    QVector<float> scales;
 };
 
 #endif // ASTEROIDCLUSTER_H
