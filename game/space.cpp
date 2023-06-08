@@ -58,8 +58,8 @@ int Space::hashCoordinates(const QVector3D & coordinates) {
 }
 
 void Space::checkAddObject(const QVector3D & coordinates) {
-    const int planetHashCutoff = 2000000;
-    const int asteroidHashCutoff = 2700000;
+    const int planetHashCutoff = 2500000;
+    const int asteroidHashCutoff = 4400000;
 
     if(takenCoords[coordinates])
         return;
@@ -68,7 +68,7 @@ void Space::checkAddObject(const QVector3D & coordinates) {
     if(hash < planetHashCutoff) {
         //qDebug() << hashCoordinates(coordinates) << coordinates;
         //we might need a new hash for planet seed
-        Planet* planet = new Planet(hash, 5.0f);
+        Planet* planet = new Planet(hash, hash%5 + 20.0f);
 //        PlanetLayer* planet = new PlanetLayer(new NoisedPatchFactory(hashCoordinates(coordinates)),
 //                                              new PlanetProperties{hashCoordinates(coordinates),3.0f});
         planet->setPosition(coordinates);
@@ -206,6 +206,10 @@ void Space::update(QVector3D cameraPosition) {
 
     for(Planet* planet: planets) {
         planet->update(cameraPosition);
+    }
+
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        asteroidCluster->update();
     }
 }
 

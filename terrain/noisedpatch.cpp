@@ -100,7 +100,7 @@ NoisedPatch::~NoisedPatch(){
 float NoisedPatch::terrainHeight(QVector3D position){
     float tmp = noise->getValue(position.x(), position.y(), position.z());
     tmp = (tmp * 2.0) - 1.0;
-    return (1 + tmp * 0.2);
+    return (1 + tmp * 0.08);
 }
 
 void NoisedPatch::calculateBoundingSphere(){
@@ -288,4 +288,19 @@ void NoisedPatch::generateNormalMap(){
     GL::funcs.glDeleteTextures(1, &positionTexture);
 
     GL::funcs.glDeleteFramebuffers(1, &fbo);
+}
+
+bool NoisedPatch::checkCollision(const QVector3D & relativePosition) {
+    QVector3D closestPoint(1e9, 1e9, 1e9);
+    for(int i = 0; i < PATCH_VERTS * PATCH_VERTS; i++){
+        QVector3D vertex(vertices[i*DATA_SIZE], vertices[i*DATA_SIZE+1], vertices[i*DATA_SIZE+2]);
+        if(relativePosition.distanceToPoint(vertex) < relativePosition.distanceToPoint(closestPoint))
+            closestPoint = vertex;
+    }
+
+    QVector3D planetCenter = QVector3D(0,0,0);
+    float distPosCenter = planetCenter.distanceToPoint(relativePosition);
+    float distPosPatch = relativePosition.distanceToPoint(closestPoint);
+    float distPatchCenter = planetCenter.distanceToPoint(closestPoint);
+    return distPosPatch < distPatchCenter && distPosCenter < distPatchCenter;
 }

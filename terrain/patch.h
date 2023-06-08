@@ -26,6 +26,7 @@ public:
     float getRadius();
 
     virtual void render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest) = 0;
+    virtual bool checkCollision(const QVector3D & relativePosition) = 0;
 };
 
 #endif // PATCH_H

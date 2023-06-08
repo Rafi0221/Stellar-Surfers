@@ -31,7 +31,7 @@ constexpr int NORMAL_MAP_SIZE = (10 * PATCH_QUADS);
 
 #define WAVES_AMOUNT 10
 
-#define WATER_CUTOFF 1.0
+#define WATER_CUTOFF 0.9
 #define TERRAIN_CUTOFF 0.8
 
 #define COLOR_TEXTURE_RESOLUTION 512
@@ -39,7 +39,7 @@ constexpr int NORMAL_MAP_SIZE = (10 * PATCH_QUADS);
 constexpr int RENDER_DIST = {
     #include "../play/saves/renderdistance.dat"
 };
-constexpr int DISTincrement = 12;
+constexpr int DISTincrement = 50;
 constexpr int hashRange = 1e9;
 
 int combine_dirs(int x, int cw);

@@ -140,7 +140,7 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 //    }else if(isLeaf() && depth <= 2){
 //        qDebug() << ":(((    " << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
 //    }
-    if(distance <= (patch->getRadius() * 2) && depth <= 6)
+    if(distance <= (patch->getRadius() * 6) && depth <= 6)
         split();
     else
         merge();
@@ -168,11 +168,12 @@ void QuadTreeNode::render(QMatrix4x4 model){
 
 bool QuadTreeNode::checkCollision(const QVector3D & relativePosition) {
     if(isLeaf()) {
-        QVector3D planetCenter = QVector3D(0,0,0);
-        float distPosCenter = planetCenter.distanceToPoint(relativePosition);
-        float distPosPatch = relativePosition.distanceToPoint(patch->getCenter());
-        float distPatchCenter = planetCenter.distanceToPoint(patch->getCenter());
-        return distPosPatch < distPatchCenter && distPosCenter < distPatchCenter;
+//        QVector3D planetCenter = QVector3D(0,0,0);
+//        float distPosCenter = planetCenter.distanceToPoint(relativePosition);
+//        float distPosPatch = relativePosition.distanceToPoint(patch->getCenter());
+//        float distPatchCenter = planetCenter.distanceToPoint(patch->getCenter());
+//        return distPosPatch < distPatchCenter && distPosCenter < distPatchCenter;
+        return patch->checkCollision(relativePosition);
     }
 
     int closestChildIndex = -1;

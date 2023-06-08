@@ -268,3 +268,7 @@ void WaterPatch::generateNormalMap(){
 
     GL::funcs.glDeleteFramebuffers(1, &fbo);
 }
+
+bool WaterPatch::checkCollision(const QVector3D & relativePosition) {
+    return false;
+}

@@ -28,6 +28,7 @@ public:
     NoisedPatch(QMatrix4x4 relativeRotation, float scale, QVector2D relativePosition, float radius, LayeredPerlinNoise *noise, unsigned int colorMapTexture);
     ~NoisedPatch();
     virtual void render(QMatrix4x4 model, int dNorth, int dEast, int dSouth, int dWest);
+    virtual bool checkCollision(const QVector3D & relativePosition);
 };
 
 #endif // NOISEDPATCH_H

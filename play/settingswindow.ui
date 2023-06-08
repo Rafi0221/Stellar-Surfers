@@ -34,7 +34,7 @@
      <number>100</number>
     </property>
     <property name="maximum">
-     <number>400</number>
+     <number>2000</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
