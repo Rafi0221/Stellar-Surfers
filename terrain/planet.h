@@ -1,6 +1,7 @@
 #ifndef PLANET_H
 #define PLANET_H
 
+class Frustum;
 class PlanetLayer;
 class PlanetProperties;
 
@@ -13,7 +14,7 @@ public:
     Planet(int seed, float radius);
     ~Planet();
     void update(QVector3D cameraPosition);
-    void render();
+    void render(Frustum *frustum);
     bool checkCollision(QVector3D cameraPosition);
     void setPosition(QVector3D position);
     void setRotation(QVector3D rotation);

@@ -10,6 +10,7 @@
 #include "../terrain/planetlayer.h"
 #include "../terrain/planetproperties.h"
 #include "../utils/camera.h"
+#include "../utils/frustum.h"
 #include "../utils/model.h"
 #include "../utils/obj_loader.h"
 #include "../utils/shader.h"
@@ -28,12 +29,13 @@ void GameWindow::initialize()
     space = new Space(seed.seed);
     space->initialize();
 
-    skybox = new SkyBox();
+    skybox = new SkyBox(new PerlinNoise(round(seed.f1 * 1000000.0)));
 
 }
 
 void GameWindow::setSeed(SetupGame::GameSeed value) {
     seed = value;
+
 }
 
 void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
@@ -76,16 +78,21 @@ void GameWindow::render()
     QMatrix3x3 view_ = view.normalMatrix();
 //    view_.normalMatrix();
     QMatrix4x4 tmp(view_);
-    Shader *skyboxShader = ShaderManager::getShader("skyboxShader");
-    skyboxShader->use();
+    Shader *textureShader = ShaderManager::getShader("textureShader");
+    textureShader->use();
+    textureShader->setMat4("projection", projection);
+    textureShader->setMat4("view", tmp);
 
-    skyboxShader->setMat4("projection", projection);
-    skyboxShader->setMat4("view", tmp);
-    PerlinNoise noise(round(seed.f1 * 1000000.0));
-    unsigned int textureID = noise.getPermutationTexture();
-    skyboxShader->setInt("permutation", 0);
-    GL::funcs.glActiveTexture(GL_TEXTURE0);
-    GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
+    //    Shader *skyboxShader = ShaderManager::getShader("skyboxShader");
+//    skyboxShader->use();
+
+//    skyboxShader->setMat4("projection", projection);
+//    skyboxShader->setMat4("view", tmp);
+//    PerlinNoise noise(round(seed.f1 * 1000000.0));
+//    unsigned int textureID = noise.getPermutationTexture();
+//    skyboxShader->setInt("permutation", 0);
+//    GL::funcs.glActiveTexture(GL_TEXTURE0);
+//    GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
     skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
@@ -123,7 +130,11 @@ void GameWindow::render()
     asteroidShader->setMat4("projection", projection);
     asteroidShader->setMat4("view", view);
 
-    space->render(asteroidShader);
+//    Frustum frustum(camera, 4.0f / 3.0f, 1.04719755f, 0.1f, 1000.0f);
+    Frustum frustum(camera, 4.0f / 3.0f, 60.0f, 0.1f, 1000.0f);
+    GL::drawCount = 0;
+    space->render(asteroidShader, &frustum);
+//    qDebug() << GL::drawCount;
 //    planet->setRotation(QVector3D(0, counter/10.0f, 0));
 //    planet->update(camera->getPosition());
 //    planet->render();

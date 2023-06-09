@@ -3,6 +3,7 @@
 #include "patchfactory.h"
 #include "planetproperties.h"
 #include "quadtreenode.h"
+#include "../utils/frustum.h"
 
 TerrainFace::TerrainFace(PatchFactory *factory, QMatrix4x4 relativeRotation, PlanetProperties *properties)
 {
@@ -20,8 +21,8 @@ void TerrainFace::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
     root->update(cameraPosition, modelMatrix);
 }
 
-void TerrainFace::render(QMatrix4x4 model){
-    root->render(model);
+void TerrainFace::render(QMatrix4x4 model, Frustum *frustum){
+    root->render(model, frustum);
 }
 
 /* called only upon construction */

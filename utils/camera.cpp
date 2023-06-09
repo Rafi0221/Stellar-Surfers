@@ -31,6 +31,14 @@ QVector3D Camera::getFront(){
     return front;
 }
 
+QVector3D Camera::getRight(){
+    return right;
+}
+
+QVector3D Camera::getUp(){
+    return up;
+}
+
 void Camera::move(float distance){
     position += front * distance;
 }

@@ -4,6 +4,7 @@
 #include <QMatrix4x4>
 
 #include "../utils/consts.h"
+#include "../utils/frustum.h"
 #include "planetproperties.h"
 #include "patchfactory.h"
 #include "patch.h"
@@ -152,8 +153,12 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
     }
 }
 
-void QuadTreeNode::render(QMatrix4x4 model){
+void QuadTreeNode::render(QMatrix4x4 model, Frustum *frustum){
     if(isLeaf()){
+//        if(!frustum->isSphereInside(model.map(patch->getCenter()), patch->getRadius()))
+//            return;
+//        if(frustum->isSphereInside(model.map(patch->getCenter()), patch->getRadius()))
+//            GL::drawCount++;
         int dNorth = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[NORTH]->depth)));
         int dEast = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[EAST]->depth)));
         int dSouth = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[SOUTH]->depth)));
@@ -161,7 +166,7 @@ void QuadTreeNode::render(QMatrix4x4 model){
         patch->render(model, dNorth, dEast, dSouth, dWest);
     }else{
         for(int i = 0; i < 4; i++){
-            children[i]->render(model);
+            children[i]->render(model, frustum);
         }
     }
 }

@@ -10,6 +10,7 @@
 #include "../terrain/asteroidcluster.h"
 #include "../terrain/planet.h"
 
+class Frustum;
 
 class Space
 {
@@ -17,7 +18,7 @@ public:
     Space(int seed);
     void update(QVector3D cameraPosition);
     void initialize();
-    void render(Shader *asteroidShader);
+    void render(Shader *asteroidShader, Frustum *frustum);
     bool checkCollision(QVector3D cameraPosition);
 
 private:

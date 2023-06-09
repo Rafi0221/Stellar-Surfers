@@ -4,6 +4,7 @@
 #include "planetlayer.h"
 #include "planetproperties.h"
 #include "waterpatchfactory.h"
+#include "../utils/frustum.h"
 
 Planet::Planet(int seed, float radius)
 {
@@ -32,11 +33,11 @@ void Planet::update(QVector3D cameraPosition){
         waterLayer->update(cameraPosition);
 }
 
-void Planet::render(){
+void Planet::render(Frustum *frustum){
     if(solidLayer != nullptr)
-        solidLayer->render();
+        solidLayer->render(frustum);
     if(waterLayer != nullptr)
-        waterLayer->render();
+        waterLayer->render(frustum);
 }
 
 bool Planet::checkCollision(QVector3D cameraPosition){

@@ -5,6 +5,7 @@
 #include "../terrain/planetproperties.h"
 #include "../terrain/planet.h"
 #include "../utils/consts.h"
+#include "../utils/frustum.h"
 
 #include <QVector3D>
 #include <cmath>
@@ -214,7 +215,7 @@ void Space::update(QVector3D cameraPosition) {
 }
 
 
-void Space::render(Shader *asteroidShader) {
+void Space::render(Shader *asteroidShader, Frustum *frustum) {
     asteroidModel->setupShader(asteroidShader);
     GL::funcs.glBindVertexArray(asteroidModel->getVAO());
 
@@ -246,7 +247,7 @@ void Space::render(Shader *asteroidShader) {
     GL::funcs.glDrawArraysInstanced(GL_TRIANGLES, 0, asteroidModel->getSize(), amount);
 
     for(Planet* planet: planets) {
-        planet->render();
+        planet->render(frustum);
     }
 }
 

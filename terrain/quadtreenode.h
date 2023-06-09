@@ -4,6 +4,7 @@
 #include <QVector2D>
 #include <QMatrix4x4>
 
+class Frustum;
 class Patch;
 class PatchFactory;
 class PlanetProperties;
@@ -40,7 +41,7 @@ public:
     void announceDeletedNeighbor(QuadTreeNode* toDelete, int dir);
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
-    void render(QMatrix4x4 model);
+    void render(QMatrix4x4 model, Frustum *frustum);
     bool checkCollision(const QVector3D & relativePosition);
 
     friend class TerrainFace;

@@ -1,13 +1,17 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
+class PerlinNoise;
 
 class SkyBox
 {
 private:
-    unsigned int VAO, VBO;
+    unsigned int VAO[6], VBO[6];
+
+    unsigned int textures[6];
+
 public:
-    SkyBox();
+    SkyBox(PerlinNoise *noise);
 
     void render();
 };

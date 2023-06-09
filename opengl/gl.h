@@ -11,6 +11,8 @@ public:
     static QVector3D rotation;
     static float acceleration;
     static float time;
+
+    static int drawCount;
 };
 
 #endif // GL_H

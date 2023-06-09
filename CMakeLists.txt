@@ -73,6 +73,7 @@ set(PROJECT_SOURCES
         utils/colors.cpp
         utils/consts.h
         utils/consts.cpp
+        utils/frustum.h
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/model.h

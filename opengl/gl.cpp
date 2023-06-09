@@ -13,3 +13,4 @@ float GL::acceleration;
 
 float GL::time;
 
+int GL::drawCount;

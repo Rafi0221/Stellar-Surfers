@@ -3,6 +3,7 @@
 
 #include <QVector3D>
 
+class Frustum;
 class PatchFactory;
 class TerrainFace;
 class PlanetProperties;
@@ -24,7 +25,7 @@ public:
     PlanetLayer(PatchFactory *factory, PlanetProperties* properties);
     ~PlanetLayer();
     void update(QVector3D cameraPosition);
-    void render();
+    void render(Frustum *frustum);
     bool checkCollision(QVector3D cameraPosition);
     void setPosition(QVector3D position);
     void setRotation(QVector3D rotation);

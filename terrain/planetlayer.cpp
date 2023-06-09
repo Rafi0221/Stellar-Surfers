@@ -6,6 +6,7 @@
 #include "patchfactory.h"
 #include "terrainface.h"
 #include "../utils/consts.h"
+#include "../utils/frustum.h"
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 
@@ -58,7 +59,7 @@ void PlanetLayer::update(QVector3D cameraPosition){
     }
 }
 
-void PlanetLayer::render(){
+void PlanetLayer::render(Frustum *frustum){
 //    Shader *terrainShader = ShaderManager::getShader("terrainShader");
     QMatrix4x4 model;
     model.translate(this->position);
@@ -67,7 +68,7 @@ void PlanetLayer::render(){
     model.rotate(this->rotation.z(), 0, 0, 1);
 //    terrainShader->setMat4("model", model);
     for(int i = 0; i < 6; i++){
-        faces[i]->render(model);
+        faces[i]->render(model, frustum);
     }
 }
 

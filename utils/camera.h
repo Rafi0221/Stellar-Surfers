@@ -15,6 +15,8 @@ public:
     QVector3D getPosition();
 
     QVector3D getFront();
+    QVector3D getRight();
+    QVector3D getUp();
 
     void move(float distance);
 

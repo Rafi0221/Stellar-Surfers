@@ -4,6 +4,7 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
+class Frustum;
 class PatchFactory;
 class QuadTreeNode;
 class PlanetProperties;
@@ -20,7 +21,7 @@ public:
     ~TerrainFace();
 
     void update(QVector3D cameraPosition, QMatrix4x4 modelMatrix);
-    void render(QMatrix4x4 model);
+    void render(QMatrix4x4 model, Frustum *frustum);
     bool checkCollision(const QVector3D & relativePosition);
     void addNeighbor(TerrainFace* neighbor, int dir);
 };
