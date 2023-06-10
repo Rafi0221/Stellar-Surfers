@@ -23,7 +23,7 @@ struct Plane{
 //    }
 
     bool isSphereOnPlane(QVector3D center, float radius){
-        return QVector3D::dotProduct(normal, center) - distance > -radius;
+        return (QVector3D::dotProduct(normal, center) - distance) > -radius;
     }
 };
 
@@ -40,15 +40,16 @@ struct Frustum{
     Frustum(Camera *camera, float aspect, float fovY, float zNear, float zFar){
         float halfVSide = zFar * tanf(fovY * 0.5f);
         float halfHSide = halfVSide * aspect;
+//        qDebug() << halfVSide << halfHSide;
         QVector3D frontMultFar = zFar * camera->getFront();
 
         nearFace = Plane(camera->getPosition() + zNear * camera->getFront(), camera->getFront());
         farFace = Plane(camera->getPosition() + frontMultFar, -camera->getFront());
-        rightFace = Plane(camera->getPosition(), QVector3D::crossProduct(frontMultFar - camera->getRight() * halfHSide, camera->getUp()));
-        leftFace = Plane(camera->getPosition(), QVector3D::crossProduct(camera->getUp(), frontMultFar + camera->getRight() * halfHSide));
-        topFace = Plane(camera->getPosition(), QVector3D::crossProduct(camera->getRight(), frontMultFar - camera->getUp() * halfVSide));
-        bottomFace = Plane(camera->getPosition(), QVector3D::crossProduct(frontMultFar + camera->getUp() * halfVSide, camera->getRight()));
-
+        rightFace = Plane(camera->getPosition(), QVector3D::crossProduct(frontMultFar + camera->getRight() * halfHSide, camera->getUp()));
+        leftFace = Plane(camera->getPosition(), QVector3D::crossProduct(camera->getUp(), frontMultFar - camera->getRight() * halfHSide));
+        topFace = Plane(camera->getPosition(), QVector3D::crossProduct(camera->getRight(), frontMultFar + camera->getUp() * halfVSide));
+        bottomFace = Plane(camera->getPosition(), QVector3D::crossProduct(frontMultFar - camera->getUp() * halfVSide, camera->getRight()));
+//        qDebug() << rightFace.normal << rightFace.distance << leftFace.normal << leftFace.distance << topFace.normal << topFace.distance << bottomFace.normal << bottomFace.distance;
     }
 
     bool isSphereInside(QVector3D center, float radius){

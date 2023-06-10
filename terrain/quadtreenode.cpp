@@ -74,6 +74,7 @@ void QuadTreeNode::merge(){
 void QuadTreeNode::split(){
     if(!isLeaf())
         return;
+    GL::updatesLeft--;
     children[NORTH_WEST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition);
     children[NORTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition + QVector2D(scale / 2.0 ,0));
     children[SOUTH_EAST] = new QuadTreeNode(face, this->factory, this->relativeRotation, this->properties, this, relativePosition + QVector2D(scale / 2.0, scale / 2.0));
@@ -141,7 +142,7 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 //    }else if(isLeaf() && depth <= 2){
 //        qDebug() << ":(((    " << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
 //    }
-    if(distance <= (patch->getRadius() * 6) && depth <= 6)
+    if(distance <= (patch->getRadius() * 6) && depth <= 6 && GL::updatesLeft > 0)
         split();
     else
         merge();
@@ -155,10 +156,9 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 
 void QuadTreeNode::render(QMatrix4x4 model, Frustum *frustum){
     if(isLeaf()){
-//        if(!frustum->isSphereInside(model.map(patch->getCenter()), patch->getRadius()))
-//            return;
-//        if(frustum->isSphereInside(model.map(patch->getCenter()), patch->getRadius()))
-//            GL::drawCount++;
+        if(!frustum->isSphereInside(model.map(patch->getCenter()), patch->getRadius()))
+            return;
+//        GL::drawCount++;
         int dNorth = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[NORTH]->depth)));
         int dEast = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[EAST]->depth)));
         int dSouth = std::min(MAX_LOD_DIFFERENCE, std::max(0, depth - (neighbors[SOUTH]->depth)));

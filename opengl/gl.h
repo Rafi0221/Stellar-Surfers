@@ -13,6 +13,7 @@ public:
     static float time;
 
     static int drawCount;
+    static int updatesLeft;
 };
 
 #endif // GL_H

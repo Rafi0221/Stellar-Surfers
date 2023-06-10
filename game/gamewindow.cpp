@@ -44,6 +44,7 @@ void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
 
 void GameWindow::render()
 {
+    GL::updatesLeft = MAX_UPDATES_PER_FRAME;
     float deltaTime = clock() - oldTime;
     frameCounter++;
     if(frameCounter == 60){
@@ -130,9 +131,9 @@ void GameWindow::render()
     asteroidShader->setMat4("projection", projection);
     asteroidShader->setMat4("view", view);
 
-//    Frustum frustum(camera, 4.0f / 3.0f, 1.04719755f, 0.1f, 1000.0f);
-    Frustum frustum(camera, 4.0f / 3.0f, 60.0f, 0.1f, 1000.0f);
-    GL::drawCount = 0;
+    Frustum frustum(camera, 4.0f / 3.0f, 1.04719755f, 0.1f, 1000.0f);
+//    Frustum frustum(camera, 4.0f / 3.0f, 60.0f, 0.1f, 1000.0f);
+//    GL::drawCount = 0;
     space->render(asteroidShader, &frustum);
 //    qDebug() << GL::drawCount;
 //    planet->setRotation(QVector3D(0, counter/10.0f, 0));

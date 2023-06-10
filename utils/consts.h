@@ -36,6 +36,8 @@ constexpr int NORMAL_MAP_SIZE = (10 * PATCH_QUADS);
 
 #define COLOR_TEXTURE_RESOLUTION 512
 
+#define MAX_UPDATES_PER_FRAME 4
+
 constexpr int RENDER_DIST = {
     #include "../play/saves/renderdistance.dat"
 };
