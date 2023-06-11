@@ -155,6 +155,7 @@ void GameWindow::render()
     Laser *laser = new Laser(QVector3D(0.3,1,0.9), QVector3D(0,0,6));
     laser->Render(camera);
 
+    GL::funcs.glDisable(GL_BLEND);
 
     if(space->checkCollision(camera->getPosition())) {
         camera->notifyCollision();
