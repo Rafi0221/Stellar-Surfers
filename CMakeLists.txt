@@ -74,6 +74,8 @@ set(PROJECT_SOURCES
         utils/consts.h
         utils/consts.cpp
         utils/frustum.h
+        utils/laser.h
+        utils/laser.cpp
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/model.h

@@ -11,6 +11,7 @@
 #include "../terrain/planetproperties.h"
 #include "../utils/camera.h"
 #include "../utils/frustum.h"
+#include "../utils/laser.h"
 #include "../utils/model.h"
 #include "../utils/obj_loader.h"
 #include "../utils/shader.h"
@@ -144,6 +145,16 @@ void GameWindow::render()
 //    planet2->render();
 
 //    skybox->render();
+    GL::funcs.glEnable(GL_BLEND);
+    GL::funcs.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Shader *laserShader = ShaderManager::getShader("laserShader");
+    laserShader->use();
+    laserShader->setMat4("view", view);
+    laserShader->setMat4("projection", projection);
+
+    Laser *laser = new Laser(QVector3D(0.3,1,0.9), QVector3D(0,0,6));
+    laser->Render(camera);
+
 
     if(space->checkCollision(camera->getPosition())) {
         camera->notifyCollision();
