@@ -102,7 +102,7 @@ void Camera::addAngles(float pitch, float yaw, float roll){
 
 void Camera::updateSpeed(float a) {
     // const float slowdown = 0.000005f;
-    a = a * 0.00005f;
+    a = a * 0.00009f;
     // we don't want to make negative speed even lower
     if (speed + a > 0 or a > 0)
         speed = speed + a;

@@ -20,7 +20,7 @@ private:
     double multiplier;
 public:
     LayeredPerlinNoise(unsigned int seed = rand(), int octaves = 15, double maxValue = 1.0f,
-                       double baseFrequency = 0.6f, double persistance = 0.5f, double lacunarity = 2.0f);
+                       double baseFrequency = 0.12f, double persistance = 0.5f, double lacunarity = 2.0f);
     ~LayeredPerlinNoise();
     virtual double getValue(double x, double y, double z);
     double getMultiplier();

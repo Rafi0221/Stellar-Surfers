@@ -24,14 +24,14 @@ void ControllerUpdater::update(QVector3D position, float speed, int collision) {
     float y = position.y();
     float z = position.z();
     float hash = x + y + z + speed + collision;
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\xFF');
-    buffer.append('\xFF');
-    buffer.append('\xFF');
-    buffer.append('\xFF');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\xFF');
+//    buffer.append('\xFF');
+//    buffer.append('\xFF');
+//    buffer.append('\xFF');
 
     buffer.append(reinterpret_cast<const char*>(&x), sizeof(x));
     buffer.append(reinterpret_cast<const char*>(&y), sizeof(y));
@@ -40,14 +40,14 @@ void ControllerUpdater::update(QVector3D position, float speed, int collision) {
     buffer.append(reinterpret_cast<const char*>(&collision), sizeof(collision));
     buffer.append(reinterpret_cast<const char*>(&hash), sizeof(hash));
 
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
-    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
+//    buffer.append('\x00');
     connectManager->send(buffer);
 }
 

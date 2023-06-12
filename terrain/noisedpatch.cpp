@@ -100,7 +100,7 @@ NoisedPatch::~NoisedPatch(){
 float NoisedPatch::terrainHeight(QVector3D position){
     float tmp = noise->getValue(position.x(), position.y(), position.z());
     tmp = (tmp * 2.0) - 1.0;
-    return (1 + tmp * 0.08);
+    return (1 + tmp * 0.2);
 }
 
 void NoisedPatch::calculateBoundingSphere(){
