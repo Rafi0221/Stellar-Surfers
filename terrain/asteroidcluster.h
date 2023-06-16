@@ -15,9 +15,13 @@ public:
     QVector<QMatrix4x4> getRotationMatrices();
     bool checkCollision(QVector3D cameraPosition);
     void update();
+    bool collisionAhead(QVector3D position, QVector3D direction, float distance);
+    QVector3D getCollisionPoint(QVector3D position, QVector3D direction, float distance);
+    void deleteAsteroid(QVector3D asteroidPosition);
 
 private:
     int seed;
+    int numOfDeleted = 0;
     QVector3D position;
     QVector<QMatrix4x4> rotationMatrices;
     QVector<float> scales;

@@ -20,6 +20,8 @@ public:
     void setRotation(QVector3D rotation);
     QVector3D getPosition();
     float getRadius();
+    bool collisionAhead(QVector3D position, QVector3D direction, float distance);
+    QVector3D getCollisionPoint(QVector3D position, QVector3D direction, float distance);
 private:
     PlanetLayer *solidLayer = nullptr;
     PlanetLayer *waterLayer = nullptr;

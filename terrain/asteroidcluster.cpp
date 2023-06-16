@@ -13,7 +13,9 @@
 //    {-28.464, 37.002, -2.9935}
 //};
 
-static const QVector3D spheresCenters[9] = {
+static const int SPHERES_NUM = 9;
+
+static const QVector3D spheresCenters[SPHERES_NUM] = {
     {-8.5356, 42.251, 62.327},
     {18.541, 88.537, 46.017},
     {-23.135, 56.536, 9.2953},
@@ -26,7 +28,7 @@ static const QVector3D spheresCenters[9] = {
 };
 
 //static const float radii[6] = {38.211, 42.315, 43.334, 39.314, 33.606, 31.038};
-static const float radii[9] = {45.454, 34.825, 56.476, 50.140, 43.361, 48.868, 55.867, 43.057, 57.667};
+static const float radii[SPHERES_NUM] = {45.454, 34.825, 56.476, 50.140, 43.361, 48.868, 55.867, 43.057, 57.667};
 const int amount = 80;
 const int cluserRadius = 3 * DISTincrement;
 
@@ -36,7 +38,7 @@ AsteroidCluster::AsteroidCluster(int seed, QVector3D coordinates) {
 
     std::mt19937 gen(seed);
 
-    for(int i = 0; i < amount; i++) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
         QMatrix4x4 matrix;
 
         matrix.translate(position.x() + gen()%cluserRadius - cluserRadius/2,
@@ -74,8 +76,8 @@ bool AsteroidCluster::checkCollision(QVector3D cameraPosition) {
     if(cameraPosition.distanceToPoint(position) > cluserRadius + 1)
         return false;
 
-    for(int i = 0; i < amount; i++) {
-        for(int j = 0; j < 9; j++) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
+        for(int j = 0; j < SPHERES_NUM; j++) {
             QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
             float radius = scales[i] * radii[j];
 
@@ -91,7 +93,66 @@ bool AsteroidCluster::checkCollision(QVector3D cameraPosition) {
 }
 
 void AsteroidCluster::update() {
-    for(int i = 0; i < amount; i++) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
         rotationMatrices[i].translate(movementVectors[i] * speeds[i]);
+    }
+}
+
+bool AsteroidCluster::collisionAhead(QVector3D position, QVector3D direction, float distance) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
+        for(int j = 0; j < SPHERES_NUM; j++) {
+            QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
+            float radius = scales[i] * radii[j];
+
+            if(center.distanceToLine(position, direction) > radius)
+                continue;
+
+            float projection = QVector3D::dotProduct(direction, center - position);
+            if(projection >= 0 && projection <= distance) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+QVector3D AsteroidCluster::getCollisionPoint(QVector3D position, QVector3D direction, float distance) {
+    QVector3D result(1e9, 1e9, 1e9);
+    for(int i = 0; i < amount - numOfDeleted; i++) {
+        for(int j = 0; j < SPHERES_NUM; j++) {
+            QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
+            float radius = scales[i] * radii[j];
+
+            if(center.distanceToLine(position, direction) > radius)
+                continue;
+
+            float projection = QVector3D::dotProduct(direction, center - position);
+            if(projection >= 0 && projection <= distance) {
+                QVector3D candidate = direction * projection + position;
+                if(position.distanceToPoint(candidate) < position.distanceToPoint(result))
+                    result = candidate;
+            }
+        }
+    }
+    return result;
+}
+
+void AsteroidCluster::deleteAsteroid(QVector3D asteroidPosition) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
+        for(int j = 0; j < SPHERES_NUM; j++) {
+            QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
+            float radius = scales[i] * radii[j];
+
+            if(asteroidPosition.distanceToPoint(center) <= radius) {
+                qDebug() << center << radius << position << asteroidPosition;
+                qDebug() << "DELETING ASTEROID!";
+                rotationMatrices.remove(i);
+                scales.remove(i);
+                movementVectors.remove(i);
+                speeds.remove(i);
+                numOfDeleted++;
+                return;
+            }
+        }
     }
 }

@@ -167,4 +167,16 @@ void GameWindow::render()
     else qDebug() << "no collision"; */
 
     controllerUpdater->update(camera->getPosition(), camera->getSpeed(), space->checkCollision(camera->getPosition()));
+
+    if(space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 100)){
+        qDebug() << "planet ahead!";
+        qDebug() << space->getCollisionPointPlanet(camera->getPosition(), camera->getFront(), 100) << camera->getPosition();
+    }
+
+    if(space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 30)){
+        qDebug() << "asteroid ahead!";
+        QVector3D asteroidPosition = space->getCollisionPointAsteroid(camera->getPosition(), camera->getFront(), 30);
+        qDebug() << asteroidPosition << camera->getPosition();
+        space->deleteAsteroid(asteroidPosition);
+    }
 }

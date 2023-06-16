@@ -267,3 +267,49 @@ bool Space::checkCollision(QVector3D cameraPosition) {
     return false;
 }
 
+bool Space::collisionAheadPlanet(QVector3D position, QVector3D direction, float distance) {
+    direction.normalize();
+    for(Planet* planet: planets) {
+        if(planet->collisionAhead(position, direction, distance))
+            return true;
+    }
+    return false;
+}
+
+bool Space::collisionAheadAsteroid(QVector3D position, QVector3D direction, float distance) {
+    direction.normalize();
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        if(asteroidCluster->collisionAhead(position, direction, distance))
+            return true;
+    }
+    return false;
+}
+
+QVector3D Space::getCollisionPointPlanet(QVector3D position, QVector3D direction, float distance) {
+    direction.normalize();
+    QVector3D result(1e9, 1e9, 1e9);
+    for(Planet* planet: planets) {
+        QVector3D candidate = planet->getCollisionPoint(position, direction, distance);
+        if(position.distanceToPoint(candidate) < position.distanceToPoint(result))
+            result = candidate;
+    }
+    return result;
+}
+
+QVector3D Space::getCollisionPointAsteroid(QVector3D position, QVector3D direction, float distance) {
+    direction.normalize();
+    QVector3D result(1e9, 1e9, 1e9);
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        QVector3D candidate = asteroidCluster->getCollisionPoint(position, direction, distance);
+        if(position.distanceToPoint(candidate) < position.distanceToPoint(result))
+            result = candidate;
+    }
+    return result;
+}
+
+void Space::deleteAsteroid(QVector3D asteroidPosition) {
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        asteroidCluster->deleteAsteroid(asteroidPosition);
+    }
+}
+
