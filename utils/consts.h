@@ -50,4 +50,13 @@ constexpr int hashRange = 1e9;
 int combine_dirs(int x, int cw);
 int opposite_dir(int dir);
 
+// don't change arbitrarily! these are present in application code too
+#define INFO_SAFE 0
+#define INFO_COLLISION 1
+#define INFO_COLLISION_AHEAD_PLANET 2
+#define INFO_COLLISION_AHEAD_ASTEROID 3
+
+#define MSG_INFO 10
+#define MSG_SHOOT 11
+
 #endif // CONSTS_H

@@ -82,8 +82,8 @@ bool AsteroidCluster::checkCollision(QVector3D cameraPosition) {
             float radius = scales[i] * radii[j];
 
             if(cameraPosition.distanceToPoint(center) <= radius) {
-                qDebug() << center << radius << position << cameraPosition;
-                qDebug() << "COLLISION WITH ASTEROID!";
+                // qDebug() << center << radius << position << cameraPosition;
+                // qDebug() << "COLLISION WITH ASTEROID!";
                 return true;
             }
         }
@@ -144,8 +144,8 @@ void AsteroidCluster::deleteAsteroid(QVector3D asteroidPosition) {
             float radius = scales[i] * radii[j];
 
             if(asteroidPosition.distanceToPoint(center) <= radius) {
-                qDebug() << center << radius << position << asteroidPosition;
-                qDebug() << "DELETING ASTEROID!";
+                // qDebug() << center << radius << position << asteroidPosition;
+                // qDebug() << "DELETING ASTEROID!";
                 rotationMatrices.remove(i);
                 scales.remove(i);
                 movementVectors.remove(i);

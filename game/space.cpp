@@ -75,13 +75,13 @@ void Space::checkAddObject(const QVector3D & coordinates) {
         planet->setPosition(coordinates);
         planets.push_back(planet);
         takenCoords[coordinates] = true;
-        qDebug() << "adding planet, number of planets" << planets.size();
+        // qDebug() << "adding planet, number of planets" << planets.size();
     }
     else if(hash < asteroidHashCutoff) {
         AsteroidCluster* asteroidCluster = new AsteroidCluster(hash, coordinates);
         asteroidClusters.push_back(asteroidCluster);
         takenCoords[coordinates] = true;
-        qDebug() << "adding asteroid, number of asteroids" << asteroidClusters.size();
+        // qDebug() << "adding asteroid, number of asteroids" << asteroidClusters.size();
     }
 }
 
@@ -128,8 +128,8 @@ void Space::initialize() {
             }
         }
     }
-    qDebug() << "number of planets" << planets.size();
-    qDebug() << "number of asteroids" << asteroidClusters.size();
+    // qDebug() << "number of planets" << planets.size();
+    // qDebug() << "number of asteroids" << asteroidClusters.size();
 
     position = QVector3D(0, 0, 0);
 }

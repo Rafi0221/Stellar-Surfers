@@ -166,7 +166,13 @@ void GameWindow::render()
     }
     else qDebug() << "no collision"; */
 
-    controllerUpdater->update(camera->getPosition(), camera->getSpeed(), space->checkCollision(camera->getPosition()));
+    controllerUpdater->update(
+            camera->getPosition(),
+            camera->getSpeed(),
+            space->checkCollision(camera->getPosition()),
+            space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 100),
+            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 30)
+    );
 
     if(space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 100)){
         qDebug() << "planet ahead!";

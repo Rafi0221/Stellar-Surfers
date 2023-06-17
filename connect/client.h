@@ -26,7 +26,7 @@ public:
     void stopClient();
 
     constexpr static const QLatin1String serviceUuid = QLatin1String("f296bf37-5412-460d-954d-2fcc31b072c0");
-    static const int messageSize = 16;
+    static const int messageSize = 20;
 
 public slots:
     void sendMessage(const QByteArray &message);
