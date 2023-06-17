@@ -142,7 +142,21 @@ void QuadTreeNode::update(QVector3D cameraPosition, QMatrix4x4 modelMatrix){
 //    }else if(isLeaf() && depth <= 2){
 //        qDebug() << ":(((    " << modelMatrix.map(center) << " " << distance << " " << (patch->getRadius());
 //    }
-    if(distance <= (patch->getRadius() * 5) && depth <= 6 && GL::updatesLeft > 0)
+    bool toSplit = false;
+    if(depth == 0)
+        toSplit = (distance <= (patch->getRadius() * 16));
+    else if(depth == 1)
+        toSplit = (distance <= (patch->getRadius() * 14));
+    else if(depth == 2)
+        toSplit = (distance <= (patch->getRadius() * 12));
+    else if(depth == 3)
+        toSplit = (distance <= (patch->getRadius() * 6));
+    else if(depth == 4)
+        toSplit = (distance <= (patch->getRadius() * 3));
+    else
+        toSplit = (distance <= (patch->getRadius() * 2));
+
+    if(toSplit && depth <= 6 && GL::updatesLeft > 0)
         split();
     else
         merge();

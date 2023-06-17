@@ -21,7 +21,7 @@ Parser::Parser(GLUpdater *glupdater)
 void Parser::parse(QByteArray line){
     //qDebug() << line.size() << " " << QString::fromUtf8(line.constData(), line.length());
     const int* msg_type = reinterpret_cast<const int*>(line.constData());
-    qDebug() << "msgType = " << *msg_type;
+    //qDebug() << "msgType = " << *msg_type;
     if(line.size() == Client::messageSize){
         if (*msg_type == MSG_INFO) {
             const float* ptrFloat = reinterpret_cast<const float*>(line.constData() + 4);

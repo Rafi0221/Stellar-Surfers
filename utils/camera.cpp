@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "consts.h"
 
 #include <QtMath>
 #include <QMatrix4x4>
@@ -112,7 +113,25 @@ float Camera::getSpeed() {
     return speed;
 }
 
-void Camera::notifyCollision() {
-    if (speed > 0)
-        speed=-speed*0.5;
+void Camera::notifyCollision(int collisionType, Space* space) {
+    if(collisionType == ASTEROID_COLLISION) {
+        if(speed > 0.4) {
+            space->deleteAsteroid(position);
+            // eXPloSiOn !!!
+        }
+        else {
+            if(speed > 0)
+                speed = -speed * 0.2;
+        }
+    }
+    else if(collisionType == PLANET_COLLISION){
+//        QVector3D planetCenter = space->getNearestPlanet(position)->getPosition();
+//        QVector3D planetVector = position - planetCenter;
+//        QVector3D movementVector = front;
+
+
+        if (speed > 0)
+            speed = -speed * 0.2;
+    }
+
 }

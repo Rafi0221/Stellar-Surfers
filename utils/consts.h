@@ -59,4 +59,7 @@ int opposite_dir(int dir);
 #define MSG_INFO 10
 #define MSG_SHOOT 11
 
+#define PLANET_COLLISION 1
+#define ASTEROID_COLLISION 2
+
 #endif // CONSTS_H

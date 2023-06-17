@@ -98,13 +98,13 @@ void AsteroidCluster::update() {
     }
 }
 
-bool AsteroidCluster::collisionAhead(QVector3D position, QVector3D direction, float distance) {
+bool AsteroidCluster::collisionAhead(QVector3D position, QVector3D direction, float distance, float width) {
     for(int i = 0; i < amount - numOfDeleted; i++) {
         for(int j = 0; j < SPHERES_NUM; j++) {
             QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
             float radius = scales[i] * radii[j];
 
-            if(center.distanceToLine(position, direction) > radius)
+            if(center.distanceToLine(position, direction) > radius + width)
                 continue;
 
             float projection = QVector3D::dotProduct(direction, center - position);
@@ -145,7 +145,7 @@ void AsteroidCluster::deleteAsteroid(QVector3D asteroidPosition) {
 
             if(asteroidPosition.distanceToPoint(center) <= radius) {
                 // qDebug() << center << radius << position << asteroidPosition;
-                // qDebug() << "DELETING ASTEROID!";
+                 qDebug() << "DELETING ASTEROID!";
                 rotationMatrices.remove(i);
                 scales.remove(i);
                 movementVectors.remove(i);

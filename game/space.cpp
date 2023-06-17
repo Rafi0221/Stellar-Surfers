@@ -267,19 +267,37 @@ bool Space::checkCollision(QVector3D cameraPosition) {
     return false;
 }
 
-bool Space::collisionAheadPlanet(QVector3D position, QVector3D direction, float distance) {
-    direction.normalize();
+bool Space::checkCollisionPlanet(QVector3D cameraPosition) {
     for(Planet* planet: planets) {
-        if(planet->collisionAhead(position, direction, distance))
+        if(cameraPosition.distanceToPoint(planet->getPosition()) <= 2*planet->getRadius()) {
+            if(planet->checkCollision(cameraPosition))
+                return true;
+        }
+    }
+    return false;
+}
+
+bool Space::checkCollisionAsteroid(QVector3D cameraPosition) {
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        if(asteroidCluster->checkCollision(cameraPosition))
             return true;
     }
     return false;
 }
 
-bool Space::collisionAheadAsteroid(QVector3D position, QVector3D direction, float distance) {
+bool Space::collisionAheadPlanet(QVector3D position, QVector3D direction, float distance, float width) {
+    direction.normalize();
+    for(Planet* planet: planets) {
+        if(planet->collisionAhead(position, direction, distance, width))
+            return true;
+    }
+    return false;
+}
+
+bool Space::collisionAheadAsteroid(QVector3D position, QVector3D direction, float distance, float width) {
     direction.normalize();
     for(AsteroidCluster* asteroidCluster: asteroidClusters) {
-        if(asteroidCluster->collisionAhead(position, direction, distance))
+        if(asteroidCluster->collisionAhead(position, direction, distance, width))
             return true;
     }
     return false;
@@ -311,5 +329,17 @@ void Space::deleteAsteroid(QVector3D asteroidPosition) {
     for(AsteroidCluster* asteroidCluster: asteroidClusters) {
         asteroidCluster->deleteAsteroid(asteroidPosition);
     }
+}
+
+Planet* Space::getNearestPlanet(QVector3D cameraPosition) {
+    Planet* result;
+    float smallestDist = 1e9;
+    for(Planet* planet: planets) {
+        if(cameraPosition.distanceToPoint(planet->getPosition()) < smallestDist) {
+            smallestDist = cameraPosition.distanceToPoint(planet->getPosition());
+            result = planet;
+        }
+    }
+    return result;
 }
 

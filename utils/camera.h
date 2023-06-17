@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "../game/space.h"
+
 #include <QVector3D>
 #include <QMatrix4x4>
 
@@ -34,7 +36,7 @@ public:
     void updateCameraVectors();
 
     void updateSpeed(float acceleration);
-    void notifyCollision();
+    void notifyCollision(int collisionType, Space* space);
     float getSpeed();
 private:
     QVector3D position;

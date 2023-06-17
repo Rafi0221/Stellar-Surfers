@@ -71,8 +71,8 @@ float Planet::getRadius(){
     return radius;
 }
 
-bool Planet::collisionAhead(QVector3D position, QVector3D direction, float distance) {
-    if(this->position.distanceToLine(position, direction) > this->radius*0.9)
+bool Planet::collisionAhead(QVector3D position, QVector3D direction, float distance, float width) {
+    if(this->position.distanceToLine(position, direction) > this->radius*0.9 + width)
         return false;
     QVector3D planetCenter = this->position - position;
     float projection = QVector3D::dotProduct(direction, planetCenter);
@@ -85,6 +85,7 @@ QVector3D Planet::getCollisionPoint(QVector3D position, QVector3D direction, flo
         return result;
     QVector3D planetCenter = this->position - position;
     float projection = QVector3D::dotProduct(direction, planetCenter);
-    result = direction * projection + position;
+    if(projection >= 0 && projection <= distance)
+        result = direction * projection + position;
     return result;
 }
