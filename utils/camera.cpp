@@ -135,3 +135,7 @@ void Camera::notifyCollision(int collisionType) {
     }
 
 }
+
+void Camera::stop() {
+    speed = 0.0f;
+}

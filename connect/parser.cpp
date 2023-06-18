@@ -29,10 +29,13 @@ void Parser::parse(QByteArray line){
             glupdater->setCameraXYZ(*(ptrFloat+2), *ptrFloat, -(*(ptrFloat+1)));
             glupdater->setAcceleration(*(ptrFloat+3));
             //    qDebug() << *ptrFloat << " " << *(ptrFloat+1) << " " << *(ptrFloat+2) << " " << *(ptrFloat+3);
-        } else {
+        } if (*msg_type == MSG_SHOOT) {
             const float* ptrFloat = reinterpret_cast<const float*>(line.constData() + 4);
 //            qDebug() << "Shoot " << *(ptrFloat) << " " << *(ptrFloat + 1);
             glupdater->notifyShoot(*(ptrFloat), *(ptrFloat + 1));
+        } if (*msg_type == MSG_DEAD) {
+            qDebug() << "Game over";
+            glupdater->notifyGameOver();
         }
     }
     else {

@@ -22,7 +22,7 @@ public:
     void render(Camera *camera);
     void addLaser(QVector3D position, QVector3D direction, float baseSpeed);
     void removeLaser(Laser *laser);
-    void checkCollisions(Space *space, ExplosionManager *explosionManager);
+    bool checkCollisions(Space *space, ExplosionManager *explosionManager);
 };
 
 #endif // LASERMANAGER_H

@@ -11,7 +11,14 @@ ControllerUpdater::ControllerUpdater(ConnectManager* connectManager)
 }
 
 
-void ControllerUpdater::update(QVector3D position, float speed, bool collision, bool collisionAheadPlanet, bool collisionAheadAsteroid) {
+void ControllerUpdater::update(
+        QVector3D position,
+        float speed,
+        bool collision,
+        bool collisionAheadPlanet,
+        bool collisionAheadAsteroid,
+        bool asteroidShot
+) {
 //    qDebug() << "got" << position << speed;
     const int msecBreak = 20;
     if(lastSend.msecsTo(QTime::currentTime()) < msecBreak) {
@@ -23,6 +30,7 @@ void ControllerUpdater::update(QVector3D position, float speed, bool collision, 
     if (collisionAheadPlanet) collisionInfo = INFO_COLLISION_AHEAD_PLANET;
     if (collisionAheadAsteroid) collisionInfo = INFO_COLLISION_AHEAD_ASTEROID;
     if (collision) collisionInfo = INFO_COLLISION;
+    if (asteroidShot) collisionInfo = INFO_ASTEROID_SHOT;
 
     QByteArray buffer;
 

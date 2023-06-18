@@ -56,3 +56,7 @@ void GLUpdater::notifyShoot(float x, float y){
     GL::shoot = true;
     //should set some coordinates
 }
+
+void GLUpdater::notifyGameOver() {
+    GL::gameOver = true;
+}

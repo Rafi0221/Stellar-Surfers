@@ -20,6 +20,7 @@
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 #include "../utils/perlinnoise.h"
+
 void GameWindow::initialize()
 {
     camera = new Camera();
@@ -73,13 +74,18 @@ void GameWindow::render()
             camera->getSpeed(),
             space->checkCollision(camera->getPosition()),
             space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 200, 0),
-            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7)
+            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7),
+            laserManager->checkCollisions(space, explosionManager)
     );
 
     collisionManager->update();
 
     cooldown -= deltaTime;
 //    GL::shoot = true;
+    if(GL::gameOver){
+        camera->stop();
+    }
+
     if(GL::shoot){
         if(cooldown <= 0.0){
             cooldown = LASER_COOLDOWN;

@@ -33,5 +33,5 @@ void CollisionManager::update(){
 
 
     // laser collisions
-    laserManager->checkCollisions(space, explosionManager);
+    // laserManager->checkCollisions(space, explosionManager);
 }

@@ -15,6 +15,8 @@ float GL::time;
 
 bool GL::shoot;
 
+bool GL::gameOver;
+
 int GL::drawCount;
 
 int GL::updatesLeft;

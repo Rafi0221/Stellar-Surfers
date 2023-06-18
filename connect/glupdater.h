@@ -16,6 +16,7 @@ public:
     void setCameraXYZ(float x, float y, float z);
     void setAcceleration(float accel);
     void notifyShoot(float x, float y);
+    void notifyGameOver();
 
 public slots:
     void setToDefault();
