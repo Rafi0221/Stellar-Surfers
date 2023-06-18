@@ -52,13 +52,15 @@ void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
 void GameWindow::render()
 {
     GL::updatesLeft = MAX_UPDATES_PER_FRAME;
-    float deltaTime = clock() - oldTime;
+
+    std::chrono::steady_clock::time_point newTime = std::chrono::steady_clock::now();
+    float deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - oldTime).count();
     frameCounter++;
     if(frameCounter == 60){
         frameCounter = 0;
         qDebug() << (1.0 / deltaTime) * 1000.0;
     }
-    oldTime = clock();
+    oldTime = std::chrono::steady_clock::now();
 
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
