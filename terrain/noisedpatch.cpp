@@ -299,8 +299,8 @@ bool NoisedPatch::checkCollision(const QVector3D & relativePosition) {
     }
 
     QVector3D planetCenter = QVector3D(0,0,0);
-    float distPosCenter = planetCenter.distanceToPoint(relativePosition);
-    float distPosPatch = relativePosition.distanceToPoint(closestPoint);
+    float distPosCenter = planetCenter.distanceToPoint(relativePosition) - 0.3f;
+    float distPosPatch = relativePosition.distanceToPoint(closestPoint) - 0.3f;
     float distPatchCenter = planetCenter.distanceToPoint(closestPoint);
     return distPosPatch < distPatchCenter && distPosCenter < distPatchCenter;
 }

@@ -54,11 +54,11 @@ void LaserManager::checkCollisions(Space *space, ExplosionManager *explosionMana
     for(int i = lasers.size() - 1; i >= 0; i--){
         int type = lasers[i].first->checkCollisions(space);
         if(type != 0){
-            removeLaser(i);
             if(type == ASTEROID_COLLISION){
                 space->deleteAsteroid(lasers[i].first->getCenter());
                 explosionManager->addExplosion();
             }
+            removeLaser(i);
         }
     }
 }

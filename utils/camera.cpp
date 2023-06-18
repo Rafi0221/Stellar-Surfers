@@ -11,7 +11,7 @@ Camera::Camera()
     pitch = 0;
     roll = 0;
     updateCameraVectors();
-    speed = 0.01f;
+    speed = 0.001f;
 }
 
 QMatrix4x4 Camera::getViewMatrix(){
@@ -103,7 +103,7 @@ void Camera::addAngles(float pitch, float yaw, float roll){
 
 void Camera::updateSpeed(float a) {
     // const float slowdown = 0.000005f;
-    a = a * 0.000009f;
+    a = a * 0.0000022f;
     // we don't want to make negative speed even lower
     if (speed + a > 0 or a > 0)
         speed = speed + a;
@@ -115,7 +115,7 @@ float Camera::getSpeed() {
 
 void Camera::notifyCollision(int collisionType) {
     if(collisionType == ASTEROID_COLLISION) {
-        if(speed > 0.4) {
+        if(speed > 0.007) {
             // space->deleteAsteroid(position);
             // eXPloSiOn !!!
         }
