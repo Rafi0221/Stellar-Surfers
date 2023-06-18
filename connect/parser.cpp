@@ -31,7 +31,8 @@ void Parser::parse(QByteArray line){
             //    qDebug() << *ptrFloat << " " << *(ptrFloat+1) << " " << *(ptrFloat+2) << " " << *(ptrFloat+3);
         } else {
             const float* ptrFloat = reinterpret_cast<const float*>(line.constData() + 4);
-            qDebug() << "Shoot " << *(ptrFloat) << " " << *(ptrFloat + 1);
+//            qDebug() << "Shoot " << *(ptrFloat) << " " << *(ptrFloat + 1);
+            glupdater->notifyShoot(*(ptrFloat), *(ptrFloat + 1));
         }
     }
     else {

@@ -38,8 +38,12 @@ constexpr int NORMAL_MAP_SIZE = (10 * PATCH_QUADS);
 
 #define MAX_UPDATES_PER_FRAME 400
 
-#define LASER_WIDTH 0.02
-#define LASER_LENGTH 0.5
+#define LASER_WIDTH 0.07
+#define LASER_LENGTH 1.2
+#define LASER_RADIUS 0.07
+#define LASER_COOLDOWN 1000
+#define LASER_LIFETIME 100000
+#define LASER_SPEED 0.017
 
 constexpr int RENDER_DIST = {
     #include "../play/saves/renderdistance.dat"

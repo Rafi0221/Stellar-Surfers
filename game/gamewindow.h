@@ -8,6 +8,9 @@
 #include "space.h"
 
 class Camera;
+class CollisionManager;
+class ExplosionManager;
+class LaserManager;
 class Model;
 class Planet;
 class PlanetLayer;
@@ -48,5 +51,10 @@ private:
 
     int frameCounter = 0;
     float oldTime = 0.0f;
+
+    float cooldown = 0.0f;
+    LaserManager *laserManager;
+    CollisionManager *collisionManager;
+    ExplosionManager *explosionManager;
 };
 #endif // TRIANGLEWINDOW_H

@@ -69,13 +69,19 @@ set(PROJECT_SOURCES
         game/space.cpp
         utils/camera.h
         utils/camera.cpp
+        utils/collisionmanager.h
+        utils/collisionmanager.cpp
         utils/colors.h
         utils/colors.cpp
         utils/consts.h
         utils/consts.cpp
+        utils/explosionmanager.h
+        utils/explosionmanager.cpp
         utils/frustum.h
         utils/laser.h
         utils/laser.cpp
+        utils/lasermanager.h
+        utils/lasermanager.cpp
         utils/layeredperlinnoise.h
         utils/layeredperlinnoise.cpp
         utils/model.h

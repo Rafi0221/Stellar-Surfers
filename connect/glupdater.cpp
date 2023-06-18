@@ -51,3 +51,8 @@ void GLUpdater::setCameraXYZ(float x, float y, float z) {
 void GLUpdater::setAcceleration(float acceleration) {
     GL::acceleration = acceleration;
 }
+
+void GLUpdater::notifyShoot(float x, float y){
+    GL::shoot = true;
+    //should set some coordinates
+}

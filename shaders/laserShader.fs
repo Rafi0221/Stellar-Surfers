@@ -1,11 +1,12 @@
 #version 330 core
 out vec4 FragColor;
 
-in float bDist;
+in vec2 bRelPos;
 
 void main()
 {
-    float x = 1.0 - abs(bDist);
-    x = (x * 2.0) - 1.0;
+    float dist = bRelPos.x * bRelPos.x + bRelPos.y * bRelPos.y;
+    float x = 1.0 - dist;
+//    x = (x * 2.0);
     FragColor = vec4(0.27, 0.95, 0.15, x);
 }

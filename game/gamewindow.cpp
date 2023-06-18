@@ -10,8 +10,11 @@
 #include "../terrain/planetlayer.h"
 #include "../terrain/planetproperties.h"
 #include "../utils/camera.h"
+#include "../utils/collisionmanager.h"
+#include "../utils/explosionmanager.h"
 #include "../utils/frustum.h"
 #include "../utils/laser.h"
+#include "../utils/lasermanager.h"
 #include "../utils/model.h"
 #include "../utils/obj_loader.h"
 #include "../utils/shader.h"
@@ -32,6 +35,9 @@ void GameWindow::initialize()
 
     skybox = new SkyBox(new PerlinNoise(round(seed.f1 * 1000000.0)));
 
+    laserManager = new LaserManager();
+    explosionManager = new ExplosionManager();
+    collisionManager = new CollisionManager(camera, space, laserManager, explosionManager);
 }
 
 void GameWindow::setSeed(SetupGame::GameSeed value) {
@@ -56,9 +62,43 @@ void GameWindow::render()
 
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
-    camera->move(camera->getSpeed());
+    camera->move(camera->getSpeed() * deltaTime);
 
     space->update(camera->getPosition());
+
+    controllerUpdater->update(
+            camera->getPosition(),
+            camera->getSpeed(),
+            space->checkCollision(camera->getPosition()),
+            space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 200, 0),
+            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7)
+    );
+
+    collisionManager->update();
+
+    cooldown -= deltaTime;
+//    GL::shoot = true;
+    if(GL::shoot){
+        if(cooldown <= 0.0){
+            cooldown = LASER_COOLDOWN;
+            qDebug() << "shooting";
+            QVector3D startPointRight = camera->getPosition() - camera->getUp() * 0.5 - camera->getRight() * 0.5;
+            QVector3D startPointLeft = camera->getPosition() - camera->getUp() * 0.5 + camera->getRight() * 0.5;
+            laserManager->addLaser(startPointRight, camera->getPosition() + 150 * camera->getFront() - startPointRight,
+                                   camera->getSpeed());
+            laserManager->addLaser(startPointLeft, camera->getPosition() + 150 * camera->getFront() - startPointLeft,
+                                   camera->getSpeed());
+        }
+        GL::shoot = false;
+    }
+
+    laserManager->update(deltaTime);
+
+
+
+
+    //RENDERING
+
 
     GL::funcs.glEnable(GL_DEPTH_TEST);
     GL::funcs.glDepthMask(GL_TRUE);
@@ -85,16 +125,6 @@ void GameWindow::render()
     textureShader->setMat4("projection", projection);
     textureShader->setMat4("view", tmp);
 
-    //    Shader *skyboxShader = ShaderManager::getShader("skyboxShader");
-//    skyboxShader->use();
-
-//    skyboxShader->setMat4("projection", projection);
-//    skyboxShader->setMat4("view", tmp);
-//    PerlinNoise noise(round(seed.f1 * 1000000.0));
-//    unsigned int textureID = noise.getPermutationTexture();
-//    skyboxShader->setInt("permutation", 0);
-//    GL::funcs.glActiveTexture(GL_TEXTURE0);
-//    GL::funcs.glBindTexture(GL_TEXTURE_1D, textureID);
     skybox->render();
 
     GL::funcs.glClear(GL_DEPTH_BUFFER_BIT);
@@ -133,18 +163,9 @@ void GameWindow::render()
     asteroidShader->setMat4("view", view);
 
     Frustum frustum(camera, 4.0f / 3.0f, 1.04719755f, 0.1f, 1000.0f);
-//    Frustum frustum(camera, 4.0f / 3.0f, 60.0f, 0.1f, 1000.0f);
-//    GL::drawCount = 0;
-    space->render(asteroidShader, &frustum);
-//    qDebug() << GL::drawCount;
-//    planet->setRotation(QVector3D(0, counter/10.0f, 0));
-//    planet->update(camera->getPosition());
-//    planet->render();
-//    planet2->setRotation(QVector3D(0, 55, 0));
-//    planet2->update(camera->getPosition());
-//    planet2->render();
 
-//    skybox->render();
+    space->render(asteroidShader, &frustum);
+
     GL::funcs.glEnable(GL_BLEND);
     GL::funcs.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Shader *laserShader = ShaderManager::getShader("laserShader");
@@ -152,39 +173,12 @@ void GameWindow::render()
     laserShader->setMat4("view", view);
     laserShader->setMat4("projection", projection);
 
-    Laser *laser = new Laser(QVector3D(0.3,1,0.9), QVector3D(0,0,6));
-    laser->Render(camera);
+    laserManager->render(camera);
 
     GL::funcs.glDisable(GL_BLEND);
 
 
-    controllerUpdater->update(
-            camera->getPosition(),
-            camera->getSpeed(),
-            space->checkCollision(camera->getPosition()),
-            space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 200, 0),
-            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7)
-    );
-
-    if(space->checkCollision(camera->getPosition())) {
-        int collisionType;
-        if(space->checkCollisionPlanet(camera->getPosition()))
-            collisionType = PLANET_COLLISION;
-        else
-            collisionType = ASTEROID_COLLISION;
-        camera->notifyCollision(collisionType, space);
-    }
 
 
-//    if(space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 100)){
-//        qDebug() << "planet ahead!";
-//        qDebug() << space->getCollisionPointPlanet(camera->getPosition(), camera->getFront(), 100) << camera->getPosition();
-//    }
 
-//    if(space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 30)){
-//        qDebug() << "asteroid ahead!";
-//        QVector3D asteroidPosition = space->getCollisionPointAsteroid(camera->getPosition(), camera->getFront(), 30);
-//        qDebug() << asteroidPosition << camera->getPosition();
-//        space->deleteAsteroid(asteroidPosition);
-//    }
 }

@@ -12,6 +12,8 @@ public:
     static float acceleration;
     static float time;
 
+    static bool shoot;
+
     static int drawCount;
     static int updatesLeft;
 };

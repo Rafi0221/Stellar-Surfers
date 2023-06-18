@@ -13,6 +13,8 @@ float GL::acceleration;
 
 float GL::time;
 
+bool GL::shoot;
+
 int GL::drawCount;
 
 int GL::updatesLeft;
