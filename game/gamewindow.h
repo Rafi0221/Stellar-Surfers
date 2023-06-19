@@ -1,6 +1,7 @@
 #ifndef TRIANGLEWINDOW_H
 #define TRIANGLEWINDOW_H
 
+#include <chrono>
 #include <QOpenGLShaderProgram>
 #include "../opengl/openglwindow.h"
 #include "../play/setupgame.h"
@@ -50,7 +51,7 @@ private:
     Planet *planet;
 
     int frameCounter = 0;
-    float oldTime = 0.0f;
+    std::chrono::steady_clock::time_point oldTime;
 
     float cooldown = 0.0f;
     LaserManager *laserManager;

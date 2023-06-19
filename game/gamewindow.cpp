@@ -20,6 +20,7 @@
 #include "../utils/shader.h"
 #include "../utils/shadermanager.h"
 #include "../utils/perlinnoise.h"
+
 void GameWindow::initialize()
 {
     camera = new Camera();
@@ -53,7 +54,9 @@ void GameWindow::setControllerUpdater(ControllerUpdater* controllerUpdater) {
 void GameWindow::render()
 {
     GL::updatesLeft = MAX_UPDATES_PER_FRAME;
-    float deltaTime = clock() - oldTime;
+
+    std::chrono::steady_clock::time_point newTime = std::chrono::steady_clock::now();
+    float deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - oldTime).count();
     if(frameCounter == 0)
         deltaTime = 0;
     frameCounter++;
@@ -61,7 +64,7 @@ void GameWindow::render()
         frameCounter = 0;
         qDebug() << (1.0 / deltaTime) * 1000.0;
     }
-    oldTime = clock();
+    oldTime = std::chrono::steady_clock::now();
 
     camera->addAngles(GL::rotation.x() / 3.0, GL::rotation.z() / 3.0, GL::rotation.y() / 3.0);
     camera->updateSpeed(GL::acceleration);
@@ -74,13 +77,18 @@ void GameWindow::render()
             camera->getSpeed(),
             space->checkCollision(camera->getPosition()),
             space->collisionAheadPlanet(camera->getPosition(), camera->getFront(), 200, 0),
-            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7)
+            space->collisionAheadAsteroid(camera->getPosition(), camera->getFront(), 100, 7),
+            laserManager->checkCollisions(space, explosionManager)
     );
 
     collisionManager->update();
 
     cooldown -= deltaTime;
 //    GL::shoot = true;
+    if(GL::gameOver){
+        camera->stop();
+    }
+
     if(GL::shoot){
         if(cooldown <= 0.0){
             cooldown = LASER_COOLDOWN;

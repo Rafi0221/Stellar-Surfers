@@ -24,7 +24,7 @@ void CollisionManager::update(){
             collisionType = ASTEROID_COLLISION;
         camera->notifyCollision(collisionType);
 
-        if(collisionType == ASTEROID_COLLISION && camera->getSpeed() > 0.4){
+        if(collisionType == ASTEROID_COLLISION && camera->getSpeed() > 0.007){
             space->deleteAsteroid(camera->getPosition());
             explosionManager->addExplosion(space->getAsteroid(camera->getPosition()));
             // eXPloSiOn !!!
@@ -33,5 +33,5 @@ void CollisionManager::update(){
 
 
     // laser collisions
-    laserManager->checkCollisions(space, explosionManager);
+    // laserManager->checkCollisions(space, explosionManager);
 }

@@ -35,6 +35,8 @@ public:
     void addAngles(float pitch, float yaw, float roll);
     void updateCameraVectors();
 
+    void stop();
+
     void updateSpeed(float acceleration);
     void notifyCollision(int collisionType);
     float getSpeed();

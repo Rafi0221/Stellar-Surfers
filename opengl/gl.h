@@ -13,6 +13,7 @@ public:
     static float time;
 
     static bool shoot;
+    static bool gameOver;
 
     static int drawCount;
     static int updatesLeft;

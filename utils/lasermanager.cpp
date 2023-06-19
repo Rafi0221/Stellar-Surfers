@@ -50,7 +50,7 @@ void LaserManager::removeLaser(int id){
     lasers.pop_back();
 }
 
-void LaserManager::checkCollisions(Space *space, ExplosionManager *explosionManager){
+bool LaserManager::checkCollisions(Space *space, ExplosionManager *explosionManager){
     for(int i = lasers.size() - 1; i >= 0; i--){
         int type = lasers[i].first->checkCollisions(space);
         if(type != 0){
@@ -61,6 +61,8 @@ void LaserManager::checkCollisions(Space *space, ExplosionManager *explosionMana
                 explosionManager->addExplosion(lasers[i].first->getCenter());
             }
             removeLaser(i);
+            return true;
         }
     }
+    return false;
 }
