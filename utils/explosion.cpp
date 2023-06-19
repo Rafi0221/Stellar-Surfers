@@ -22,17 +22,17 @@ float texDelta[][2] = {
 };
 
 float sizes[][2] = {
-    {0.005, 0.005},
-    {0.05, 0.05},
-    {0.03, 0.03},
-    {0.05, 0.05},
+    {0.01, 0.01},
+    {0.1, 0.1},
+    {0.06, 0.06},
+    {0.1, 0.1},
 };
 
 float speeds[] = {
-    0.15,
-    0.1,
-    0.12,
-    0.22
+    0.3,
+    0.2,
+    0.24,
+    0.44
 };
 
 float speedDelta[] = {
@@ -52,7 +52,7 @@ Explosion::Explosion(QVector3D position)
         velocities[i] = QVector3D(getRand(), getRand(), getRand());
         velocities[i].normalize();
         velocities[i] *= getRand();
-        positions[i] = position + velocities[i] * abs(getRand()) * 0.16;
+        positions[i] = position + velocities[i] * abs(getRand()) * 2;
 
         angularVelocities[i] = getRand();
 

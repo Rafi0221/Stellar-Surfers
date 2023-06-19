@@ -12,7 +12,7 @@ ExplosionManager::ExplosionManager()
 }
 
 void ExplosionManager::addExplosion(QVector3D position){
-    explosions.push_back({new Explosion(position), EXPLOSION_LIFETIME});
+    explosions.push_back({new Explosion(position), EXPLOSION_LIFETIME + currentTime});
 }
 
 void ExplosionManager::removeExplosion(int id){

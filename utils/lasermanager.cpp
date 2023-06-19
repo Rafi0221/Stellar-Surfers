@@ -55,10 +55,13 @@ bool LaserManager::checkCollisions(Space *space, ExplosionManager *explosionMana
         int type = lasers[i].first->checkCollisions(space);
         if(type != 0){
             if(type == ASTEROID_COLLISION){
-                space->deleteAsteroid(lasers[i].first->getCenter());
                 explosionManager->addExplosion(space->getAsteroid(lasers[i].first->getCenter()));
+                qDebug() << "hit asteroid" << space->getAsteroid(lasers[i].first->getCenter());
+                space->deleteAsteroid(lasers[i].first->getCenter());
+
             }else{
                 explosionManager->addExplosion(lasers[i].first->getCenter());
+                qDebug() << "hit planet" << lasers[i].first->getCenter();
             }
             removeLaser(i);
             return true;
