@@ -38,7 +38,7 @@ void GameWindow::initialize()
 
     laserManager = new LaserManager();
     explosionManager = new ExplosionManager();
-//    explosionManager->addExplosion(QVector3D(0,0,1.5));
+//    explosionManager->addExplosion(QVector3D(0,0,0));
     collisionManager = new CollisionManager(camera, space, laserManager, explosionManager);
 }
 
@@ -179,6 +179,7 @@ void GameWindow::render()
 
     GL::funcs.glEnable(GL_BLEND);
     GL::funcs.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+//    GL::funcs.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     Shader *laserShader = ShaderManager::getShader("laserShader");
     laserShader->use();
     laserShader->setMat4("view", view);

@@ -34,5 +34,7 @@ void main()
         color *= fade;
         transparency *= fade;
     }
+    if(transparency < 0.01)
+        discard;
     FragColor = vec4(color, transparency);
 }
