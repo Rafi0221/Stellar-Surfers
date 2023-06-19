@@ -125,14 +125,15 @@ int load_obj(string path, unsigned int &VAO){
 unsigned int load_texture(std::string path){
     QImage img;
     img.load(QString::fromStdString(path), "PNG");
-    img = img.convertToFormat(QImage::Format_RGB888);
+    img = img.convertToFormat(QImage::Format_RGBA8888);
     uchar *bits = img.bits();
 
     for(int y = 0; y < img.height()/2; y++){
         for(int x = 0; x < img.width(); x++){
-            swap(bits[(y * img.width() + x) * 3], bits[((img.height()-y-1) * img.width() + x) * 3]);
-            swap(bits[(y * img.width() + x) * 3 + 1], bits[((img.height()-y-1) * img.width() + x) * 3 + 1]);
-            swap(bits[(y * img.width() + x) * 3 + 2], bits[((img.height()-y-1) * img.width() + x) * 3 + 2]);
+            swap(bits[(y * img.width() + x) * 4], bits[((img.height()-y-1) * img.width() + x) * 4]);
+            swap(bits[(y * img.width() + x) * 4 + 1], bits[((img.height()-y-1) * img.width() + x) * 4 + 1]);
+            swap(bits[(y * img.width() + x) * 4 + 2], bits[((img.height()-y-1) * img.width() + x) * 4 + 2]);
+            swap(bits[(y * img.width() + x) * 4 + 3], bits[((img.height()-y-1) * img.width() + x) * 4 + 3]);
         }
     }
 
@@ -145,7 +146,7 @@ unsigned int load_texture(std::string path){
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     GL::funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    GL::funcs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width(), img.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, bits);
+    GL::funcs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, bits);
     GL::funcs.glGenerateMipmap(GL_TEXTURE_2D);
     return textureID;
 }

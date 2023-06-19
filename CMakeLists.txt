@@ -75,6 +75,8 @@ set(PROJECT_SOURCES
         utils/colors.cpp
         utils/consts.h
         utils/consts.cpp
+        utils/explosion.h
+        utils/explosion.cpp
         utils/explosionmanager.h
         utils/explosionmanager.cpp
         utils/frustum.h

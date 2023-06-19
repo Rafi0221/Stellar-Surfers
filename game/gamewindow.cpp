@@ -37,6 +37,7 @@ void GameWindow::initialize()
 
     laserManager = new LaserManager();
     explosionManager = new ExplosionManager();
+//    explosionManager->addExplosion(QVector3D(0,0,1.5));
     collisionManager = new CollisionManager(camera, space, laserManager, explosionManager);
 }
 
@@ -53,6 +54,8 @@ void GameWindow::render()
 {
     GL::updatesLeft = MAX_UPDATES_PER_FRAME;
     float deltaTime = clock() - oldTime;
+    if(frameCounter == 0)
+        deltaTime = 0;
     frameCounter++;
     if(frameCounter == 60){
         frameCounter = 0;
@@ -94,7 +97,7 @@ void GameWindow::render()
 
     laserManager->update(deltaTime);
 
-
+    explosionManager->update(camera, deltaTime);
 
 
     //RENDERING
@@ -167,13 +170,26 @@ void GameWindow::render()
     space->render(asteroidShader, &frustum);
 
     GL::funcs.glEnable(GL_BLEND);
-    GL::funcs.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    GL::funcs.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     Shader *laserShader = ShaderManager::getShader("laserShader");
     laserShader->use();
     laserShader->setMat4("view", view);
     laserShader->setMat4("projection", projection);
 
     laserManager->render(camera);
+
+    Shader *explosionShader = ShaderManager::getShader("explosionShader");
+
+    GL::funcs.glActiveTexture(GL_TEXTURE0);
+    GL::funcs.glBindTexture(GL_TEXTURE_2D, load_texture("media/explosions2.png"));
+
+    explosionShader->use();
+
+    explosionShader->setInt("texture1", 0);
+    explosionShader->setMat4("view", view);
+    explosionShader->setMat4("projection", projection);
+
+    explosionManager->render();
 
     GL::funcs.glDisable(GL_BLEND);
 

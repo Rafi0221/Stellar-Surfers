@@ -17,6 +17,7 @@ void ShaderManager::initialize(){
     shaders["asteroidShader"] = new Shader("shaders/asteroidShader.vs", "shaders/asteroidShader.fs");
     shaders["textureShader"] = new Shader("shaders/textureShader.vs", "shaders/textureShader.fs");
     shaders["laserShader"] = new Shader("shaders/laserShader.vs", "shaders/laserShader.fs");
+    shaders["explosionShader"] = new Shader("shaders/explosionShader.vs", "shaders/explosionShader.fs");
 
     Shader *waterShader = shaders["waterShader"];
     waterShader->use();

@@ -156,3 +156,17 @@ void AsteroidCluster::deleteAsteroid(QVector3D asteroidPosition) {
         }
     }
 }
+
+QVector3D AsteroidCluster::getAsteroid(QVector3D asteroidPosition) {
+    for(int i = 0; i < amount - numOfDeleted; i++) {
+        for(int j = 0; j < SPHERES_NUM; j++) {
+            QVector3D center = rotationMatrices[i].map(spheresCenters[j]);
+            float radius = scales[i] * radii[j];
+
+            if(asteroidPosition.distanceToPoint(center) <= radius) {
+                return center;
+            }
+        }
+    }
+    return QVector3D();
+}

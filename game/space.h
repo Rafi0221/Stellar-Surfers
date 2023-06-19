@@ -27,6 +27,7 @@ public:
     QVector3D getCollisionPointAsteroid(QVector3D position, QVector3D direction, float distance);
     QVector3D getCollisionPointPlanet(QVector3D position, QVector3D direction, float distance);
     void deleteAsteroid(QVector3D asteroidPosition);
+    QVector3D getAsteroid(QVector3D asteroidPosition);
     Planet* getNearestPlanet(QVector3D cameraPosition);
 
 private:

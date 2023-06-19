@@ -18,7 +18,7 @@ public:
     bool collisionAhead(QVector3D position, QVector3D direction, float distance, float width);
     QVector3D getCollisionPoint(QVector3D position, QVector3D direction, float distance);
     void deleteAsteroid(QVector3D asteroidPosition);
-
+    QVector3D getAsteroid(QVector3D asteroidPosition);
 private:
     int seed;
     int numOfDeleted = 0;
@@ -27,6 +27,7 @@ private:
     QVector<float> scales;
     QVector<QVector3D> movementVectors;
     QVector<float> speeds;
+    QVector<bool> destroyed;
 };
 
 #endif // ASTEROIDCLUSTER_H

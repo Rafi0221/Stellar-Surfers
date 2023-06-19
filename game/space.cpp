@@ -331,6 +331,15 @@ void Space::deleteAsteroid(QVector3D asteroidPosition) {
     }
 }
 
+QVector3D Space::getAsteroid(QVector3D asteroidPosition) {
+    for(AsteroidCluster* asteroidCluster: asteroidClusters) {
+        QVector3D tmp = asteroidCluster->getAsteroid(asteroidPosition);
+        if(tmp != QVector3D())
+            return tmp;
+    }
+    return QVector3D();
+}
+
 Planet* Space::getNearestPlanet(QVector3D cameraPosition) {
     Planet* result;
     float smallestDist = 1e9;
